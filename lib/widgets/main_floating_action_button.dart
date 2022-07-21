@@ -24,7 +24,10 @@ class _MainFloatingActionButtonState extends State<MainFloatingActionButton> {
       duration: const Duration(milliseconds: 200),
       width: scale * 55.0,
       height: scale * 55.0,
-      decoration: BoxDecoration(boxShadow: [Styles.boxShadow]),
+      decoration: BoxDecoration(
+          color: Styles.accentColor,
+          boxShadow: [Styles.boxShadow],
+          borderRadius: BorderRadius.circular(Styles.mainButtonBorderRadius)),
       child: Material(
         color: Colors.transparent,
         child: InkWell(

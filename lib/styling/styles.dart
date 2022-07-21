@@ -14,7 +14,7 @@ class Styles {
 
   // Colors
   static const Color accentColor = Color.fromARGB(255, 32, 174, 250);
-  static const Color splashColor = Color.fromARGB(255, 255, 255, 255);
+  static const Color splashColor = Color.fromARGB(110, 255, 255, 255);
 
   // BoxShadows
   static final BoxShadow boxShadow =
