@@ -15,6 +15,7 @@ class CreateAccountPage extends StatefulWidget {
 
 class _CreateAccountPageState extends State<CreateAccountPage> {
   final TextEditingController emailTextEditingController = TextEditingController();
+  final TextEditingController usernameTextEditingController = TextEditingController();
   final TextEditingController displayNameTextEditingController = TextEditingController();
   final TextEditingController passwordTextEditingController = TextEditingController();
   final TextEditingController confirmPasswordTextEditingController = TextEditingController();
@@ -26,6 +27,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       // Check if values are empty
       log(Styles.checkIfStringEmpty("a ").toString());
       if (Styles.checkIfStringEmpty(emailTextEditingController.text) ||
+          Styles.checkIfStringEmpty(usernameTextEditingController.text) ||
           Styles.checkIfStringEmpty(displayNameTextEditingController.text) ||
           Styles.checkIfStringEmpty(passwordTextEditingController.text) ||
           Styles.checkIfStringEmpty(confirmPasswordTextEditingController.text)) return;
@@ -38,8 +40,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       await Auth()
           .createAccount(
               email: emailTextEditingController.text,
-              password: passwordTextEditingController.text,
+              username: usernameTextEditingController.text,
               displayName: displayNameTextEditingController.text,
+              password: passwordTextEditingController.text,
               profilePhotoURL: Styles.defaultPhotoURL)
           .then((value) {
         Navigator.pop(context);
@@ -66,6 +69,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                 MainTextField(
                   controller: emailTextEditingController,
                   hintText: "Email",
+                ),
+                MainTextField(
+                  controller: usernameTextEditingController,
+                  hintText: "Username",
                 ),
                 MainTextField(
                   controller: displayNameTextEditingController,

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:social_network/database/user_data_database.dart';
+import 'package:social_network/models/user_data.dart';
 
 class Auth {
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -41,13 +43,21 @@ class Auth {
   // Create new account
   Future<bool> createAccount(
       {required String email,
-      required String password,
+      required String username,
       required String displayName,
+      required String password,
       required String profilePhotoURL}) async {
     try {
       await auth.createUserWithEmailAndPassword(email: email.trim(), password: password);
-      await auth.currentUser!.updateDisplayName(displayName);
-      await auth.currentUser!.updatePhotoURL(profilePhotoURL);
+
+      UserData userData = UserData(
+        id: Auth().getUserId(),
+        username: username,
+        displayName: displayName,
+        profilePhotoURL: profilePhotoURL,
+      );
+
+      await UserDataDatabase().addUserData(userData);
 
       return true;
     } on FirebaseAuthException catch (_) {

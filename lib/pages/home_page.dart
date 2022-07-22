@@ -32,6 +32,10 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void openAddPage() {
+    Navigator.pushNamed(context, '/addpost');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +77,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: MainFloatingActionButton(
         icon: Icons.add,
-        onPressed: () {},
+        onPressed: openAddPage,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
