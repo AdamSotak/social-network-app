@@ -52,3 +52,6 @@ app.*.map.json
 
 # VSCode
 /.vscode
+
+# Development Environment
+/development_assets/

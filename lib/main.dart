@@ -7,7 +7,7 @@ import 'package:social_network/auth/auth.dart';
 import 'package:social_network/firebase_options.dart';
 import 'package:social_network/pages/posts/add_post_page.dart';
 import 'package:social_network/pages/create_account_page.dart';
-import 'package:social_network/pages/home_page.dart';
+import 'package:social_network/pages/main_page.dart';
 import 'package:social_network/pages/login_page.dart';
 import 'package:social_network/styling/styles.dart';
 
@@ -31,11 +31,10 @@ class App extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.white),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            backgroundColor: const Color.fromARGB(255, 30, 30, 30),
-            elevation: 100.0,
+            backgroundColor: Colors.grey.withOpacity(0.3),
+            elevation: 0.0,
             unselectedLabelStyle: GoogleFonts.raleway(color: Colors.white, fontSize: 12.0),
             selectedLabelStyle: GoogleFonts.raleway(color: Colors.black),
-            unselectedItemColor: Colors.white,
             selectedItemColor: Styles.accentColor),
         cardTheme: const CardTheme(elevation: 10.0, color: Colors.white),
         radioTheme: RadioThemeData(fillColor: MaterialStateProperty.all(Colors.black)),
@@ -64,7 +63,7 @@ class App extends StatelessWidget {
         textButtonTheme: TextButtonThemeData(
             style: ButtonStyle(overlayColor: MaterialStateProperty.all(const Color.fromARGB(255, 200, 200, 200)))),
         textTheme: TextTheme(
-          headline1: GoogleFonts.raleway(color: Colors.black, fontSize: 20.0, height: 1.2),
+          headline1: GoogleFonts.raleway(color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.bold),
           headline2: GoogleFonts.raleway(color: Colors.black, fontSize: 15.0),
           headline3: GoogleFonts.raleway(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
           headline4: GoogleFonts.raleway(color: Colors.black, fontSize: 20.0),
@@ -123,7 +122,7 @@ class App extends StatelessWidget {
                   if (snapshot.data?.uid == null) {
                     return const LoginPage();
                   } else {
-                    return const HomePage();
+                    return const MainPage();
                   }
                 } else {
                   return const Scaffold(

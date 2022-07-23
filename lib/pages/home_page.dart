@@ -1,11 +1,14 @@
-import 'package:animations/animations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
-import 'package:social_network/pages/posts/posts_page.dart';
-import 'package:social_network/pages/settings_page.dart';
-import 'package:social_network/styling/styles.dart';
-import 'package:social_network/widgets/main_app_bar.dart';
-import 'package:social_network/widgets/main_floating_action_button.dart';
+import 'package:social_network/database/post_database.dart';
+import 'package:social_network/models/hashtag.dart';
+import 'package:social_network/models/loop.dart';
+import 'package:social_network/models/post.dart';
+import 'package:social_network/widgets/home/hashtag_listview_tile.dart';
+import 'package:social_network/widgets/home/loop_listview_tile.dart';
+import 'package:social_network/widgets/no_data_tile.dart';
+import 'package:social_network/widgets/posts/post_listview_tile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,71 +18,131 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static int bottomNavigationBarCurrentIndex = 0;
-  late PageController pageController;
-
-  List<Widget> pages = const [PostsPage(), SettingsPage()];
-
-  @override
-  void initState() {
-    super.initState();
-    pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    pageController.dispose();
-    super.dispose();
-  }
-
-  void openAddPage() {
-    Navigator.pushNamed(context, '/addpost');
-  }
+  List<Post> posts = [];
+  List<Hashtag> hashtags = [
+    // Sample data
+    Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
+    Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
+    Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
+    Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
+    Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
+  ];
+  List<Loop> loops = [
+    // Sample data
+    Loop(
+        id: "id",
+        userId: Auth().getUserId(),
+        name: "name",
+        description: "description",
+        contentURL: "",
+        created: DateTime.now()),
+    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
+    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
+    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
+    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(
-        title: "Home",
-        actionButtons: [
-          IconButton(
-            onPressed: () {
-              Auth().logout();
-            },
-            splashRadius: Styles.buttonSplashRadius,
-            icon: Icon(
-              Icons.logout,
-              color: Theme.of(context).iconTheme.color,
-            ),
-          )
-        ],
-      ),
-      body: PageTransitionSwitcher(
-          transitionBuilder: (child, primaryAnimation, secondaryAnimation) => FadeThroughTransition(
-                animation: primaryAnimation,
-                secondaryAnimation: secondaryAnimation,
-                fillColor: const Color.fromARGB(50, 55, 55, 55),
-                child: child,
+      body: StreamBuilder<QuerySnapshot>(
+          stream: PostDatabase().getPostStream(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            // Error and loading checking
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text("Something went wrong"),
+              );
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            posts.clear();
+
+            posts.addAll(snapshot.data!.docs.map((DocumentSnapshot documentSnapshot) {
+              var post = Post.fromDocumentSnapshot(documentSnapshot);
+              return post;
+            }));
+
+            if (posts.isEmpty) {
+              return const NoDataTile(text: "No Posts Yet");
+            }
+
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      "Trending",
+                      style: Theme.of(context).textTheme.headline1,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 250.0,
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.only(left: 10.0),
+                      itemCount: hashtags.length,
+                      itemBuilder: ((context, index) {
+                        var hashtag = hashtags[index];
+                        return HashtagListViewTile(hashtag: hashtag);
+                      }),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      "Loops",
+                      style: Theme.of(context).textTheme.headline1,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 80.0,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: loops.length,
+                      itemBuilder: ((context, index) {
+                        var loop = loops[index];
+                        return LoopListViewTile(loop: loop);
+                      }),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      "Posts",
+                      style: Theme.of(context).textTheme.headline1,
+                    ),
+                  ),
+                  ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: posts.length,
+                    itemBuilder: (context, index) {
+                      var post = posts[index];
+                      return PostListViewTile(post: post);
+                    },
+                  ),
+                ],
               ),
-          child: pages[bottomNavigationBarCurrentIndex]),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: bottomNavigationBarCurrentIndex,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings")
-        ],
-        onTap: (index) {
-          setState(() {
-            bottomNavigationBarCurrentIndex = index;
-          });
-        },
-      ),
-      floatingActionButton: MainFloatingActionButton(
-        icon: Icons.add,
-        onPressed: openAddPage,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            );
+          }),
     );
   }
 }
