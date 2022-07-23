@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/firebase_options.dart';
-import 'package:social_network/pages/add_post_page.dart';
+import 'package:social_network/pages/posts/add_post_page.dart';
 import 'package:social_network/pages/create_account_page.dart';
 import 'package:social_network/pages/home_page.dart';
 import 'package:social_network/pages/login_page.dart';

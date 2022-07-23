@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/models/post.dart';
+import 'package:social_network/storage/storage.dart';
 
 class PostDatabase {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -35,6 +36,13 @@ class PostDatabase {
   // Delete Post
   Future<void> deletePost(Post post) async {
     try {
+      // Delete post image or video
+      if (post.contentURL != "" && !post.video) {
+        await Storage().deletePostImage(post.contentURL);
+      } else if (post.contentURL != "" && post.video) {
+        await Storage().deletePostVideo(post.contentURL);
+      }
+
       await firestore.collection(postsCollectionName).doc(post.id).delete();
     } catch (error) {
       log("Delete Post Exception: $error");

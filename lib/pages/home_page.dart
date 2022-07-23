@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
-import 'package:social_network/pages/posts_page.dart';
+import 'package:social_network/pages/posts/posts_page.dart';
 import 'package:social_network/pages/settings_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_app_bar.dart';
