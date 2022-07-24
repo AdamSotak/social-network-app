@@ -1,11 +1,11 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network/pages/create_page.dart';
+import 'package:social_network/pages/create/create_page.dart';
 import 'package:social_network/pages/home_page.dart';
-import 'package:social_network/pages/playlists_page.dart';
+import 'package:social_network/pages/playlists/playlists_page.dart';
 import 'package:social_network/pages/posts/add_post_page.dart';
-import 'package:social_network/pages/profile_page.dart';
+import 'package:social_network/pages/profile_pages/profile_page.dart';
 import 'package:social_network/widgets/main_bottom_navigation_bar.dart';
 
 class MainPage extends StatefulWidget {

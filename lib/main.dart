@@ -5,8 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/firebase_options.dart';
-import 'package:social_network/pages/posts/add_post_page.dart';
-import 'package:social_network/pages/create_account_page.dart';
 import 'package:social_network/pages/main_page.dart';
 import 'package:social_network/pages/login_page.dart';
 import 'package:social_network/styling/styles.dart';
@@ -27,7 +25,8 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.light,
-        appBarTheme: AppBarTheme(titleTextStyle: GoogleFonts.raleway(color: Colors.black, fontSize: 25.0)),
+        appBarTheme: AppBarTheme(
+            titleTextStyle: GoogleFonts.raleway(color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.bold)),
         scaffoldBackgroundColor: Colors.white,
         bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.white),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -114,28 +113,22 @@ class App extends StatelessWidget {
           headline4: GoogleFonts.raleway(color: Colors.white, fontSize: 20.0),
         ),
       ),
-      routes: {
-        '/': (context) => StreamBuilder(
-              stream: Auth().user,
-              builder: ((context, AsyncSnapshot<User?> snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
-                  if (snapshot.data?.uid == null) {
-                    return const LoginPage();
-                  } else {
-                    return const MainPage();
-                  }
-                } else {
-                  return const Scaffold(
-                    body: Center(child: CircularProgressIndicator()),
-                  );
-                }
-              }),
-            ),
-        '/login': (context) => const LoginPage(),
-        '/createAccount': (context) => const CreateAccountPage(),
-        '/addpost': (context) => const AddPostPage()
-      },
-      initialRoute: '/',
+      home: StreamBuilder(
+        stream: Auth().user,
+        builder: ((context, AsyncSnapshot<User?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.data?.uid == null) {
+              return const LoginPage();
+            } else {
+              return const MainPage();
+            }
+          } else {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+        }),
+      ),
     );
   }
 }

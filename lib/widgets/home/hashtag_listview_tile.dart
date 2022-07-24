@@ -46,7 +46,7 @@ class _HashtagListViewTileState extends State<HashtagListViewTile> {
                         hashtag.name,
                         style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white, fontSize: 25.0),
                       ),
-                      (hashtag.postCount > 1)
+                      (hashtag.postCount != 1)
                           ? Text(
                               "${Styles.getFormattedNumberString(hashtag.postCount)} Posts",
                               style:

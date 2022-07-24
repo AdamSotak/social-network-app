@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MainAppBar extends StatefulWidget with PreferredSizeWidget {
@@ -30,7 +31,7 @@ class _MainAppBarState extends State<MainAppBar> {
       elevation: 0.0,
       leading: Navigator.of(context).canPop() && ModalRoute.of(context)?.settings.name != "/"
           ? IconButton(
-              icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
+              icon: Icon(CupertinoIcons.arrow_left, color: Theme.of(context).iconTheme.color),
               onPressed: () {
                 Navigator.of(context).pop();
               },
