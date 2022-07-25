@@ -51,8 +51,10 @@ class Styles {
   ];
 
   // BoxShadows
-  static final BoxShadow boxShadow =
-      BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 10, spreadRadius: 7, offset: const Offset(0.0, 3.0));
+  static const List<BoxShadow> boxShadow = [
+    BoxShadow(blurRadius: 30.0, offset: Offset(-28.0, -28.0), color: Colors.white),
+    BoxShadow(blurRadius: 30.0, offset: Offset(28.0, 28.0), color: Color.fromARGB(249, 122, 169, 175))
+  ];
 
   // Functions
   static bool checkIfStringEmpty(String string) {

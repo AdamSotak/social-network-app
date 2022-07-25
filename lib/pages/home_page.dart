@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/database/post_database.dart';
@@ -7,6 +8,7 @@ import 'package:social_network/models/loop.dart';
 import 'package:social_network/models/post.dart';
 import 'package:social_network/widgets/home/hashtag_listview_tile.dart';
 import 'package:social_network/widgets/home/loop_listview_tile.dart';
+import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/no_data_tile.dart';
 import 'package:social_network/widgets/posts/post_listview_tile.dart';
 
@@ -40,6 +42,8 @@ class _HomePageState extends State<HomePage> {
     Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
     Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
     Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
+    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
+    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
   ];
 
   @override
@@ -55,14 +59,21 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Text(
-                "Trending",
-                style: Theme.of(context).textTheme.headline1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Trending",
+                    style: Theme.of(context).textTheme.headline1,
+                  ),
+                  MainIconButton(icon: const Icon(CupertinoIcons.search), onPressed: () {})
+                ],
               ),
             ),
             SizedBox(
               height: 250.0,
               child: ListView.builder(
+                clipBehavior: Clip.none,
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.only(left: 10.0),
@@ -83,6 +94,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 80.0,
               child: ListView.builder(
+                clipBehavior: Clip.none,
                 padding: const EdgeInsets.only(left: 10.0),
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
@@ -134,9 +146,11 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ListView.builder(
+                        clipBehavior: Clip.none,
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: posts.length,
+                        padding: EdgeInsets.zero,
                         itemBuilder: (context, index) {
                           var post = posts[index];
                           return PostListViewTile(post: post);

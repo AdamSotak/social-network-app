@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_network/styling/styles.dart';
+import 'package:social_network/widgets/main_widgets/main_container.dart';
 
 class MainButton extends StatefulWidget {
   const MainButton(
@@ -34,23 +34,19 @@ class _MainButtonState extends State<MainButton> {
     var padding = widget.padding;
     var onPressed = widget.onPressed;
 
-    return Container(
-      width: (width != 0.0) ? width : null,
-      height: (height != 0.0) ? height : null,
-      margin: margin,
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(Styles.mainButtonBorderRadius), color: Styles.accentColor),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(Styles.mainButtonBorderRadius),
-          onTap: () {
-            onPressed();
-          },
-          splashColor: Styles.splashColor,
-          child: Padding(
-            padding: padding,
-            child: Text(text, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18.0)),
+    return GestureDetector(
+      onTap: () {
+        onPressed();
+      },
+      child: MainContainer(
+        width: (width != 0.0) ? width : null,
+        height: (height != 0.0) ? height : null,
+        margin: margin,
+        child: Padding(
+          padding: padding,
+          child: Text(
+            text,
+            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18.0),
           ),
         ),
       ),

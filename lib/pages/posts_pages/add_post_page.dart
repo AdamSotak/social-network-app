@@ -7,9 +7,9 @@ import 'package:social_network/database/post_database.dart';
 import 'package:social_network/models/post.dart';
 import 'package:social_network/storage/storage.dart';
 import 'package:social_network/styling/styles.dart';
-import 'package:social_network/widgets/main_app_bar.dart';
-import 'package:social_network/widgets/main_button.dart';
-import 'package:social_network/widgets/main_text_field.dart';
+import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
+import 'package:social_network/widgets/main_widgets/main_button.dart';
+import 'package:social_network/widgets/main_widgets/main_text_field.dart';
 import 'package:video_player/video_player.dart';
 
 class AddPostPage extends StatefulWidget {

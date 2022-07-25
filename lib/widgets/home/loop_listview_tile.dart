@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/models/loop.dart';
+import 'package:social_network/widgets/main_widgets/main_container.dart';
 
 class LoopListViewTile extends StatefulWidget {
   const LoopListViewTile({Key? key, required this.loop}) : super(key: key);
@@ -14,29 +15,41 @@ class LoopListViewTile extends StatefulWidget {
 }
 
 class _LoopListViewTileState extends State<LoopListViewTile> {
+  bool blurEffect = false;
+
   @override
   Widget build(BuildContext context) {
     var loop = widget.loop;
 
-    return Container(
+    void openLoop() {}
+
+    void onEffect() {
+      setState(() {
+        blurEffect = !blurEffect;
+      });
+    }
+
+    void onEffectEnd() {
+      setState(() {
+        blurEffect = !blurEffect;
+      });
+    }
+
+    return MainContainer(
       width: 80.0,
       height: 80.0,
       margin: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            Color.fromARGB(255, 242, 112, 155),
-            Color.fromARGB(255, 255, 148, 114),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(50.0),
-      ),
+      pressable: true,
+      onPressed: openLoop,
+      onEffect: onEffect,
+      onEffectEnd: onEffectEnd,
       child: Center(
         child: Container(
           width: 70.0,
           height: 70.0,
           decoration: const BoxDecoration(
-              image: DecorationImage(image: AssetImage("development_assets/images/profile_image.jpg"), fit: BoxFit.cover),
+              image:
+                  DecorationImage(image: AssetImage("development_assets/images/profile_image.jpg"), fit: BoxFit.cover),
               shape: BoxShape.circle),
           child: GestureDetector(
             onTap: () {},
@@ -65,15 +78,22 @@ class _LoopListViewTileState extends State<LoopListViewTile> {
                         Container(
                           decoration: const BoxDecoration(shape: BoxShape.circle),
                         ),
-                        (loop.userId == Auth().getUserId())
-                            ? const Center(
-                                child: Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 50.0,
-                                ),
-                              )
-                            : Container()
+                        TweenAnimationBuilder<double>(
+                          tween: Tween<double>(begin: 0.0, end: (blurEffect) ? 5.0 : 0.0),
+                          duration: const Duration(milliseconds: 100),
+                          builder: (context, value, child) {
+                            return BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: value, sigmaY: value),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: const BoxDecoration(shape: BoxShape.circle),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        )
                       ],
                     ),
             ),

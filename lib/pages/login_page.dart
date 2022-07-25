@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/styling/styles.dart';
-import 'package:social_network/widgets/main_button.dart';
-import 'package:social_network/widgets/main_text_field.dart';
+import 'package:social_network/widgets/main_widgets/main_button.dart';
+import 'package:social_network/widgets/main_widgets/main_text_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

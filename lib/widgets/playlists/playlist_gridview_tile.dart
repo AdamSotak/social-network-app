@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/models/playlist.dart';
-import 'package:social_network/pages/playlists/playlist_page.dart';
+import 'package:social_network/pages/playlists_pages/playlist_page.dart';
 import 'package:social_network/styling/styles.dart';
+import 'package:social_network/widgets/main_widgets/main_container.dart';
+import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 
 class PlaylistGridViewTile extends StatefulWidget {
   const PlaylistGridViewTile({Key? key, required this.playlist}) : super(key: key);
@@ -17,6 +19,7 @@ class _PlaylistGridViewTileState extends State<PlaylistGridViewTile> {
   @override
   Widget build(BuildContext context) {
     var playlist = widget.playlist;
+    LinearGradient gradient = Styles.getRandomLinearGradient();
 
     void openPlaylistPage() {
       Navigator.push(
@@ -24,19 +27,18 @@ class _PlaylistGridViewTileState extends State<PlaylistGridViewTile> {
         CupertinoPageRoute(
           builder: (builder) => PlaylistPage(
             playlist: playlist,
+            gradient: gradient,
           ),
         ),
       );
     }
 
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Styles.mainBorderRadius),
-      ),
+    return MainContainer(
+      margin: const EdgeInsets.all(5.0),
       child: Container(
         height: 100.0,
         decoration: BoxDecoration(
-          gradient: Styles.getRandomLinearGradient(),
+          gradient: gradient,
           borderRadius: BorderRadius.circular(Styles.mainBorderRadius),
         ),
         margin: const EdgeInsets.all(5.0),
@@ -72,26 +74,17 @@ class _PlaylistGridViewTileState extends State<PlaylistGridViewTile> {
               ),
               Align(
                 alignment: Alignment.bottomRight,
-                child: Container(
+                child: MainIconButton(
                   width: 55.0,
                   height: 55.0,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white, width: 3.0),
-                    borderRadius: BorderRadius.circular(Styles.mainButtonBorderRadius),
+                  margin: EdgeInsets.zero,
+                  gradient: gradient,
+                  icon: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                    size: 30.0,
                   ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(Styles.mainButtonBorderRadius),
-                      onTap: openPlaylistPage,
-                      splashColor: Styles.splashColor,
-                      child: const Icon(
-                        Icons.play_arrow_rounded,
-                        color: Colors.white,
-                        size: 30.0,
-                      ),
-                    ),
-                  ),
+                  onPressed: openPlaylistPage,
                 ),
               ),
             ],

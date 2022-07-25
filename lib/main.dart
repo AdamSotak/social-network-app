@@ -21,13 +21,14 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.light,
+        // brightness: Brightness.light,
         appBarTheme: AppBarTheme(
             titleTextStyle: GoogleFonts.raleway(color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.bold)),
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: Colors.grey[300],
         bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.white),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
             backgroundColor: Colors.grey.withOpacity(0.3),
@@ -113,21 +114,28 @@ class App extends StatelessWidget {
           headline4: GoogleFonts.raleway(color: Colors.white, fontSize: 20.0),
         ),
       ),
-      home: StreamBuilder(
-        stream: Auth().user,
-        builder: ((context, AsyncSnapshot<User?> snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            if (snapshot.data?.uid == null) {
-              return const LoginPage();
+      home: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: Colors.black,
+            statusBarIconBrightness: Brightness.dark,
+            systemNavigationBarIconBrightness: Brightness.dark),
+        child: StreamBuilder(
+          stream: Auth().user,
+          builder: ((context, AsyncSnapshot<User?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.data?.uid == null) {
+                return const LoginPage();
+              } else {
+                return const MainPage();
+              }
             } else {
-              return const MainPage();
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
             }
-          } else {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-        }),
+          }),
+        ),
       ),
     );
   }

@@ -1,12 +1,12 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network/pages/create/create_page.dart';
+import 'package:social_network/pages/add_page.dart';
+import 'package:social_network/pages/create_pages/create_page.dart';
 import 'package:social_network/pages/home_page.dart';
-import 'package:social_network/pages/playlists/playlists_page.dart';
-import 'package:social_network/pages/posts/add_post_page.dart';
+import 'package:social_network/pages/playlists_pages/playlists_page.dart';
 import 'package:social_network/pages/profile_pages/profile_page.dart';
-import 'package:social_network/widgets/main_bottom_navigation_bar.dart';
+import 'package:social_network/widgets/main_widgets/main_bottom_navigation_bar.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> {
   List<Widget> pages = const [
     HomePage(),
     PlaylistsPage(),
-    AddPostPage(),
+    AddPage(),
     CreatePage(),
     ProfilePage(),
   ];
@@ -55,19 +55,39 @@ class _MainPageState extends State<MainPage> {
               ),
           child: pages[bottomNavigationBarCurrentIndex]),
       bottomNavigationBar: MainBottomNavigationBar(
-        widgets: const [
-          MainBottomNavigationBarItem(icon: Icon(CupertinoIcons.home), title: Text("Home")),
-          MainBottomNavigationBarItem(icon: Icon(CupertinoIcons.music_albums), title: Text("Playlists")),
-          Padding(
-            padding: EdgeInsets.only(top: 10.0),
-            child: MainBottomNavigationBarItem(
-                icon: Icon(
+        widgets: [
+          MainBottomNavigationBarItem(
+            icon: const Icon(CupertinoIcons.home),
+            title: const Text("Home"),
+            selected: (bottomNavigationBarCurrentIndex == 0),
+            index: 0,
+          ),
+          MainBottomNavigationBarItem(
+            icon: const Icon(CupertinoIcons.music_albums),
+            title: const Text("Playlists"),
+            selected: (bottomNavigationBarCurrentIndex == 1),
+            index: 1,
+          ),
+          MainBottomNavigationBarItem(
+            icon: const Icon(
               CupertinoIcons.add_circled,
               size: 40.0,
-            )),
+            ),
+            selected: (bottomNavigationBarCurrentIndex == 2),
+            index: 2,
           ),
-          MainBottomNavigationBarItem(icon: Icon(CupertinoIcons.music_note), title: Text("Create")),
-          MainBottomNavigationBarItem(icon: Icon(CupertinoIcons.person), title: Text("Profile")),
+          MainBottomNavigationBarItem(
+            icon: const Icon(CupertinoIcons.music_note),
+            title: const Text("Create"),
+            selected: (bottomNavigationBarCurrentIndex == 3),
+            index: 3,
+          ),
+          MainBottomNavigationBarItem(
+            icon: const Icon(CupertinoIcons.person),
+            title: const Text("Profile"),
+            selected: (bottomNavigationBarCurrentIndex == 4),
+            index: 4,
+          ),
         ],
         selectedIndex: bottomNavigationBarCurrentIndex,
         onWidgetSelected: (index) {
