@@ -45,104 +45,109 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-          stream: PostDatabase().getPostStream(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            // Error and loading checking
-            if (snapshot.hasError) {
-              return const Center(
-                child: Text("Something went wrong"),
-              );
-            }
-
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            posts.clear();
-
-            posts.addAll(snapshot.data!.docs.map((DocumentSnapshot documentSnapshot) {
-              var post = Post.fromDocumentSnapshot(documentSnapshot);
-              return post;
-            }));
-
-            if (posts.isEmpty) {
-              return const NoDataTile(text: "No Posts Yet");
-            }
-
-            return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      "Trending",
-                      style: Theme.of(context).textTheme.headline1,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 250.0,
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.only(left: 10.0),
-                      itemCount: hashtags.length,
-                      itemBuilder: ((context, index) {
-                        var hashtag = hashtags[index];
-                        return HashtagListViewTile(hashtag: hashtag);
-                      }),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      "Loops",
-                      style: Theme.of(context).textTheme.headline1,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 80.0,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: loops.length,
-                      itemBuilder: ((context, index) {
-                        var loop = loops[index];
-                        return LoopListViewTile(loop: loop);
-                      }),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      "Posts",
-                      style: Theme.of(context).textTheme.headline1,
-                    ),
-                  ),
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: posts.length,
-                    itemBuilder: (context, index) {
-                      var post = posts[index];
-                      return PostListViewTile(post: post);
-                    },
-                  ),
-                ],
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 20.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                "Trending",
+                style: Theme.of(context).textTheme.headline1,
               ),
-            );
-          }),
+            ),
+            SizedBox(
+              height: 250.0,
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.only(left: 10.0),
+                itemCount: hashtags.length,
+                itemBuilder: ((context, index) {
+                  var hashtag = hashtags[index];
+                  return HashtagListViewTile(hashtag: hashtag);
+                }),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                "Loops",
+                style: Theme.of(context).textTheme.headline1,
+              ),
+            ),
+            SizedBox(
+              height: 80.0,
+              child: ListView.builder(
+                padding: const EdgeInsets.only(left: 10.0),
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: loops.length,
+                itemBuilder: ((context, index) {
+                  var loop = loops[index];
+                  return LoopListViewTile(loop: loop);
+                }),
+              ),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                "Posts",
+                style: Theme.of(context).textTheme.headline1,
+              ),
+            ),
+            StreamBuilder<QuerySnapshot>(
+                stream: PostDatabase().getPostStream(),
+                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  // Error and loading checking
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Text("Something went wrong"),
+                    );
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  posts.clear();
+
+                  posts.addAll(snapshot.data!.docs.map((DocumentSnapshot documentSnapshot) {
+                    var post = Post.fromDocumentSnapshot(documentSnapshot);
+                    return post;
+                  }));
+
+                  if (posts.isEmpty) {
+                    return const NoDataTile(text: "No Posts Yet");
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          var post = posts[index];
+                          return PostListViewTile(post: post);
+                        },
+                      ),
+                    ],
+                  );
+                }),
+          ],
+        ),
+      ),
     );
   }
 }

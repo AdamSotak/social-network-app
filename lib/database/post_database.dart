@@ -38,9 +38,9 @@ class PostDatabase {
     try {
       // Delete post image or video
       if (post.contentURL != "" && !post.video) {
-        await Storage().deletePostImage(post.contentURL);
+        Storage().deletePostImage(post.contentURL);
       } else if (post.contentURL != "" && post.video) {
-        await Storage().deletePostVideo(post.contentURL);
+        Storage().deletePostVideo(post.contentURL);
       }
 
       await firestore.collection(postsCollectionName).doc(post.id).delete();

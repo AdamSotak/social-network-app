@@ -72,9 +72,6 @@ class _MainPageState extends State<MainPage> {
         selectedIndex: bottomNavigationBarCurrentIndex,
         onWidgetSelected: (index) {
           setState(() {
-            if (index == 2) {
-              return;
-            }
             bottomNavigationBarCurrentIndex = index;
           });
         },

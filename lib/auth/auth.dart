@@ -17,6 +17,11 @@ class Auth {
     return auth.currentUser!.uid;
   }
 
+  // Get user IDToken
+  Future<String> getUserIDToken() {
+    return auth.currentUser!.getIdToken(true);
+  }
+
   // Login user
   Future<bool> login({required String email, required String password}) async {
     try {

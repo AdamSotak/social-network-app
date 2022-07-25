@@ -99,7 +99,7 @@ class _AddPostPageState extends State<AddPostPage> {
       }
 
       await PostDatabase().addPost(post).then((value) {
-        Navigator.pop(context);
+        // Navigator.pop(context);
       });
     }
 

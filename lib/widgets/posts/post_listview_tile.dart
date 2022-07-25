@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:social_network/database/post_database.dart';
 import 'package:social_network/database/user_data_database.dart';
@@ -8,7 +6,6 @@ import 'package:social_network/models/post.dart';
 import 'package:social_network/models/user_data.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:video_player/video_player.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 class PostListViewTile extends StatefulWidget {
   const PostListViewTile({Key? key, required this.post}) : super(key: key);
@@ -28,7 +25,7 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
   @override
   void initState() {
     super.initState();
-    _videoPlayerController = VideoPlayerController.network("")
+    _videoPlayerController = VideoPlayerController.network(widget.post.contentURL)
       ..initialize().then((_) {
         _videoPlayerController.setLooping(true);
         _videoPlayerController.play();
@@ -47,17 +44,14 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
     super.build(context);
     var post = widget.post;
 
-    List<String> postImages = ["midi_1.jpg", "midi_2.jpg", "midi_3.jpg", "music_studio_1.jpg", "music_studio_2.jpg"];
-    final random = Random();
-
     // Delete Post from database
     void deletePost() {
       DialogManager().displayConfirmationDialog(
         context: context,
         title: "Delete Post?",
         description: "Confirm post deletion",
-        onConfirmation: () async {
-          await PostDatabase().deletePost(post);
+        onConfirmation: () {
+          PostDatabase().deletePost(post);
         },
         onCancellation: () {},
       );
@@ -124,126 +118,113 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
 
             UserData userData = snapshot.data!;
 
-            return VisibilityDetector(
-              key: UniqueKey(),
-              onVisibilityChanged: (value) {
-                var visiblePercentage = value.visibleFraction * 100;
-                if (!_videoPlayerController.value.isInitialized) return;
-
-                if (visiblePercentage < 30.0) {
-                  _videoPlayerController.pause();
-                } else {
-                  _videoPlayerController.play();
-                }
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-                    child: Row(
-                      children: [
-                        const CircleAvatar(
-                          backgroundImage: AssetImage("development_assets/images/profile_image.jpg"),
-                          radius: 25.0,
-                        ),
-                        const SizedBox(
-                          width: 10.0,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              userData.displayName,
-                              style: Theme.of(context).textTheme.headline3,
-                            ),
-                            Text("@${userData.username}"),
-                            Text(Styles.getFormattedDateString(post.created)),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  (post.contentURL != "" && !post.video)
-                      ? Image.asset("development_assets/images/${postImages[random.nextInt(postImages.length)]}")
-                      : Container(),
-                  // (post.contentURL != "" && post.video && _videoPlayerController.value.isInitialized)
-                  //     ? ClipRRect(
-                  //         borderRadius: BorderRadius.circular(10.0),
-                  //         child: AspectRatio(
-                  //           aspectRatio: _videoPlayerController.value.aspectRatio,
-                  //           child: VideoPlayer(_videoPlayerController),
-                  //         ),
-                  //       )
-                  //     : Container(),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                    child: Column(
-                      children: [
-                        (post.contentURL != "")
-                            ? Text(
-                                post.description,
-                                style: Theme.of(context).textTheme.headline2,
-                              )
-                            : Text(
-                                post.description,
-                                style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0),
-                              )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+                  child: Row(
                     children: [
-                      Row(
+                      const CircleAvatar(
+                        backgroundImage: AssetImage("development_assets/images/profile_image.jpg"),
+                        radius: 25.0,
+                      ),
+                      const SizedBox(
+                        width: 10.0,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                            ),
-                            splashRadius: Styles.buttonSplashRadius,
+                          Text(
+                            userData.displayName,
+                            style: Theme.of(context).textTheme.headline3,
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.comment,
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                            splashRadius: Styles.buttonSplashRadius,
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.bookmark,
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                            splashRadius: Styles.buttonSplashRadius,
-                          ),
+                          Text("@${userData.username}"),
+                          Text(Styles.getFormattedDateString(post.created)),
                         ],
-                      ),
-                      IconButton(
-                        onPressed: displayPostOptions,
-                        icon: Icon(
-                          Icons.settings,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                        splashRadius: Styles.buttonSplashRadius,
-                      ),
+                      )
                     ],
-                  )
-                ],
-              ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                (post.contentURL != "" && !post.video)
+                    ? ClipRRect(borderRadius: BorderRadius.circular(10.0), child: Image.network(post.contentURL))
+                    : Container(),
+                (post.contentURL != "" && post.video && _videoPlayerController.value.isInitialized)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: AspectRatio(
+                          aspectRatio: _videoPlayerController.value.aspectRatio,
+                          child: VideoPlayer(_videoPlayerController),
+                        ),
+                      )
+                    : Container(),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                  child: Column(
+                    children: [
+                      (post.contentURL != "")
+                          ? Text(
+                              post.description,
+                              style: Theme.of(context).textTheme.headline2,
+                            )
+                          : Text(
+                              post.description,
+                              style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0),
+                            )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                          ),
+                          splashRadius: Styles.buttonSplashRadius,
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.comment,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                          splashRadius: Styles.buttonSplashRadius,
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.bookmark,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                          splashRadius: Styles.buttonSplashRadius,
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      onPressed: displayPostOptions,
+                      icon: Icon(
+                        Icons.settings,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                      splashRadius: Styles.buttonSplashRadius,
+                    ),
+                  ],
+                )
+              ],
             );
           },
         ),

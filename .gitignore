@@ -55,3 +55,8 @@ app.*.map.json
 
 # Development Environment
 /development_assets/
+
+# Backend
+/backend/azure-storage/node_modules
+/backend/azure-storage/credentials
+/backend/azure-storage/.deployment

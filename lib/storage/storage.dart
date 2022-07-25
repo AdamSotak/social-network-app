@@ -1,24 +1,26 @@
+import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:social_network/auth/auth.dart';
+import 'package:social_network/styling/variables.dart';
 
 class Storage {
-  final storage = FirebaseStorage.instance;
-
-  final storageRef = FirebaseStorage.instance.ref();
-
   // Upload Post image
   Future<String> uploadPostImage(String imagePath, String postId) async {
     try {
-      String imageName = postId;
-      File file = File(imagePath);
+      var request = http.MultipartRequest("POST", Uri.parse('${Variables.azureStorageURL}/uploadImage'));
+      request.fields['userToken'] = await Auth().getUserIDToken();
+      request.files.add(
+        await http.MultipartFile.fromPath('file', imagePath, contentType: MediaType("image", "jpeg")),
+      );
 
-      final storageImageRef = storageRef.child(imageName);
-
-      await storageImageRef.putFile(file);
-
-      return await storageImageRef.getDownloadURL();
+      var response = await request.send();
+      var responseData = jsonDecode(await response.stream.bytesToString());
+      if (responseData["tokenValid"] == false) {
+        Auth().logout();
+      }
+      return responseData["url"];
     } catch (error) {
       log(error.toString());
       return "";
@@ -28,8 +30,22 @@ class Storage {
   // Delete Post image
   Future<bool> deletePostImage(String url) async {
     try {
-      final imageRef = storage.refFromURL(url);
-      await imageRef.delete();
+      var response = await http.delete(
+        Uri.parse('${Variables.azureStorageURL}/deleteImage'),
+        body: jsonEncode(
+          <String, String>{
+            'url': url,
+            'userToken': await Auth().getUserIDToken(),
+          },
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      var responseData = jsonDecode(response.body);
+      if (responseData["tokenValid"] == false) {
+        Auth().logout();
+      }
       return true;
     } catch (error) {
       log(error.toString());
@@ -40,25 +56,43 @@ class Storage {
   // Upload Post video
   Future<String> uploadPostVideo(String videoPath, String postId) async {
     try {
-      String videoName = postId;
-      File file = File(videoPath);
+      var request = http.MultipartRequest("POST", Uri.parse('${Variables.azureStorageURL}/uploadVideo'));
+      request.fields['userToken'] = await Auth().getUserIDToken();
+      request.files.add(
+        await http.MultipartFile.fromPath('file', videoPath, contentType: MediaType("video", "mp4")),
+      );
 
-      final storageVideoRef = storageRef.child(videoName);
-
-      await storageVideoRef.putFile(file);
-
-      return await storageVideoRef.getDownloadURL();
+      var response = await request.send();
+      var responseData = jsonDecode(await response.stream.bytesToString());
+      if (responseData["tokenValid"] == false) {
+        Auth().logout();
+      }
+      return responseData["url"];
     } catch (error) {
       log(error.toString());
       return "";
     }
   }
 
-  // Delete Post image
+  // Delete Post video
   Future<bool> deletePostVideo(String url) async {
     try {
-      final videoRef = storage.refFromURL(url);
-      await videoRef.delete();
+      var response = await http.delete(
+        Uri.parse('${Variables.azureStorageURL}/deleteVideo'),
+        body: jsonEncode(
+          <String, String>{
+            'url': url,
+            'userToken': await Auth().getUserIDToken(),
+          },
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      var responseData = jsonDecode(response.body);
+      if (responseData["tokenValid"] == false) {
+        Auth().logout();
+      }
       return true;
     } catch (error) {
       log(error.toString());

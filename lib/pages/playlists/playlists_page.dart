@@ -29,20 +29,18 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MainAppBar(title: "Playlists"),
-      body: Padding(
+      body: GridView.builder(
         padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-        child: GridView.builder(
-          physics: const BouncingScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisExtent: 200,
-          ),
-          itemCount: playlists.length,
-          itemBuilder: ((context, index) {
-            var playlist = playlists[index];
-            return PlaylistGridViewTile(playlist: playlist);
-          }),
+        physics: const BouncingScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisExtent: 200,
         ),
+        itemCount: playlists.length,
+        itemBuilder: ((context, index) {
+          var playlist = playlists[index];
+          return PlaylistGridViewTile(playlist: playlist);
+        }),
       ),
     );
   }
