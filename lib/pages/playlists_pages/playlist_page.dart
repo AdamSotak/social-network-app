@@ -20,9 +20,14 @@ class _PlaylistPageState extends State<PlaylistPage> {
   Widget build(BuildContext context) {
     var playlist = widget.playlist;
     var gradient = widget.gradient;
+
+    void deletePlaylist() {
+
+    }
+
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 0.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
         child: Column(
           children: [
             Row(
@@ -35,8 +40,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
                 ),
                 const Spacer(),
                 MainIconButton(
-                  icon: const Icon(CupertinoIcons.bars),
-                  onPressed: () {},
+                  icon: const Icon(CupertinoIcons.delete),
+                  onPressed: deletePlaylist,
                 )
               ],
             ),
@@ -50,16 +55,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
             ))
           ],
         ),
-      ),
-      floatingActionButton: MainIconButton(
-        width: 60.0,
-        height: 60.0,
-        icon: const Icon(
-          CupertinoIcons.play_arrow_solid,
-          color: Colors.white,
-        ),
-        onPressed: () {},
-        gradient: gradient,
       ),
     );
   }

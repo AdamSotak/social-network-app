@@ -56,7 +56,7 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 0.0),
               child: Text(
                 "Playlists",
                 style: Theme.of(context).textTheme.headline1,

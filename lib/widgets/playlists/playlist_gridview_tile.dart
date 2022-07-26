@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network/models/enums/music_player_type.dart';
 import 'package:social_network/models/playlist.dart';
-import 'package:social_network/pages/playlists_pages/playlist_page.dart';
+import 'package:social_network/pages/music_pages/music_player_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
@@ -21,13 +22,13 @@ class _PlaylistGridViewTileState extends State<PlaylistGridViewTile> {
     var playlist = widget.playlist;
     LinearGradient gradient = Styles.getRandomLinearGradient();
 
-    void openPlaylistPage() {
+    void openMusicPlayerPage() {
       Navigator.push(
         context,
         CupertinoPageRoute(
-          builder: (builder) => PlaylistPage(
+          builder: (builder) => MusicPlayerPage(
             playlist: playlist,
-            gradient: gradient,
+            musicPlayerType: MusicPlayerType.playlist,
           ),
         ),
       );
@@ -84,7 +85,7 @@ class _PlaylistGridViewTileState extends State<PlaylistGridViewTile> {
                     color: Colors.white,
                     size: 30.0,
                   ),
-                  onPressed: openPlaylistPage,
+                  onPressed: openMusicPlayerPage,
                 ),
               ),
             ],

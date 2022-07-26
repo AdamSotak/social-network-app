@@ -11,6 +11,7 @@ class MainContainer extends StatefulWidget {
     this.margin = const EdgeInsets.all(5.0),
     this.padding = const EdgeInsets.all(0.0),
     this.gradient,
+    this.toggleButton = false,
     this.onEffect,
     this.onEffectEnd,
     this.onPressed,
@@ -23,6 +24,7 @@ class MainContainer extends StatefulWidget {
   final EdgeInsets margin;
   final EdgeInsets padding;
   final LinearGradient? gradient;
+  final bool toggleButton;
   final Function? onPressed;
   final Function? onEffect;
   final Function? onEffectEnd;
@@ -34,6 +36,7 @@ class MainContainer extends StatefulWidget {
 
 class _MainContainerState extends State<MainContainer> {
   bool pressed = false;
+  bool toggled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +46,7 @@ class _MainContainerState extends State<MainContainer> {
     var margin = widget.margin;
     var padding = widget.padding;
     var gradient = widget.gradient;
+    var toggleButton = widget.toggleButton;
     var onPressed = widget.onPressed;
     var onEffect = widget.onEffect;
     var onEffectEnd = widget.onEffectEnd;
@@ -59,6 +63,11 @@ class _MainContainerState extends State<MainContainer> {
     return Listener(
       onPointerUp: (event) => setState(() {
         if (!pressable) return;
+
+        if (toggleButton) {
+          toggled = !toggled;
+        }
+
         pressed = false;
         if (onEffectEnd != null) {
           onEffectEnd();
@@ -69,6 +78,7 @@ class _MainContainerState extends State<MainContainer> {
       }),
       onPointerDown: (event) => setState(() {
         if (!pressable) return;
+
         pressed = true;
         if (onEffect != null) {
           onEffect();
@@ -83,21 +93,21 @@ class _MainContainerState extends State<MainContainer> {
         decoration: box_shadow.BoxDecoration(
           borderRadius: BorderRadius.circular(Styles.mainBorderRadius),
           color: Colors.grey[200],
-          gradient: (pressed) ? pressedLinearGradient : gradient,
+          gradient: (pressed || toggled) ? pressedLinearGradient : gradient,
           boxShadow: [
             box_shadow.BoxShadow(
               color: Colors.white,
               offset: const Offset(-5.0, -5.0),
               blurRadius: 15.0,
               spreadRadius: 1.0,
-              inset: pressed,
+              inset: pressed || toggled,
             ),
             box_shadow.BoxShadow(
                 color: Colors.grey.shade600,
                 offset: const Offset(5.0, 5.0),
                 blurRadius: 15.0,
                 spreadRadius: 1.0,
-                inset: pressed),
+                inset: pressed || toggled),
           ],
         ),
         child: child,

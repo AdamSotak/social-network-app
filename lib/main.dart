@@ -25,7 +25,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // brightness: Brightness.light,
+        brightness: Brightness.light,
         appBarTheme: AppBarTheme(
             titleTextStyle: GoogleFonts.raleway(color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.bold)),
         scaffoldBackgroundColor: Colors.grey[300],
@@ -63,11 +63,11 @@ class App extends StatelessWidget {
         textButtonTheme: TextButtonThemeData(
             style: ButtonStyle(overlayColor: MaterialStateProperty.all(const Color.fromARGB(255, 200, 200, 200)))),
         textTheme: TextTheme(
-          headline1: GoogleFonts.raleway(color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.bold),
-          headline2: GoogleFonts.raleway(color: Colors.black, fontSize: 15.0),
-          headline3: GoogleFonts.raleway(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
-          headline4: GoogleFonts.raleway(color: Colors.black, fontSize: 20.0),
-        ),
+            headline1: GoogleFonts.raleway(color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.bold),
+            headline2: GoogleFonts.raleway(color: Colors.black, fontSize: 15.0),
+            headline3: GoogleFonts.raleway(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
+            headline4: GoogleFonts.raleway(color: Colors.black, fontSize: 20.0),
+            caption: GoogleFonts.comfortaa(color: Colors.black, fontSize: 20.0)),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,

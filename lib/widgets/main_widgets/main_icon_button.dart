@@ -7,6 +7,7 @@ class MainIconButton extends StatelessWidget {
     required this.icon,
     this.width = 50.0,
     this.height = 50.0,
+    this.toggleButton = false,
     this.margin = const EdgeInsets.all(5.0),
     required this.onPressed,
     this.gradient = const LinearGradient(colors: []),
@@ -15,25 +16,28 @@ class MainIconButton extends StatelessWidget {
   final Icon icon;
   final double width;
   final double height;
+  final bool toggleButton;
   final EdgeInsets margin;
   final Function onPressed;
   final LinearGradient gradient;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+    return Listener(
+      onPointerDown: (event) {},
+      onPointerUp: (event) {
         onPressed();
       },
       child: MainContainer(
         width: width,
         height: width,
         pressable: true,
+        toggleButton: toggleButton,
         gradient: (gradient != const LinearGradient(colors: [])) ? gradient : null,
         margin: margin,
         child: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: icon,
+          child: Center(child: icon),
         ),
       ),
     );

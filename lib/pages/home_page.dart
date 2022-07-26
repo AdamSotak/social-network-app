@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
               height: 80.0,
               child: ListView.builder(
                 clipBehavior: Clip.none,
-                padding: const EdgeInsets.only(left: 10.0),
+                padding: const EdgeInsets.only(left: 15.0),
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemCount: loops.length,
