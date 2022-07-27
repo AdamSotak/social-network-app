@@ -20,9 +20,9 @@ class PostsDatabase {
   Future<void> addPost(Post post) async {
     try {
       if (post.contentURL != "" && !post.video) {
-        post.contentURL = await ImageStorage().uploadPostImage(post.contentURL);
+        post.contentURL = await ImageStorage().uploadImage(post.contentURL);
       } else if (post.contentURL != "" && post.video) {
-        post.contentURL = await VideoStorage().uploadPostVideo(post.contentURL);
+        post.contentURL = await VideoStorage().uploadVideo(post.contentURL);
       }
 
       await firestore.collection(postsCollectionName).doc(post.id).set(post.toJson());
@@ -45,9 +45,9 @@ class PostsDatabase {
     try {
       // Delete post image or video
       if (post.contentURL != "" && !post.video) {
-        ImageStorage().deletePostImage(post.contentURL);
+        ImageStorage().deleteImage(post.contentURL);
       } else if (post.contentURL != "" && post.video) {
-        VideoStorage().deletePostVideo(post.contentURL);
+        VideoStorage().deleteVideo(post.contentURL);
       }
 
       await firestore.collection(postsCollectionName).doc(post.id).delete();

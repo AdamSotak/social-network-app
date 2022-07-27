@@ -7,8 +7,8 @@ import 'package:social_network/auth/auth.dart';
 import 'package:social_network/styling/variables.dart';
 
 class ImageStorage {
-  // Upload Post image
-  Future<String> uploadPostImage(String imagePath) async {
+  // Upload image
+  Future<String> uploadImage(String imagePath) async {
     try {
       var request = http.MultipartRequest("POST", Uri.parse('${Variables.azureStorageURL}/images/upload'));
       request.fields['userToken'] = await Auth().getUserIDToken();
@@ -28,8 +28,8 @@ class ImageStorage {
     }
   }
 
-  // Delete Post image
-  Future<bool> deletePostImage(String url) async {
+  // Delete image
+  Future<bool> deleteImage(String url) async {
     try {
       var response = await http.delete(
         Uri.parse('${Variables.azureStorageURL}/images/delete'),

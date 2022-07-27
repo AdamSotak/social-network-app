@@ -231,9 +231,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                         style: Theme.of(context).textTheme.caption,
                       ),
                       MainIconButton(
-                          icon: const Icon(CupertinoIcons.shuffle),
-                          toggleButton: true,
-                          onPressed: shufflePlaylistChanged),
+                          icon: const Icon(CupertinoIcons.shuffle), toggle: true, onPressed: shufflePlaylistChanged),
                       MainIconButton(icon: musicPlayerRepeatIcon, onPressed: repeatChanged),
                       Text(
                         "3:00",

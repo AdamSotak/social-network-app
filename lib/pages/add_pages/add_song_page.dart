@@ -13,7 +13,7 @@ import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
-import 'package:social_network/widgets/song_listview_tile.dart';
+import 'package:social_network/widgets/music_widgets/song_listview_tile.dart';
 
 class AddSongPage extends StatefulWidget {
   const AddSongPage({Key? key}) : super(key: key);
@@ -25,6 +25,7 @@ class AddSongPage extends StatefulWidget {
 class _AddSongPageState extends State<AddSongPage> {
   final TextEditingController songNameTextEditingController = TextEditingController();
   String songButtonText = "Add Song";
+  String songContentURL = "";
   Song song = Song(
     id: "preview",
     userId: Auth().getUserId(),
@@ -38,9 +39,14 @@ class _AddSongPageState extends State<AddSongPage> {
   @override
   Widget build(BuildContext context) {
     void addSong() async {
+      if (Styles.checkIfStringEmpty(songNameTextEditingController.text)) {
+        DialogManager().displaySnackBar(context: context, text: "Please enter song name");
+      }
+
       DialogManager().displayLoadingDialog(context: context);
 
-      song.id = Styles.getUUID();
+      song.id = Auth.getUUID();
+      song.contentURL = songContentURL;
       song.created = DateTime.now();
 
       await SongsDatabase().addSong(song).then((value) {
@@ -63,10 +69,11 @@ class _AddSongPageState extends State<AddSongPage> {
         File file = File(result.files.single.path!);
         setState(() {
           song.contentURL = file.path;
+          songContentURL = file.path;
           songButtonText = "Change Song";
         });
       } on PlatformException catch (_) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please enable storage permission")));
+        DialogManager().displaySnackBar(context: context, text: "Please enable storage permission");
       } catch (error) {
         log(error.toString());
       }

@@ -6,7 +6,6 @@ import 'package:social_network/database/posts_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/enums/post_type.dart';
 import 'package:social_network/models/post.dart';
-import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
@@ -41,7 +40,7 @@ class _AddPostPageState extends State<AddPostPage> {
     void addPost() async {
       DialogManager().displayLoadingDialog(context: context);
 
-      post.id = Styles.getUUID();
+      post.id = Auth.getUUID();
       post.description = postDescriptionTextEditingController.text;
       post.created = DateTime.now();
 

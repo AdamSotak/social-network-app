@@ -28,11 +28,26 @@ class _AddPageState extends State<AddPage> {
               style: Theme.of(context).textTheme.headline1,
             ),
           ),
-          const AddWidget(text: "Loop", index: 0),
-          const AddWidget(text: "Song", index: 1),
-          const AddWidget(text: "Text", index: 2),
-          const AddWidget(text: "Picture", index: 3),
-          const AddWidget(text: "Video", index: 4),
+          const AddWidget(
+            text: "Loop",
+            nextPage: AddLoopPage(),
+          ),
+          const AddWidget(
+            text: "Song",
+            nextPage: AddSongPage(),
+          ),
+          const AddWidget(
+            text: "Text",
+            nextPage: AddPostPage(postType: PostType.text),
+          ),
+          const AddWidget(
+            text: "Picture",
+            nextPage: AddPostPage(postType: PostType.image),
+          ),
+          const AddWidget(
+            text: "Video",
+            nextPage: AddPostPage(postType: PostType.video),
+          ),
         ],
       ),
     );
@@ -43,11 +58,13 @@ class AddWidget extends StatefulWidget {
   const AddWidget({
     Key? key,
     required this.text,
-    required this.index,
+    this.subtext = "",
+    required this.nextPage,
   }) : super(key: key);
 
   final String text;
-  final int index;
+  final String subtext;
+  final Widget nextPage;
 
   @override
   State<AddWidget> createState() => _AddWidgetState();
@@ -59,37 +76,18 @@ class _AddWidgetState extends State<AddWidget> {
   @override
   Widget build(BuildContext context) {
     var text = widget.text;
-    var index = widget.index;
+    var subtext = widget.subtext;
+    var nextPage = widget.nextPage;
 
-    void openPage(Widget page) {
-      Navigator.push(context, CupertinoPageRoute(builder: (builder) => page));
-    }
-
-    void choosePage() {
-      switch (index) {
-        case 0:
-          openPage(const AddLoopPage());
-          break;
-        case 1:
-          openPage(const AddSongPage());
-          break;
-        case 2:
-          openPage(const AddPostPage(postType: PostType.text));
-          break;
-        case 3:
-          openPage(const AddPostPage(postType: PostType.image));
-          break;
-        case 4:
-          openPage(const AddPostPage(postType: PostType.video));
-          break;
-      }
+    void openPage() {
+      Navigator.push(context, CupertinoPageRoute(builder: (builder) => nextPage));
     }
 
     return Flexible(
       child: Listener(
         onPointerUp: (event) => setState(() {
           pressed = false;
-          choosePage();
+          openPage();
         }),
         onPointerDown: (event) => setState(() {
           pressed = true;
@@ -100,7 +98,7 @@ class _AddWidgetState extends State<AddWidget> {
             duration: const Duration(milliseconds: 200),
             margin: const EdgeInsets.all(5.0),
             decoration: BoxDecoration(
-              gradient: (pressed) ? null : Styles.linearGradients[index],
+              gradient: (pressed) ? null : Styles.getRandomLinearGradient(),
               borderRadius: BorderRadius.circular(Styles.mainBorderRadius),
             ),
             child: Padding(
@@ -109,12 +107,19 @@ class _AddWidgetState extends State<AddWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         text,
                         style: Theme.of(context).textTheme.headline1!.copyWith(color: Colors.white),
                       ),
+                      (subtext != "")
+                          ? Text(
+                              subtext,
+                              style: Theme.of(context).textTheme.headline2!.copyWith(color: Colors.white),
+                            )
+                          : Container(),
                     ],
                   ),
                   const Align(

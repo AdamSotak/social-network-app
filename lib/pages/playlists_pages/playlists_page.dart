@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network/models/playlist.dart';
 import 'package:social_network/models/song.dart';
-import 'package:social_network/widgets/playlists/playlist_gridview_tile.dart';
+import 'package:social_network/widgets/music_widgets/playlists/playlist_gridview_tile.dart';
 
 class PlaylistsPage extends StatefulWidget {
   const PlaylistsPage({Key? key}) : super(key: key);

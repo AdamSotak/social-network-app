@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:social_network/styling/styles.dart';
 
 class NoDataTile extends StatelessWidget {
-  const NoDataTile({Key? key, required this.text}) : super(key: key);
+  const NoDataTile({Key? key, required this.text, this.subtext = ""}) : super(key: key);
 
   final String text;
+  final String subtext;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,13 @@ class NoDataTile extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline1,
                 textAlign: TextAlign.center,
               ),
+              (subtext != "")
+                  ? Text(
+                      subtext,
+                      style: Theme.of(context).textTheme.headline2,
+                      textAlign: TextAlign.center,
+                    )
+                  : Container(),
               const SizedBox(
                 height: 100.0,
               )

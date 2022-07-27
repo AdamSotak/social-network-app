@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social_network/database/user_data_database.dart';
 import 'package:social_network/models/user_data.dart';
+import 'package:uuid/uuid.dart';
 
 class Auth {
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -68,5 +69,10 @@ class Auth {
     } on FirebaseAuthException catch (_) {
       return false;
     }
+  }
+
+  // Returns UUID
+  static String getUUID() {
+    return const Uuid().v4();
   }
 }

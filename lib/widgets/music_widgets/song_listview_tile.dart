@@ -9,7 +9,7 @@ import 'package:social_network/models/user_data.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
-import 'package:social_network/widgets/song_seekbar.dart';
+import 'package:social_network/widgets/music_widgets/song_seekbar.dart';
 
 class SongListViewTile extends StatefulWidget {
   const SongListViewTile({Key? key, required this.song}) : super(key: key);

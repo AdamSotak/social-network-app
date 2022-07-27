@@ -2,13 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
+import 'package:social_network/database/albums_database.dart';
 import 'package:social_network/database/posts_database.dart';
+import 'package:social_network/models/album.dart';
 import 'package:social_network/models/hashtag.dart';
 import 'package:social_network/models/loop.dart';
 import 'package:social_network/models/post.dart';
 import 'package:social_network/widgets/home/hashtag_listview_tile.dart';
 import 'package:social_network/widgets/home/loop_listview_tile.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
+import 'package:social_network/widgets/music_widgets/album_listview_tile.dart';
 import 'package:social_network/widgets/no_data_tile.dart';
 import 'package:social_network/widgets/posts/post_listview_tile.dart';
 
@@ -21,6 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Post> posts = [];
+  List<Album> albums = [];
   List<Hashtag> hashtags = [
     // Sample data
     Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
@@ -154,6 +158,51 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (context, index) {
                         var post = posts[index];
                         return PostListViewTile(post: post);
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: AlbumsDatabase().getAlbumStream(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                // Error and loading checking
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text("Something went wrong"),
+                  );
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                albums.clear();
+
+                albums.addAll(snapshot.data!.docs.map((DocumentSnapshot documentSnapshot) {
+                  var album = Album.fromDocumentSnapshot(documentSnapshot);
+                  return album;
+                }));
+
+                if (albums.isEmpty) {
+                  return const NoDataTile(text: "No Posts Yet");
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListView.builder(
+                      clipBehavior: Clip.none,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: albums.length,
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (context, index) {
+                        var album = albums[index];
+                        return AlbumListViewTile(album: album);
                       },
                     ),
                   ],

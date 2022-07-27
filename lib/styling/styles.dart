@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
 
 class Styles {
   // Values
@@ -60,11 +59,6 @@ class Styles {
   // Functions
   static bool checkIfStringEmpty(String string) {
     return string.isEmpty || RegExp(r"/^\s+$/").hasMatch(string);
-  }
-
-  // Returns UUID
-  static String getUUID() {
-    return const Uuid().v4();
   }
 
   // Returns a formatted date string

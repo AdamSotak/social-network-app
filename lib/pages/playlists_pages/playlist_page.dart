@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:social_network/models/playlist.dart';
 import 'package:social_network/widgets/main_widgets/main_back_button.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
-import 'package:social_network/widgets/playlists/playlist_song_listview_tile.dart';
+import 'package:social_network/widgets/music_widgets/playlists/playlist_song_listview_tile.dart';
 
 class PlaylistPage extends StatefulWidget {
   const PlaylistPage({Key? key, required this.playlist, required this.gradient}) : super(key: key);
@@ -21,9 +21,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
     var playlist = widget.playlist;
     var gradient = widget.gradient;
 
-    void deletePlaylist() {
-
-    }
+    void deletePlaylist() {}
 
     return Scaffold(
       body: Padding(

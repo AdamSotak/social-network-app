@@ -14,7 +14,7 @@ import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
-import 'package:social_network/widgets/song_seekbar.dart';
+import 'package:social_network/widgets/music_widgets/song_seekbar.dart';
 
 class AddLoopPage extends StatefulWidget {
   const AddLoopPage({Key? key}) : super(key: key);
@@ -47,7 +47,7 @@ class _AddLoopPageState extends State<AddLoopPage> {
     void addLoop() async {
       DialogManager().displayLoadingDialog(context: context);
 
-      loop.id = Styles.getUUID();
+      loop.id = Auth.getUUID();
       loop.created = DateTime.now();
 
       await LoopsDatabase().addLoop(loop).then((value) {
@@ -93,7 +93,7 @@ class _AddLoopPageState extends State<AddLoopPage> {
           loopAudioButtonText = "Change Audio";
         });
       } on PlatformException catch (_) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please enable storage permission")));
+        DialogManager().displaySnackBar(context: context, text: "Please enable storage permission");
       } catch (error) {
         log(error.toString());
       }
