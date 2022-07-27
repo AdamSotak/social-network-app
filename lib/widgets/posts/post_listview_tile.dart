@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/database/post_database.dart';
@@ -11,9 +14,10 @@ import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:video_player/video_player.dart';
 
 class PostListViewTile extends StatefulWidget {
-  const PostListViewTile({Key? key, required this.post}) : super(key: key);
+  const PostListViewTile({Key? key, required this.post, this.onContentURLCleared}) : super(key: key);
 
   final Post post;
+  final Function? onContentURLCleared;
 
   @override
   State<PostListViewTile> createState() => _PostListViewTileState();
@@ -21,6 +25,12 @@ class PostListViewTile extends StatefulWidget {
 
 class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepAliveClientMixin {
   late VideoPlayerController _videoPlayerController;
+  late bool preview = widget.post.id == "preview";
+  UserData userData = UserData(id: "", username: "", displayName: "", profilePhotoURL: "");
+
+  Future<void> getUserData() async {
+    userData = await UserDataDatabase().getUserData(widget.post.userId);
+  }
 
   @override
   bool get wantKeepAlive => true;
@@ -28,12 +38,17 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
   @override
   void initState() {
     super.initState();
+    getUserData().whenComplete(() {
+      setState(() {});
+    });
     _videoPlayerController = VideoPlayerController.network(widget.post.contentURL)
-      ..initialize().then((_) {
-        _videoPlayerController.setLooping(true);
-        _videoPlayerController.play();
-        setState(() {});
-      });
+      ..initialize().then(
+        (value) {
+          setState(() {
+            _videoPlayerController.setLooping(true);
+          });
+        },
+      );
   }
 
   @override
@@ -46,6 +61,20 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
   Widget build(BuildContext context) {
     super.build(context);
     var post = widget.post;
+    var onContentURLCleared = widget.onContentURLCleared;
+
+    void setupVideoPlayer() async {
+      if (preview && post.contentURL != "" && post.video) {
+        _videoPlayerController.dispose();
+        _videoPlayerController = VideoPlayerController.file(File(widget.post.contentURL));
+        await _videoPlayerController.initialize();
+        _videoPlayerController.setLooping(true);
+        _videoPlayerController.play();
+        log(_videoPlayerController.value.size.height.toString());
+      }
+    }
+
+    setupVideoPlayer();
 
     // Delete Post from database
     void deletePost() {
@@ -58,6 +87,20 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
         },
         onCancellation: () {},
       );
+    }
+
+    void deletePostContentURL() {
+      setState(() {
+        post.contentURL = "";
+      });
+
+      if (post.video) {
+        _videoPlayerController.dispose();
+      }
+
+      if (onContentURLCleared != null) {
+        onContentURLCleared();
+      }
     }
 
     // Display Post options modalBottomSheet
@@ -97,134 +140,131 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
       ]);
     }
 
-    return MainContainer(
-      margin: const EdgeInsets.only(bottom: 20.0),
-      padding: const EdgeInsets.only(bottom: 5.0),
-      child: FutureBuilder<UserData>(
-        future: UserDataDatabase().getUserData(post.userId),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text("Something went wrong"),
-            );
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          UserData userData = snapshot.data!;
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+    Widget buildPostListViewTile(UserData userData) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const CircleAvatar(
+                  backgroundImage: AssetImage("development_assets/images/profile_image.jpg"),
+                  radius: 30.0,
+                  backgroundColor: Styles.defaultImageBackgroundColor,
+                ),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CircleAvatar(
-                      backgroundImage: AssetImage("development_assets/images/profile_image.jpg"),
-                      radius: 30.0,
+                    Text(
+                      userData.displayName,
+                      style: Theme.of(context).textTheme.headline3,
                     ),
-                    const SizedBox(
-                      width: 10.0,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Text("@${userData.username}"),
+                    Text(Styles.getFormattedDateString(post.created)),
+                  ],
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+          (post.contentURL != "" && !post.video)
+              ? (preview)
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text(
-                          userData.displayName,
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                        Text("@${userData.username}"),
-                        Text(Styles.getFormattedDateString(post.created)),
+                        ClipRRect(borderRadius: BorderRadius.circular(10.0), child: Image.file(File(post.contentURL))),
+                        MainIconButton(icon: const Icon(CupertinoIcons.delete), onPressed: deletePostContentURL)
                       ],
                     )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              (post.contentURL != "" && !post.video)
-                  ? ClipRRect(borderRadius: BorderRadius.circular(10.0), child: Image.network(post.contentURL))
-                  : Container(),
-              (post.contentURL != "" && post.video && _videoPlayerController.value.isInitialized)
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: AspectRatio(
-                        aspectRatio: _videoPlayerController.value.aspectRatio,
-                        child: VideoPlayer(_videoPlayerController),
-                      ),
-                    )
-                  : Container(),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                child: Column(
+                  : ClipRRect(borderRadius: BorderRadius.circular(10.0), child: Image.network(post.contentURL))
+              : Container(),
+          (post.contentURL != "" && post.video)
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    (post.contentURL != "")
-                        ? Text(
-                            post.description,
-                            style: Theme.of(context).textTheme.headline2,
-                          )
-                        : Text(
-                            post.description,
-                            style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0),
-                          )
+                    AspectRatio(
+                      aspectRatio: _videoPlayerController.value.aspectRatio,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0), child: VideoPlayer(_videoPlayerController)),
+                    ),
+                    MainIconButton(icon: const Icon(CupertinoIcons.delete), onPressed: deletePostContentURL)
                   ],
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
+                )
+              : Container(),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+            child: Column(
+              children: [
+                (post.contentURL != "")
+                    ? Text(
+                        post.description,
+                        style: Theme.of(context).textTheme.headline2,
+                      )
+                    : Text(
+                        post.description,
+                        style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0),
+                      ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      MainIconButton(
-                        icon: const Icon(
-                          CupertinoIcons.heart,
-                          color: Colors.red,
-                        ),
-                        onPressed: () {},
-                      ),
-                      MainIconButton(
-                        icon: Icon(
-                          CupertinoIcons.bubble_left,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                        onPressed: () {},
-                      ),
-                      MainIconButton(
-                        icon: Icon(
-                          CupertinoIcons.bookmark,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                        onPressed: () {},
-                      ),
-                    ],
+                  MainIconButton(
+                    icon: const Icon(
+                      CupertinoIcons.heart,
+                      color: Colors.red,
+                    ),
+                    onPressed: () {},
                   ),
                   MainIconButton(
                     icon: Icon(
-                      CupertinoIcons.settings,
+                      CupertinoIcons.bubble_left,
                       color: Theme.of(context).iconTheme.color,
                     ),
-                    onPressed: displayPostOptions,
+                    onPressed: () {},
+                  ),
+                  MainIconButton(
+                    icon: Icon(
+                      CupertinoIcons.bookmark,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    onPressed: () {},
                   ),
                 ],
               ),
+              MainIconButton(
+                icon: Icon(
+                  CupertinoIcons.settings,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                onPressed: (preview) ? () {} : displayPostOptions,
+              ),
             ],
-          );
-        },
-      ),
-    );
+          ),
+        ],
+      );
+    }
+
+    return MainContainer(
+        margin: const EdgeInsets.only(bottom: 20.0),
+        padding: const EdgeInsets.only(bottom: 5.0),
+        child: buildPostListViewTile(userData));
   }
 }

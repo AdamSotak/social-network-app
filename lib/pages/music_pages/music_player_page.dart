@@ -7,7 +7,7 @@ import 'package:social_network/models/playlist.dart';
 import 'package:social_network/models/song.dart';
 import 'package:social_network/pages/playlists_pages/playlist_page.dart';
 import 'package:social_network/styling/styles.dart';
-import 'package:social_network/widgets/main_widgets/main_back_button.dart';
+import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 
@@ -102,9 +102,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       });
     }
 
-    void deletePlaylist() {
-
-    }
+    void deletePlaylist() {}
 
     void displayPlaylistOptions() {
       DialogManager().displayModalBottomSheet(context: context, title: "Playlist Options", options: [
@@ -144,175 +142,162 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
     }
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                const MainBackButton(),
-                const Spacer(),
-                Text(
-                  playlist!.name,
-                  style: Theme.of(context).textTheme.headline1,
-                ),
-                const Spacer(),
-                MainIconButton(
-                  icon: const Icon(CupertinoIcons.bars),
-                  onPressed: displayPlaylistOptions
-                )
-              ],
-            ),
-            Expanded(
-              child: ListView(
-                physics: const ClampingScrollPhysics(),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
+          child: Column(
+            children: [
+              MainAppBar(
+                title: playlist!.name,
+                icon: const Icon(CupertinoIcons.bars),
+                onIconPressed: displayPlaylistOptions,
+              ),
+              Column(
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      MainContainer(
-                        height: (musicPlayerType == MusicPlayerType.playlist) ? 250.0 : 350.0,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          margin: const EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(
-                            gradient: Styles.getRandomLinearGradient(),
-                            borderRadius: BorderRadius.circular(Styles.mainBorderRadius),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      playlist.name,
-                                      style: Theme.of(context).textTheme.headline1!.copyWith(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                  MainContainer(
+                    height: (musicPlayerType == MusicPlayerType.playlist)
+                        ? MediaQuery.of(context).size.height / 3.0
+                        : 350.0,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      margin: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        gradient: Styles.getRandomLinearGradient(),
+                        borderRadius: BorderRadius.circular(Styles.mainBorderRadius),
                       ),
-                      MainContainer(
-                        height: 100.0,
-                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-                        pressable: true,
-                        onPressed: openPlaylistPage,
-                        child: Row(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
                               children: [
                                 Text(
-                                  "Now Playing...",
-                                  style: Theme.of(context).textTheme.headline3,
+                                  playlist.name,
+                                  style: Theme.of(context).textTheme.headline1!.copyWith(color: Colors.white),
                                 ),
-                                const Spacer(),
-                                Text(
-                                  "Song Name",
-                                  style: Theme.of(context).textTheme.caption,
-                                  overflow: TextOverflow.fade,
-                                ),
-                                Text(
-                                  "Album Name",
-                                  style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 15.0),
-                                  overflow: TextOverflow.fade,
-                                )
                               ],
                             ),
-                            const Icon(
-                              CupertinoIcons.arrow_right,
-                              size: 30.0,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  MainContainer(
+                    height: 100.0,
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                    pressable: true,
+                    onPressed: openPlaylistPage,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Now Playing...",
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                            const Spacer(),
+                            Text(
+                              "Song Name",
+                              style: Theme.of(context).textTheme.caption,
+                              overflow: TextOverflow.fade,
+                            ),
+                            Text(
+                              "Album Name",
+                              style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 15.0),
+                              overflow: TextOverflow.fade,
                             )
                           ],
                         ),
+                        const Icon(
+                          CupertinoIcons.arrow_right,
+                          size: 30.0,
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "0:00",
+                        style: Theme.of(context).textTheme.caption,
                       ),
-                      const SizedBox(
-                        height: 20.0,
+                      MainIconButton(
+                          icon: const Icon(CupertinoIcons.shuffle),
+                          toggleButton: true,
+                          onPressed: shufflePlaylistChanged),
+                      MainIconButton(icon: musicPlayerRepeatIcon, onPressed: repeatChanged),
+                      Text(
+                        "3:00",
+                        style: Theme.of(context).textTheme.caption,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            "0:00",
-                            style: Theme.of(context).textTheme.caption,
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  MainContainer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: CupertinoSlider(
+                            value: seekbarValue,
+                            onChanged: (double value) {
+                              seekbarValueChanged(value);
+                            },
                           ),
-                          MainIconButton(
-                              icon: const Icon(CupertinoIcons.shuffle),
-                              toggleButton: true,
-                              onPressed: shufflePlaylistChanged),
-                          MainIconButton(icon: musicPlayerRepeatIcon, onPressed: repeatChanged),
-                          Text(
-                            "3:00",
-                            style: Theme.of(context).textTheme.caption,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: MainContainer(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                          pressable: true,
+                          onPressed: () {},
+                          child: const Center(
+                            child: Icon(CupertinoIcons.backward_fill),
                           ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      MainContainer(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: CupertinoSlider(
-                                value: seekbarValue,
-                                onChanged: (double value) {
-                                  seekbarValueChanged(value);
-                                },
-                              ),
-                            ),
-                          ],
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: MainContainer(
-                              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                              pressable: true,
-                              onPressed: () {},
-                              child: const Center(
-                                child: Icon(CupertinoIcons.backward_fill),
-                              ),
-                            ),
+                      MainContainer(
+                        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                        pressable: true,
+                        toggleButton: true,
+                        onPressed: playPauseChanged,
+                        child: Center(
+                          child: playPauseIcon,
+                        ),
+                      ),
+                      Flexible(
+                        child: MainContainer(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                          pressable: true,
+                          onPressed: () {},
+                          child: const Center(
+                            child: Icon(CupertinoIcons.forward_fill),
                           ),
-                          MainContainer(
-                            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                            pressable: true,
-                            toggleButton: true,
-                            onPressed: playPauseChanged,
-                            child: Center(
-                              child: playPauseIcon,
-                            ),
-                          ),
-                          Flexible(
-                            child: MainContainer(
-                              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                              pressable: true,
-                              onPressed: () {},
-                              child: const Center(
-                                child: Icon(CupertinoIcons.forward_fill),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

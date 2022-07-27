@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network/pages/add_page.dart';
+import 'package:social_network/pages/add_pages/add_page.dart';
 import 'package:social_network/pages/create_pages/create_page.dart';
 import 'package:social_network/pages/home_page.dart';
 import 'package:social_network/pages/playlists_pages/playlists_page.dart';

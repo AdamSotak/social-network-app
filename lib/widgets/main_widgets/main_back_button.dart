@@ -14,7 +14,7 @@ class MainBackButton extends StatelessWidget {
         width: 50.0,
         height: 50.0,
         pressable: true,
-        margin: EdgeInsets.all(5.0),
+        margin: EdgeInsets.all(0.0),
         child: Padding(padding: EdgeInsets.all(5.0), child: Icon(CupertinoIcons.arrow_left)),
       ),
     );

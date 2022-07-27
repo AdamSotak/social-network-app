@@ -1,17 +1,21 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network/widgets/main_widgets/main_back_button.dart';
+import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 
-class MainAppBar extends StatefulWidget with PreferredSizeWidget {
-  const MainAppBar({Key? key, required this.title, this.actionButtons = const []}) : super(key: key);
+class MainAppBar extends StatefulWidget {
+  const MainAppBar({
+    Key? key,
+    required this.title,
+    required this.icon,
+    required this.onIconPressed,
+  }) : super(key: key);
 
   final String title;
-  final List<Widget> actionButtons;
+  final Icon icon;
+  final Function onIconPressed;
 
   @override
   State<MainAppBar> createState() => _MainAppBarState();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(50.0);
 }
 
 class _MainAppBarState extends State<MainAppBar> {
@@ -19,27 +23,24 @@ class _MainAppBarState extends State<MainAppBar> {
   @override
   Widget build(BuildContext context) {
     var title = widget.title;
-    var actionButtons = widget.actionButtons;
+    var icon = widget.icon;
+    var onIconPressed = widget.onIconPressed;
 
-    return AppBar(
-      title: Text(
-        title,
-        style: Theme.of(context).appBarTheme.titleTextStyle,
-      ),
-      leadingWidth: 50.0,
-      actions: [...actionButtons],
-      elevation: 0.0,
-      leading: Navigator.of(context).canPop() && ModalRoute.of(context)?.settings.name != "/"
-          ? IconButton(
-              icon: Icon(CupertinoIcons.arrow_left, color: Theme.of(context).iconTheme.color),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              splashRadius: 20.0,
-            )
-          : null,
-      backgroundColor: Colors.transparent,
-      flexibleSpace: Container(),
+    return Row(
+      children: [
+        const MainBackButton(),
+        const Spacer(),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.headline1,
+        ),
+        const Spacer(),
+        MainIconButton(
+          icon: icon,
+          margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+          onPressed: onIconPressed,
+        )
+      ],
     );
   }
 }

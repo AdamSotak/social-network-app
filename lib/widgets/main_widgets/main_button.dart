@@ -5,14 +5,16 @@ class MainButton extends StatefulWidget {
   const MainButton(
       {Key? key,
       required this.text,
+      this.icon,
       this.width = 0.0,
       this.height = 0.0,
-      this.margin = const EdgeInsets.all(10.0),
+      this.margin = const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
       this.padding = const EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 10.0),
       required this.onPressed})
       : super(key: key);
 
   final String text;
+  final Icon? icon;
   final double width;
   final double height;
   final EdgeInsets margin;
@@ -28,6 +30,7 @@ class _MainButtonState extends State<MainButton> {
   @override
   Widget build(BuildContext context) {
     var text = widget.text;
+    var icon = widget.icon;
     var width = widget.width;
     var height = widget.height;
     var margin = widget.margin;
@@ -42,11 +45,18 @@ class _MainButtonState extends State<MainButton> {
         width: (width != 0.0) ? width : null,
         height: (height != 0.0) ? height : null,
         margin: margin,
+        pressable: true,
         child: Padding(
           padding: padding,
-          child: Text(
-            text,
-            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              (icon != null) ? icon : Container(),
+              Text(
+                text,
+                style: Theme.of(context).textTheme.headline2,
+              ),
+            ],
           ),
         ),
       ),

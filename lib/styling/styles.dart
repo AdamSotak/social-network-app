@@ -20,6 +20,7 @@ class Styles {
   // Colors
   static const Color accentColor = Color.fromARGB(255, 32, 174, 250);
   static const Color splashColor = Color.fromARGB(110, 255, 255, 255);
+  static const Color defaultImageBackgroundColor = Color.fromARGB(110, 255, 255, 255);
   static const Color listTileBackgroundColor = Color.fromARGB(110, 255, 255, 255);
 
   // Color Gradients
@@ -80,5 +81,15 @@ class Styles {
   static LinearGradient getRandomLinearGradient() {
     var random = Random();
     return linearGradients[random.nextInt(linearGradients.length)];
+  }
+
+  static String getFormattedSeconds(int seconds) {
+    final duration = Duration(seconds: seconds);
+    final minutes = duration.inMinutes;
+    final newSeconds = seconds % 60;
+
+    final minutesToString = '$minutes'.padLeft(1, '0');
+    final secondsToString = '$newSeconds'.padLeft(2, '0');
+    return '$minutesToString:$secondsToString';
   }
 }

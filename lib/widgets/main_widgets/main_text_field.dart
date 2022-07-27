@@ -1,18 +1,21 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart' as box_shadow;
+import 'package:social_network/styling/styles.dart';
 
 class MainTextField extends StatefulWidget {
-  const MainTextField(
-      {Key? key,
-      required this.controller,
-      this.decoration = const InputDecoration(),
-      this.hintText = "",
-      this.style = const TextStyle(),
-      this.obscureText = false,
-      this.maxLines = 1,
-      this.autofocus = false,
-      this.margin = const EdgeInsets.all(10.0),
-      this.width = 500.0})
-      : super(key: key);
+  const MainTextField({
+    Key? key,
+    required this.controller,
+    this.decoration = const InputDecoration(),
+    this.hintText = "",
+    this.style = const TextStyle(),
+    this.obscureText = false,
+    this.maxLines = 1,
+    this.autofocus = false,
+    this.margin = const EdgeInsets.all(0.0),
+    this.width = 500.0,
+    this.onChanged,
+  }) : super(key: key);
 
   final TextEditingController controller;
   final InputDecoration decoration;
@@ -23,6 +26,7 @@ class MainTextField extends StatefulWidget {
   final bool autofocus;
   final EdgeInsets margin;
   final double width;
+  final Function? onChanged;
 
   @override
   State<MainTextField> createState() => _MainTextFieldState();
@@ -40,22 +44,42 @@ class _MainTextFieldState extends State<MainTextField> {
     var autofocus = widget.autofocus;
     var margin = widget.margin;
     var width = widget.width;
+    var onChanged = widget.onChanged;
 
     return SizedBox(
       width: (width == 0.0) ? null : width,
       child: Container(
         margin: margin,
-        child: Material(
-          borderRadius: BorderRadius.circular(10.0),
-          elevation: 10.0,
-          child: TextField(
-            style: style,
-            controller: textFieldTextEditingController,
-            decoration: decoration.copyWith(hintText: hintText),
-            obscureText: obscureText,
-            maxLines: maxLines,
-            autofocus: autofocus,
-          ),
+        decoration: box_shadow.BoxDecoration(
+          boxShadow: [
+            const box_shadow.BoxShadow(
+              color: Colors.white,
+              offset: Offset(-5.0, -5.0),
+              blurRadius: 15.0,
+              spreadRadius: 1.0,
+              inset: true,
+            ),
+            box_shadow.BoxShadow(
+                color: Colors.grey.shade600,
+                offset: const Offset(5.0, 5.0),
+                blurRadius: 15.0,
+                spreadRadius: 1.0,
+                inset: true),
+          ],
+          borderRadius: BorderRadius.circular(Styles.mainBorderRadius),
+        ),
+        child: TextField(
+          style: style,
+          controller: textFieldTextEditingController,
+          decoration: decoration.copyWith(hintText: hintText),
+          obscureText: obscureText,
+          maxLines: maxLines,
+          autofocus: autofocus,
+          onChanged: (value) {
+            if (onChanged != null) {
+              onChanged(value);
+            }
+          },
         ),
       ),
     );
