@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:social_network/auth/auth.dart';
+import 'package:social_network/database/loops_database.dart';
+import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/loop.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
@@ -42,7 +44,17 @@ class _AddLoopPageState extends State<AddLoopPage> {
 
   @override
   Widget build(BuildContext context) {
-    void addLoop() {}
+    void addLoop() async {
+      DialogManager().displayLoadingDialog(context: context);
+
+      loop.id = Styles.getUUID();
+      loop.created = DateTime.now();
+
+      await LoopsDatabase().addLoop(loop).then((value) {
+        DialogManager().closeDialog(context: context);
+        Navigator.pop(context);
+      });
+    }
 
     void play() {
       audioPlayer.play();

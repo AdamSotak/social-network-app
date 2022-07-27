@@ -6,7 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:social_network/auth/auth.dart';
+import 'package:social_network/database/songs_database.dart';
+import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/song.dart';
+import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
@@ -34,7 +37,17 @@ class _AddSongPageState extends State<AddSongPage> {
 
   @override
   Widget build(BuildContext context) {
-    void addSong() {}
+    void addSong() async {
+      DialogManager().displayLoadingDialog(context: context);
+
+      song.id = Styles.getUUID();
+      song.created = DateTime.now();
+
+      await SongsDatabase().addSong(song).then((value) {
+        DialogManager().closeDialog(context: context);
+        Navigator.pop(context);
+      });
+    }
 
     void onSongNameChanged(String value) {
       setState(() {

@@ -1,18 +1,19 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/styling/variables.dart';
 
-class Storage {
-  // Upload Post image
-  Future<String> uploadPostImage(String imagePath, String postId) async {
+class AudioStorage {
+  // Upload Loop audio
+  Future<String> uploadLoopAudio(String audioPath) async {
     try {
-      var request = http.MultipartRequest("POST", Uri.parse('${Variables.azureStorageURL}/uploadImage'));
+      var request = http.MultipartRequest("POST", Uri.parse('${Variables.azureStorageURL}/loops/upload'));
       request.fields['userToken'] = await Auth().getUserIDToken();
       request.files.add(
-        await http.MultipartFile.fromPath('file', imagePath, contentType: MediaType("image", "jpeg")),
+        await http.MultipartFile.fromPath('file', audioPath, contentType: MediaType("audio", "mpeg")),
       );
 
       var response = await request.send();
@@ -27,11 +28,11 @@ class Storage {
     }
   }
 
-  // Delete Post image
-  Future<bool> deletePostImage(String url) async {
+  // Delete Loop audio
+  Future<bool> deleteLoopAudio(String url) async {
     try {
       var response = await http.delete(
-        Uri.parse('${Variables.azureStorageURL}/deleteImage'),
+        Uri.parse('${Variables.azureStorageURL}/loops/delete'),
         body: jsonEncode(
           <String, String>{
             'url': url,
@@ -53,13 +54,13 @@ class Storage {
     }
   }
 
-  // Upload Post video
-  Future<String> uploadPostVideo(String videoPath, String postId) async {
+  // Upload Song audio
+  Future<String> uploadSongAudio(String audioPath) async {
     try {
-      var request = http.MultipartRequest("POST", Uri.parse('${Variables.azureStorageURL}/uploadVideo'));
+      var request = http.MultipartRequest("POST", Uri.parse('${Variables.azureStorageURL}/songs/upload'));
       request.fields['userToken'] = await Auth().getUserIDToken();
       request.files.add(
-        await http.MultipartFile.fromPath('file', videoPath, contentType: MediaType("video", "mp4")),
+        await http.MultipartFile.fromPath('file', audioPath, contentType: MediaType("audio", "mpeg")),
       );
 
       var response = await request.send();
@@ -74,11 +75,11 @@ class Storage {
     }
   }
 
-  // Delete Post video
-  Future<bool> deletePostVideo(String url) async {
+  // Delete Song audio
+  Future<bool> deleteSongAudio(String url) async {
     try {
       var response = await http.delete(
-        Uri.parse('${Variables.azureStorageURL}/deleteVideo'),
+        Uri.parse('${Variables.azureStorageURL}/songs/delete'),
         body: jsonEncode(
           <String, String>{
             'url': url,

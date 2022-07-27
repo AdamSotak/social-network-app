@@ -127,7 +127,7 @@ class DialogManager {
   }
 
   // Close a dialog
-  void closeDialog(BuildContext context) {
+  void closeDialog({required BuildContext context}) {
     Navigator.of(context).pop();
   }
 }

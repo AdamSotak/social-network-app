@@ -3,9 +3,10 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/models/post.dart';
-import 'package:social_network/storage/storage.dart';
+import 'package:social_network/storage/image_storage.dart';
+import 'package:social_network/storage/video_storage.dart';
 
-class PostDatabase {
+class PostsDatabase {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   final String postsCollectionName = "posts";
@@ -18,6 +19,12 @@ class PostDatabase {
   // Add new Post
   Future<void> addPost(Post post) async {
     try {
+      if (post.contentURL != "" && !post.video) {
+        post.contentURL = await ImageStorage().uploadPostImage(post.contentURL);
+      } else if (post.contentURL != "" && post.video) {
+        post.contentURL = await VideoStorage().uploadPostVideo(post.contentURL);
+      }
+
       await firestore.collection(postsCollectionName).doc(post.id).set(post.toJson());
     } catch (error) {
       log("Add Post Exception: $error");
@@ -38,9 +45,9 @@ class PostDatabase {
     try {
       // Delete post image or video
       if (post.contentURL != "" && !post.video) {
-        Storage().deletePostImage(post.contentURL);
+        ImageStorage().deletePostImage(post.contentURL);
       } else if (post.contentURL != "" && post.video) {
-        Storage().deletePostVideo(post.contentURL);
+        VideoStorage().deletePostVideo(post.contentURL);
       }
 
       await firestore.collection(postsCollectionName).doc(post.id).delete();

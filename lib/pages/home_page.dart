@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
-import 'package:social_network/database/post_database.dart';
+import 'package:social_network/database/posts_database.dart';
 import 'package:social_network/models/hashtag.dart';
 import 'package:social_network/models/loop.dart';
 import 'package:social_network/models/post.dart';
@@ -116,49 +116,50 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             StreamBuilder<QuerySnapshot>(
-                stream: PostDatabase().getPostStream(),
-                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  // Error and loading checking
-                  if (snapshot.hasError) {
-                    return const Center(
-                      child: Text("Something went wrong"),
-                    );
-                  }
-
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  posts.clear();
-
-                  posts.addAll(snapshot.data!.docs.map((DocumentSnapshot documentSnapshot) {
-                    var post = Post.fromDocumentSnapshot(documentSnapshot);
-                    return post;
-                  }));
-
-                  if (posts.isEmpty) {
-                    return const NoDataTile(text: "No Posts Yet");
-                  }
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListView.builder(
-                        clipBehavior: Clip.none,
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: posts.length,
-                        padding: EdgeInsets.zero,
-                        itemBuilder: (context, index) {
-                          var post = posts[index];
-                          return PostListViewTile(post: post);
-                        },
-                      ),
-                    ],
+              stream: PostsDatabase().getPostStream(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                // Error and loading checking
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text("Something went wrong"),
                   );
-                }),
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                posts.clear();
+
+                posts.addAll(snapshot.data!.docs.map((DocumentSnapshot documentSnapshot) {
+                  var post = Post.fromDocumentSnapshot(documentSnapshot);
+                  return post;
+                }));
+
+                if (posts.isEmpty) {
+                  return const NoDataTile(text: "No Posts Yet");
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListView.builder(
+                      clipBehavior: Clip.none,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: posts.length,
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (context, index) {
+                        var post = posts[index];
+                        return PostListViewTile(post: post);
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),

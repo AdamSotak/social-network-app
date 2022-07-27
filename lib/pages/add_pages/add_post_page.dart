@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_network/auth/auth.dart';
+import 'package:social_network/database/posts_database.dart';
+import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/enums/post_type.dart';
 import 'package:social_network/models/post.dart';
+import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
@@ -35,7 +38,19 @@ class _AddPostPageState extends State<AddPostPage> {
   Widget build(BuildContext context) {
     var postType = widget.postType;
 
-    void addPost() {}
+    void addPost() async {
+      DialogManager().displayLoadingDialog(context: context);
+
+      post.id = Styles.getUUID();
+      post.description = postDescriptionTextEditingController.text;
+      post.created = DateTime.now();
+
+      await PostsDatabase().addPost(post).then((value) {
+      DialogManager().closeDialog(context: context);
+        Navigator.pop(context);
+      });
+
+    }
 
     void onDescriptionChanged(String value) {
       setState(() {

@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network/database/post_database.dart';
+import 'package:social_network/database/posts_database.dart';
 import 'package:social_network/database/user_data_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/post.dart';
@@ -46,6 +46,7 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
         (value) {
           setState(() {
             _videoPlayerController.setLooping(true);
+            _videoPlayerController.play();
           });
         },
       );
@@ -83,7 +84,7 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
         title: "Delete Post?",
         description: "Confirm post deletion",
         onConfirmation: () {
-          PostDatabase().deletePost(post);
+          PostsDatabase().deletePost(post);
         },
         onCancellation: () {},
       );
@@ -187,17 +188,23 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
                   : ClipRRect(borderRadius: BorderRadius.circular(10.0), child: Image.network(post.contentURL))
               : Container(),
           (post.contentURL != "" && post.video)
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    AspectRatio(
+              ? (preview)
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        AspectRatio(
+                          aspectRatio: _videoPlayerController.value.aspectRatio,
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0), child: VideoPlayer(_videoPlayerController)),
+                        ),
+                        MainIconButton(icon: const Icon(CupertinoIcons.delete), onPressed: deletePostContentURL)
+                      ],
+                    )
+                  : AspectRatio(
                       aspectRatio: _videoPlayerController.value.aspectRatio,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0), child: VideoPlayer(_videoPlayerController)),
-                    ),
-                    MainIconButton(icon: const Icon(CupertinoIcons.delete), onPressed: deletePostContentURL)
-                  ],
-                )
+                    )
               : Container(),
           const SizedBox(
             height: 10.0,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:social_network/database/songs_database.dart';
 import 'package:social_network/database/user_data_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/song.dart';
@@ -49,7 +50,17 @@ class _SongListViewTileState extends State<SongListViewTile> {
 
     void editSong() {}
 
-    void deleteSong() {}
+    void deleteSong() {
+      DialogManager().displayConfirmationDialog(
+        context: context,
+        title: "Delete Song?",
+        description: "Confirm song deletion",
+        onConfirmation: () {
+          SongsDatabase().deleteSong(song);
+        },
+        onCancellation: () {},
+      );
+    }
 
     void play() {
       audioPlayer.play();
@@ -72,6 +83,9 @@ class _SongListViewTileState extends State<SongListViewTile> {
     void setupAudioPlayer() async {
       if (widget.song.contentURL != "" && preview) {
         await audioPlayer.setFilePath(widget.song.contentURL);
+        await audioPlayer.setLoopMode(LoopMode.one);
+      } else if (widget.song.contentURL != "" && !preview) {
+        await audioPlayer.setUrl(widget.song.contentURL);
         await audioPlayer.setLoopMode(LoopMode.one);
       }
     }
