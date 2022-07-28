@@ -28,11 +28,13 @@ class _CreatePageState extends State<CreatePage> {
             text: "Song",
             subtext: "Digital Audio Workstation to create your own tracks",
             nextPage: CreateSongPage(),
+            index: 0,
           ),
           const AddWidget(
             text: "Album",
             subtext: "Create Album with songs you created",
             nextPage: CreateAlbumPage(),
+            index: 1,
           ),
         ],
       ),

@@ -5,6 +5,7 @@ class Song {
   String userId;
   String name;
   String albumId;
+  String artworkURL;
   String contentURL;
   int likes;
   DateTime created;
@@ -14,6 +15,7 @@ class Song {
     required this.userId,
     required this.name,
     required this.albumId,
+    required this.artworkURL,
     required this.contentURL,
     required this.likes,
     required this.created,
@@ -27,6 +29,7 @@ class Song {
       userId: data['userId'] as String,
       name: data['name'] as String,
       albumId: data['albumId'] as String,
+      artworkURL: data['artworkURL'] as String,
       contentURL: data['contentURL'] as String,
       likes: data['likes'] as int,
       created: DateTime.fromMillisecondsSinceEpoch(data['created'].seconds * 1000),
@@ -38,6 +41,7 @@ class Song {
         userId = json['userId'],
         name = json['name'],
         albumId = json['albumId'],
+        artworkURL = json['artworkURL'],
         contentURL = json['contentURL'],
         likes = json['likes'],
         created = DateTime.fromMillisecondsSinceEpoch(json['created'].seconds * 1000);
@@ -48,6 +52,7 @@ class Song {
       'userId': userId,
       'name': name,
       'albumId': albumId,
+      'artworkURL': artworkURL,
       'contentURL': contentURL,
       'likes': likes,
       'created': created,

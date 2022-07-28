@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/database/songs_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
@@ -25,12 +26,14 @@ class AddSongPage extends StatefulWidget {
 class _AddSongPageState extends State<AddSongPage> {
   final TextEditingController songNameTextEditingController = TextEditingController();
   String songButtonText = "Add Song";
+  String songArtworkButtonText = "Add Artwork";
   String songContentURL = "";
   Song song = Song(
     id: "preview",
     userId: Auth().getUserId(),
     name: "",
     albumId: "",
+    artworkURL: "",
     contentURL: "",
     likes: 0,
     created: DateTime.now(),
@@ -41,6 +44,12 @@ class _AddSongPageState extends State<AddSongPage> {
     void addSong() async {
       if (Styles.checkIfStringEmpty(songNameTextEditingController.text)) {
         DialogManager().displaySnackBar(context: context, text: "Please enter song name");
+        return;
+      }
+
+      if (Styles.checkIfStringEmpty(songContentURL)) {
+        DialogManager().displaySnackBar(context: context, text: "Please choose a song");
+        return;
       }
 
       DialogManager().displayLoadingDialog(context: context);
@@ -79,6 +88,23 @@ class _AddSongPageState extends State<AddSongPage> {
       }
     }
 
+    void chooseSongArtwork() async {
+      final ImagePicker imagePicker = ImagePicker();
+      final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
+
+      if (image == null) return;
+      var decodedImage = await decodeImageFromList(await image.readAsBytes());
+      if (decodedImage.width - decodedImage.height > 5 || decodedImage.width - decodedImage.height < 0) {
+        DialogManager().displaySnackBar(context: context, text: "Please use an image with equal width and height");
+        return;
+      }
+
+      setState(() {
+        songArtworkButtonText = "Change Song Artwork";
+        song.artworkURL = image.path;
+      });
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -106,7 +132,8 @@ class _AddSongPageState extends State<AddSongPage> {
                   )
                 ],
               ),
-              MainButton(text: songButtonText, onPressed: chooseSong)
+              MainButton(text: songButtonText, onPressed: chooseSong),
+              MainButton(text: songArtworkButtonText, onPressed: chooseSongArtwork),
             ],
           ),
         ),

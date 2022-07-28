@@ -12,6 +12,7 @@ import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/music_widgets/song_seekbar.dart';
+import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
 
 class AlbumListViewTile extends StatefulWidget {
   const AlbumListViewTile({Key? key, required this.album}) : super(key: key);
@@ -24,7 +25,14 @@ class AlbumListViewTile extends StatefulWidget {
 
 class _AlbumListViewTileState extends State<AlbumListViewTile> {
   late bool preview = widget.album.id == "preview";
-  UserData userData = UserData(id: "", username: "", displayName: "", profilePhotoURL: "");
+  UserData userData = UserData(
+    id: "",
+    username: "",
+    displayName: "",
+    profilePhotoURL: "",
+    followers: 0,
+    following: 0,
+  );
   bool playing = false;
   final AudioPlayer audioPlayer = AudioPlayer();
 
@@ -145,33 +153,7 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage("development_assets/images/profile_image.jpg"),
-                  radius: 30.0,
-                  backgroundColor: Styles.defaultImageBackgroundColor,
-                ),
-                const SizedBox(
-                  width: 10.0,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      userData.displayName,
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-                    Text("@${userData.username}"),
-                    Text(Styles.getFormattedDateString(album.created)),
-                  ],
-                )
-              ],
-            ),
-          ),
+          UserDataWidget(userData: userData, created: album.created),
           const SizedBox(
             height: 10.0,
           ),

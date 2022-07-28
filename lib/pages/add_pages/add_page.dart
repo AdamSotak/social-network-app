@@ -31,22 +31,27 @@ class _AddPageState extends State<AddPage> {
           const AddWidget(
             text: "Loop",
             nextPage: AddLoopPage(),
+            index: 0,
           ),
           const AddWidget(
             text: "Song",
             nextPage: AddSongPage(),
+            index: 1,
           ),
           const AddWidget(
             text: "Text",
             nextPage: AddPostPage(postType: PostType.text),
+            index: 2,
           ),
           const AddWidget(
             text: "Picture",
             nextPage: AddPostPage(postType: PostType.image),
+            index: 3,
           ),
           const AddWidget(
             text: "Video",
             nextPage: AddPostPage(postType: PostType.video),
+            index: 4,
           ),
         ],
       ),
@@ -59,11 +64,13 @@ class AddWidget extends StatefulWidget {
     Key? key,
     required this.text,
     this.subtext = "",
+    required this.index,
     required this.nextPage,
   }) : super(key: key);
 
   final String text;
   final String subtext;
+  final int index;
   final Widget nextPage;
 
   @override
@@ -77,6 +84,7 @@ class _AddWidgetState extends State<AddWidget> {
   Widget build(BuildContext context) {
     var text = widget.text;
     var subtext = widget.subtext;
+    var index = widget.index;
     var nextPage = widget.nextPage;
 
     void openPage() {
@@ -98,7 +106,7 @@ class _AddWidgetState extends State<AddWidget> {
             duration: const Duration(milliseconds: 200),
             margin: const EdgeInsets.all(5.0),
             decoration: BoxDecoration(
-              gradient: (pressed) ? null : Styles.getRandomLinearGradient(),
+              gradient: (pressed) ? null : Styles.linearGradients[index],
               borderRadius: BorderRadius.circular(Styles.mainBorderRadius),
             ),
             child: Padding(

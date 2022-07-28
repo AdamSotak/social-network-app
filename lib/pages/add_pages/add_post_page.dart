@@ -9,7 +9,7 @@ import 'package:social_network/models/post.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
-import 'package:social_network/widgets/posts/post_listview_tile.dart';
+import 'package:social_network/widgets/post_widgets/post_listview_tile.dart';
 
 class AddPostPage extends StatefulWidget {
   const AddPostPage({Key? key, required this.postType}) : super(key: key);

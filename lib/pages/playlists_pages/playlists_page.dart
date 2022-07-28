@@ -23,6 +23,7 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
               userId: "userId",
               name: "Song Name",
               albumId: "",
+              artworkURL: "",
               contentURL: "",
               likes: 10,
               created: DateTime.now()),
@@ -31,6 +32,7 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
               userId: "userId",
               name: "Song Name",
               albumId: "",
+              artworkURL: "",
               contentURL: "",
               likes: 10,
               created: DateTime.now())

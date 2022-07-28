@@ -61,6 +61,8 @@ class Auth {
         username: username,
         displayName: displayName,
         profilePhotoURL: profilePhotoURL,
+        followers: 0,
+        following: 0,
       );
 
       await UserDataDatabase().addUserData(userData);

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -10,6 +12,7 @@ import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/music_widgets/song_seekbar.dart';
+import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
 
 class SongListViewTile extends StatefulWidget {
   const SongListViewTile({Key? key, required this.song}) : super(key: key);
@@ -22,7 +25,14 @@ class SongListViewTile extends StatefulWidget {
 
 class _SongListViewTileState extends State<SongListViewTile> {
   late bool preview = widget.song.id == "preview";
-  UserData userData = UserData(id: "", username: "", displayName: "", profilePhotoURL: "");
+  UserData userData = UserData(
+    id: "",
+    username: "",
+    displayName: "",
+    profilePhotoURL: "",
+    followers: 0,
+    following: 0,
+  );
   bool playing = false;
   final AudioPlayer audioPlayer = AudioPlayer();
 
@@ -85,7 +95,9 @@ class _SongListViewTileState extends State<SongListViewTile> {
         await audioPlayer.setFilePath(widget.song.contentURL);
         await audioPlayer.setLoopMode(LoopMode.one);
       } else if (widget.song.contentURL != "" && !preview) {
-        await audioPlayer.setUrl(widget.song.contentURL);
+        try {
+          await audioPlayer.setUrl(widget.song.contentURL);
+        } catch (_) {}
         await audioPlayer.setLoopMode(LoopMode.one);
       }
     }
@@ -129,6 +141,12 @@ class _SongListViewTileState extends State<SongListViewTile> {
       ]);
     }
 
+    void deleteArtworkURL() {
+      setState(() {
+        song.artworkURL = "";
+      });
+    }
+
     return MainContainer(
       margin: const EdgeInsets.only(bottom: 20.0),
       padding: const EdgeInsets.only(bottom: 5.0),
@@ -136,33 +154,7 @@ class _SongListViewTileState extends State<SongListViewTile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage("development_assets/images/profile_image.jpg"),
-                  radius: 30.0,
-                  backgroundColor: Styles.defaultImageBackgroundColor,
-                ),
-                const SizedBox(
-                  width: 10.0,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      userData.displayName,
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-                    Text("@${userData.username}"),
-                    Text(Styles.getFormattedDateString(song.created)),
-                  ],
-                )
-              ],
-            ),
-          ),
+          UserDataWidget(userData: userData, created: song.created),
           const SizedBox(
             height: 20.0,
           ),
@@ -183,6 +175,37 @@ class _SongListViewTileState extends State<SongListViewTile> {
           const SizedBox(
             height: 10.0,
           ),
+          (song.artworkURL != "")
+              ? (preview)
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        MainContainer(
+                          margin: const EdgeInsets.all(15.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: Image.file(
+                                File(song.artworkURL),
+                              ),
+                            ),
+                          ),
+                        ),
+                        MainIconButton(icon: const Icon(CupertinoIcons.delete), onPressed: deleteArtworkURL)
+                      ],
+                    )
+                  : MainContainer(
+                      margin: const EdgeInsets.all(15.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.network(song.artworkURL),
+                        ),
+                      ),
+                    )
+              : Container(),
           Padding(
             padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
             child: Column(children: [

@@ -8,9 +8,9 @@ import 'package:social_network/database/user_data_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/post.dart';
 import 'package:social_network/models/user_data.dart';
-import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
+import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
 import 'package:video_player/video_player.dart';
 
 class PostListViewTile extends StatefulWidget {
@@ -26,7 +26,14 @@ class PostListViewTile extends StatefulWidget {
 class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepAliveClientMixin {
   late VideoPlayerController _videoPlayerController;
   late bool preview = widget.post.id == "preview";
-  UserData userData = UserData(id: "", username: "", displayName: "", profilePhotoURL: "");
+  UserData userData = UserData(
+    id: "",
+    username: "",
+    displayName: "",
+    profilePhotoURL: "",
+    followers: 0,
+    following: 0,
+  );
 
   Future<void> getUserData() async {
     userData = await UserDataDatabase().getUserData(widget.post.userId);
@@ -146,33 +153,7 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage("development_assets/images/profile_image.jpg"),
-                  radius: 30.0,
-                  backgroundColor: Styles.defaultImageBackgroundColor,
-                ),
-                const SizedBox(
-                  width: 10.0,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      userData.displayName,
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-                    Text("@${userData.username}"),
-                    Text(Styles.getFormattedDateString(post.created)),
-                  ],
-                )
-              ],
-            ),
-          ),
+          UserDataWidget(userData: userData, created: post.created),
           const SizedBox(
             height: 20.0,
           ),

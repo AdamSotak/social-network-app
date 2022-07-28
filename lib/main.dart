@@ -25,6 +25,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        splashColor: Colors.transparent,
         brightness: Brightness.light,
         appBarTheme: AppBarTheme(
             titleTextStyle: GoogleFonts.raleway(color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.bold)),
@@ -37,6 +38,7 @@ class App extends StatelessWidget {
             selectedLabelStyle: GoogleFonts.raleway(color: Colors.black),
             selectedItemColor: Styles.accentColor),
         cardTheme: const CardTheme(elevation: 10.0, color: Colors.white),
+        tabBarTheme: TabBarTheme(overlayColor: MaterialStateProperty.all(Colors.transparent)),
         radioTheme: RadioThemeData(fillColor: MaterialStateProperty.all(Colors.black)),
         iconTheme: const IconThemeData(color: Colors.black),
         progressIndicatorTheme: const ProgressIndicatorThemeData(color: Colors.black),
@@ -64,7 +66,7 @@ class App extends StatelessWidget {
             style: ButtonStyle(overlayColor: MaterialStateProperty.all(const Color.fromARGB(255, 200, 200, 200)))),
         textTheme: TextTheme(
             headline1: GoogleFonts.raleway(color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.bold),
-            headline2: GoogleFonts.raleway(color: Colors.black, fontSize: 15.0),
+            headline2: GoogleFonts.raleway(color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.w500),
             headline3: GoogleFonts.raleway(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
             headline4: GoogleFonts.raleway(color: Colors.black, fontSize: 20.0),
             caption: GoogleFonts.comfortaa(color: Colors.black, fontSize: 20.0)),

@@ -24,9 +24,6 @@ class NoDataTile extends StatelessWidget {
                 size: 200.0,
                 color: (Theme.of(context).iconTheme.color == Colors.black) ? Colors.grey : Colors.white,
               ),
-              const SizedBox(
-                height: 10.0,
-              ),
               Text(
                 text,
                 style: Theme.of(context).textTheme.headline1,
@@ -39,9 +36,6 @@ class NoDataTile extends StatelessWidget {
                       textAlign: TextAlign.center,
                     )
                   : Container(),
-              const SizedBox(
-                height: 100.0,
-              )
             ],
           ),
         ),
