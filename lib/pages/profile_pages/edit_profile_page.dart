@@ -67,7 +67,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       // Checks whether to upload or delete user profile image
       if (!Styles.checkIfStringEmpty(newPictureURL)) {
         userData.profilePhotoURL = await ImageStorage().uploadImage(newPictureURL);
-      } else if (Styles.checkIfStringEmpty(newPictureURL) && userData.profilePhotoURL == "") {
+      } else if (Styles.checkIfStringEmpty(newPictureURL) && userData.profilePhotoURL == "" && oldPictureURL != "") {
         await ImageStorage().deleteImage(oldPictureURL);
       }
 

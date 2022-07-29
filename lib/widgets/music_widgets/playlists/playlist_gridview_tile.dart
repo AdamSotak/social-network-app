@@ -79,6 +79,7 @@ class _PlaylistGridViewTileState extends State<PlaylistGridViewTile> {
                   width: 55.0,
                   height: 55.0,
                   margin: EdgeInsets.zero,
+                  overrideShadow: true,
                   gradient: gradient,
                   icon: const Icon(
                     Icons.play_arrow_rounded,

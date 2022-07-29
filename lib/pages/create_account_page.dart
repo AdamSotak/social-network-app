@@ -21,6 +21,16 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   final TextEditingController confirmPasswordTextEditingController = TextEditingController();
 
   @override
+  void dispose() {
+    emailTextEditingController.dispose();
+    usernameTextEditingController.dispose();
+    displayNameTextEditingController.dispose();
+    passwordTextEditingController.dispose();
+    confirmPasswordTextEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Create a new account
     void createAccount() async {

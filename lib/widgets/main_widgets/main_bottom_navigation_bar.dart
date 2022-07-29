@@ -85,14 +85,14 @@ class MainBottomNavigationBarItem extends StatelessWidget {
         boxShadow: (selected)
             ? [
                 box_shadow.BoxShadow(
-                  color: ThemeModeChangeNotifier().darkMode ? Colors.white.withOpacity(0.7) : Colors.white,
+                  color: ThemeModeChangeNotifier().darkMode ? Colors.white.withOpacity(0.3) : Colors.white,
                   offset: const Offset(-5.0, -5.0),
                   blurRadius: 15.0,
                   spreadRadius: 1.0,
                   inset: selected,
                 ),
                 box_shadow.BoxShadow(
-                  color: Colors.grey.shade600,
+                  color: ThemeModeChangeNotifier().darkMode ? Colors.grey.shade900 : Colors.grey.shade600,
                   offset: const Offset(5.0, 5.0),
                   blurRadius: 15.0,
                   spreadRadius: 1.0,

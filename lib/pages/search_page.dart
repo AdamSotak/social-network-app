@@ -22,6 +22,12 @@ class _SearchPageState extends State<SearchPage> {
   List<UserData> userData = [];
 
   @override
+  void dispose() {
+    searchTextEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     void search() {
       setState(() {});
@@ -98,7 +104,6 @@ class _SearchPageState extends State<SearchPage> {
 
                 return ListView.builder(
                   clipBehavior: Clip.none,
-                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
                   itemCount: userData.length,

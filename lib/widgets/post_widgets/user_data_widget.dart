@@ -35,17 +35,17 @@ class UserDataWidget extends StatelessWidget {
             children: [
               Text(
                 userData.displayName,
-                style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.black),
+                style: Theme.of(context).textTheme.headline3,
               ),
               Text(
                 "@${userData.username}",
-                style: Theme.of(context).textTheme.headline2!.copyWith(color: Colors.black),
+                style: Theme.of(context).textTheme.headline2,
               ),
               (created == null)
                   ? Container()
                   : Text(
                       Styles.getFormattedDateString(created!),
-                      style: Theme.of(context).textTheme.headline2!.copyWith(color: Colors.black),
+                      style: Theme.of(context).textTheme.headline2,
                     ),
             ],
           )

@@ -13,6 +13,7 @@ class MainContainer extends StatefulWidget {
     this.padding = const EdgeInsets.all(0.0),
     this.gradient,
     this.toggleButton = false,
+    this.overrideShadow = false,
     this.onEffect,
     this.onEffectEnd,
     this.onPressed,
@@ -26,6 +27,7 @@ class MainContainer extends StatefulWidget {
   final EdgeInsets padding;
   final LinearGradient? gradient;
   final bool toggleButton;
+  final bool overrideShadow;
   final Function? onPressed;
   final Function? onEffect;
   final Function? onEffectEnd;
@@ -48,6 +50,7 @@ class _MainContainerState extends State<MainContainer> {
     var padding = widget.padding;
     var gradient = widget.gradient;
     var toggleButton = widget.toggleButton;
+    var overrideShadow = widget.overrideShadow;
     var onPressed = widget.onPressed;
     var onEffect = widget.onEffect;
     var onEffectEnd = widget.onEffectEnd;
@@ -93,18 +96,18 @@ class _MainContainerState extends State<MainContainer> {
         duration: const Duration(milliseconds: 100),
         decoration: box_shadow.BoxDecoration(
           borderRadius: BorderRadius.circular(Styles.mainBorderRadius),
-          color: Colors.grey[200],
+          color: ThemeModeChangeNotifier().darkMode ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
           gradient: (pressed || toggled) ? pressedLinearGradient : gradient,
           boxShadow: [
             box_shadow.BoxShadow(
-              color: ThemeModeChangeNotifier().darkMode ? Colors.white.withOpacity(0.2) : Colors.white,
+              color: (ThemeModeChangeNotifier().darkMode && !overrideShadow) ? Colors.black : Colors.white,
               offset: const Offset(-5.0, -5.0),
               blurRadius: 15.0,
               spreadRadius: 1.0,
               inset: pressed || toggled,
             ),
             box_shadow.BoxShadow(
-                color: Colors.grey.shade600,
+                color: (ThemeModeChangeNotifier().darkMode && !overrideShadow) ? Colors.grey.shade900 : Colors.grey.shade600,
                 offset: const Offset(5.0, 5.0),
                 blurRadius: 15.0,
                 spreadRadius: 1.0,

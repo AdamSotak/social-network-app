@@ -40,6 +40,12 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
   );
 
   @override
+  void dispose() {
+    albumNameTextEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     void createAlbum() {
       if (Styles.checkIfStringEmpty(albumNameTextEditingController.text)) {
@@ -128,14 +134,20 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   // Error and loading checking
                   if (snapshot.hasError) {
-                    return const Center(
-                      child: Text("Something went wrong"),
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: Center(
+                        child: Text("Something went wrong"),
+                      ),
                     );
                   }
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
                     );
                   }
 
@@ -149,12 +161,12 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
                   if (songs.isEmpty) {
                     return Column(
                       children: const [
-                        SizedBox(
-                          height: 50.0,
-                        ),
-                        NoDataTile(
-                          text: "No Songs Yet",
-                          subtext: "Please add some songs first",
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 50.0),
+                          child: NoDataTile(
+                            text: "No Songs Yet",
+                            subtext: "Please add some songs first",
+                          ),
                         ),
                       ],
                     );

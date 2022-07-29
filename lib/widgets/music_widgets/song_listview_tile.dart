@@ -2,16 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:social_network/database/songs_database.dart';
 import 'package:social_network/database/user_data_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
+import 'package:social_network/models/enums/audio_player_type.dart';
 import 'package:social_network/models/song.dart';
 import 'package:social_network/models/user_data.dart';
-import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
-import 'package:social_network/widgets/music_widgets/song_seekbar.dart';
+import 'package:social_network/widgets/music_widgets/audio_player_widget.dart';
 import 'package:social_network/widgets/post_widgets/options_row.dart';
 import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
 
@@ -34,8 +33,6 @@ class _SongListViewTileState extends State<SongListViewTile> {
     followers: 0,
     following: 0,
   );
-  bool playing = false;
-  final AudioPlayer audioPlayer = AudioPlayer();
 
   Future<void> getUserData() async {
     userData = await UserDataDatabase().getUserData(widget.song.userId);
@@ -47,12 +44,6 @@ class _SongListViewTileState extends State<SongListViewTile> {
     getUserData().whenComplete(() {
       setState(() {});
     });
-  }
-
-  @override
-  void dispose() {
-    audioPlayer.dispose();
-    super.dispose();
   }
 
   @override
@@ -72,38 +63,6 @@ class _SongListViewTileState extends State<SongListViewTile> {
         onCancellation: () {},
       );
     }
-
-    void play() {
-      audioPlayer.play();
-    }
-
-    void pause() {
-      audioPlayer.pause();
-    }
-
-    void playPauseChanged() {
-      playing = !playing;
-
-      if (!playing) {
-        pause();
-      } else {
-        play();
-      }
-    }
-
-    void setupAudioPlayer() async {
-      if (widget.song.contentURL != "" && preview) {
-        await audioPlayer.setFilePath(widget.song.contentURL);
-        await audioPlayer.setLoopMode(LoopMode.one);
-      } else if (widget.song.contentURL != "" && !preview) {
-        try {
-          await audioPlayer.setUrl(widget.song.contentURL);
-        } catch (_) {}
-        await audioPlayer.setLoopMode(LoopMode.one);
-      }
-    }
-
-    setupAudioPlayer();
 
     void deleteArtworkURL() {
       setState(() {
@@ -131,7 +90,7 @@ class _SongListViewTileState extends State<SongListViewTile> {
               children: [
                 Text(
                   song.name,
-                  style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0, color: Colors.black),
+                  style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 25.0),
                 )
               ],
             ),
@@ -170,76 +129,11 @@ class _SongListViewTileState extends State<SongListViewTile> {
                       ),
                     )
               : Container(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-            child: Column(children: [
-              MainContainer(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    StreamBuilder<Duration?>(
-                      stream: audioPlayer.durationStream,
-                      builder: ((context, snapshot) {
-                        final duration = snapshot.data ?? Duration.zero;
-                        return StreamBuilder<Duration>(
-                          stream: audioPlayer.createPositionStream(),
-                          builder: (context, snapshot) {
-                            var position = snapshot.data ?? Duration.zero;
-                            var seekbarValue = (100.0 / duration.inSeconds) * position.inSeconds;
-                            if (seekbarValue.toString() == "NaN") {
-                              seekbarValue = 0.0;
-                            }
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                SeekBar(
-                                  duration: duration,
-                                  position: position,
-                                  bufferedPosition: const Duration(milliseconds: 0),
-                                  onChangeEnd: (newPosition) async {
-                                    await audioPlayer.seek(newPosition);
-                                  },
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 10.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        Styles.getFormattedSeconds(position.inSeconds),
-                                        style: Theme.of(context).textTheme.caption,
-                                      ),
-                                      Text(
-                                        Styles.getFormattedSeconds(duration.inSeconds),
-                                        style: Theme.of(context).textTheme.caption,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      }),
-                    ),
-                  ],
-                ),
-              ),
-              MainContainer(
-                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
-                pressable: true,
-                toggleButton: true,
-                onPressed: playPauseChanged,
-                child: const Center(
-                  child: Icon(CupertinoIcons.playpause_fill),
-                ),
-              ),
-            ]),
-          ),
+          AudioPlayerWidget(audioPlayerType: AudioPlayerType.song, song: song, preview: preview),
           const SizedBox(
             height: 30.0,
           ),
-          OptionsRow(preview: preview, song: true, onEdit: openEditSongPage, onDelete: deleteSong)
+          OptionsRow(preview: preview, playlist: true, onEdit: openEditSongPage, onDelete: deleteSong)
         ],
       ),
     );

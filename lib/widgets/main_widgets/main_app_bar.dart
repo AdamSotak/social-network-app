@@ -1,5 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network/widgets/main_widgets/main_back_button.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 
 class MainAppBar extends StatelessWidget {
@@ -20,8 +20,16 @@ class MainAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const MainBackButton(),
+        MainIconButton(
+          margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+          icon: const Icon(CupertinoIcons.arrow_left),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         const Spacer(),
         Text(
           title,

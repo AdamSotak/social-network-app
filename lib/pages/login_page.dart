@@ -19,6 +19,13 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordTextEditingController = TextEditingController();
 
   @override
+  void dispose() {
+    emailTextEditingController.dispose();
+    passwordTextEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     void login() async {
       // Check if values are empty

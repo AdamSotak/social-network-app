@@ -7,13 +7,13 @@ class OptionsRow extends StatelessWidget {
   const OptionsRow({
     Key? key,
     required this.preview,
-    this.song = false,
+    this.playlist = false,
     required this.onEdit,
     required this.onDelete,
   }) : super(key: key);
 
   final bool preview;
-  final bool song;
+  final bool playlist;
   final Function onEdit;
   final Function onDelete;
 
@@ -21,6 +21,8 @@ class OptionsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     // Display Post options modalBottomSheet
     void displayPostOptions() {
+      
+
       DialogManager().displayModalBottomSheet(context: context, title: "Post Options", options: [
         ListTile(
           leading: Icon(
@@ -60,42 +62,43 @@ class OptionsRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconTheme(
-          data: const IconThemeData(color: Colors.black),
-          child: Row(
-            children: [
-              MainIconButton(
-                icon: const Icon(
-                  CupertinoIcons.heart,
-                  color: Colors.red,
-                ),
-                onPressed: () {},
+        Row(
+          children: [
+            MainIconButton(
+              icon: const Icon(
+                CupertinoIcons.heart,
+                color: Colors.red,
               ),
-              MainIconButton(
-                icon: const Icon(
-                  CupertinoIcons.bubble_left,
-                ),
-                onPressed: () {},
+              onPressed: () {},
+            ),
+            MainIconButton(
+              icon: Icon(
+                CupertinoIcons.bubble_left,
+                color: Theme.of(context).iconTheme.color,
               ),
-              song
-                  ? MainIconButton(
-                      icon: const Icon(
-                        CupertinoIcons.music_albums,
-                      ),
-                      onPressed: () {},
-                    )
-                  : MainIconButton(
-                      icon: const Icon(
-                        CupertinoIcons.bookmark,
-                      ),
-                      onPressed: () {},
+              onPressed: () {},
+            ),
+            playlist
+                ? MainIconButton(
+                    icon: Icon(
+                      CupertinoIcons.music_albums,
+                      color: Theme.of(context).iconTheme.color,
                     ),
-            ],
-          ),
+                    onPressed: () {},
+                  )
+                : MainIconButton(
+                    icon: Icon(
+                      CupertinoIcons.bookmark,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    onPressed: () {},
+                  ),
+          ],
         ),
         MainIconButton(
-          icon: const Icon(
+          icon: Icon(
             CupertinoIcons.settings,
+            color: Theme.of(context).iconTheme.color,
           ),
           onPressed: (preview) ? () {} : displayPostOptions,
         ),

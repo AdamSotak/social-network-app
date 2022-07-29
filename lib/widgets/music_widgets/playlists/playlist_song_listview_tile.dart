@@ -31,12 +31,12 @@ class PlaylistSongListViewTile extends StatelessWidget {
                 children: [
                   Text(
                     song.name,
-                    style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.black),
+                    style: Theme.of(context).textTheme.headline3,
                   ),
                   !chooseSong
                       ? Text(
                           "Album Name",
-                          style: Theme.of(context).textTheme.headline2!.copyWith(color: Colors.black),
+                          style: Theme.of(context).textTheme.headline2,
                         )
                       : Container()
                 ],
@@ -45,8 +45,9 @@ class PlaylistSongListViewTile extends StatelessWidget {
                 children: [
                   (song.userId == Auth().getUserId())
                       ? MainIconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             CupertinoIcons.wand_stars,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                           onPressed: () {
                             onSongChosen!(song);
@@ -55,9 +56,10 @@ class PlaylistSongListViewTile extends StatelessWidget {
                       : Container(),
                   chooseSong
                       ? MainIconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             CupertinoIcons.add_circled,
                             size: 30.0,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                           toggle: true,
                           onPressed: () {
@@ -65,9 +67,10 @@ class PlaylistSongListViewTile extends StatelessWidget {
                           },
                         )
                       : MainIconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             CupertinoIcons.xmark,
                             size: 20.0,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                           onPressed: () {},
                         ),

@@ -34,6 +34,12 @@ class _AddPostPageState extends State<AddPostPage> {
   String addVideoButtonText = "Add Video";
 
   @override
+  void dispose() {
+    postDescriptionTextEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var postType = widget.postType;
 
@@ -45,10 +51,9 @@ class _AddPostPageState extends State<AddPostPage> {
       post.created = DateTime.now();
 
       await PostsDatabase().addPost(post).then((value) {
-      DialogManager().closeDialog(context: context);
+        DialogManager().closeDialog(context: context);
         Navigator.pop(context);
       });
-
     }
 
     void onDescriptionChanged(String value) {

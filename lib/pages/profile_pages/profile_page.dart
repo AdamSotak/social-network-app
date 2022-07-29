@@ -28,20 +28,31 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late bool localUser = widget.userId == Auth().getUserId();
+  UserData userData = UserData(
+    id: "",
+    username: "",
+    displayName: "",
+    profilePhotoURL: "",
+    followers: 0,
+    following: 0,
+  );
+
+  Future<void> getUserData() async {
+    userData = await UserDataDatabase().getUserData(widget.userId);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData().whenComplete(() {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     var userId = widget.userId;
     var backButton = widget.backButton;
-
-    UserData userData = UserData(
-      id: "",
-      username: "",
-      displayName: "",
-      profilePhotoURL: "",
-      followers: 0,
-      following: 0,
-    );
 
     void openEditPage() {
       Navigator.push(
@@ -64,6 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: DefaultTabController(
         length: 3,
         child: NestedScrollView(
+          clipBehavior: Clip.none,
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverList(
@@ -120,88 +132,69 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                       ),
                     ),
-                    FutureBuilder<UserData>(
-                      future: UserDataDatabase().getUserData(userId),
-                      builder: (BuildContext context, AsyncSnapshot<UserData> snapshot) {
-                        if (snapshot.hasError) {
-                          return const Center(
-                            child: Text("Something went wrong"),
-                          );
-                        }
-
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-
-                        userData = snapshot.data!;
-
-                        return Center(
-                          child: SizedBox(
-                            height: 250.0,
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(5.0),
-                                  decoration: BoxDecoration(
-                                    gradient: Styles.linearGradients[2],
-                                    borderRadius: BorderRadius.circular(150.0),
-                                  ),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(2.0),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).scaffoldBackgroundColor,
-                                      borderRadius: BorderRadius.circular(150.0),
-                                    ),
-                                    child: (Styles.checkIfStringEmpty(userData.profilePhotoURL))
-                                        ? const CircleAvatar(
-                                            backgroundImage: AssetImage(Variables.defaultProfileImageURL),
-                                            backgroundColor: Styles.defaultImageBackgroundColor,
-                                            radius: 70.0,
-                                          )
-                                        : CircleAvatar(
-                                            backgroundImage: NetworkImage(userData.profilePhotoURL),
-                                            backgroundColor: Styles.defaultImageBackgroundColor,
-                                            radius: 70.0,
-                                          ),
-                                  ),
+                    Center(
+                      child: SizedBox(
+                        height: 250.0,
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(
+                                gradient: Styles.linearGradients[2],
+                                borderRadius: BorderRadius.circular(150.0),
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.all(2.0),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).scaffoldBackgroundColor,
+                                  borderRadius: BorderRadius.circular(150.0),
                                 ),
-                                const SizedBox(
-                                  height: 10.0,
-                                ),
-                                Text(
-                                  userData.displayName,
-                                  style: Theme.of(context).textTheme.headline3,
-                                ),
-                                Text(
-                                  "@${userData.username}",
-                                  style: Theme.of(context).textTheme.headline2,
-                                ),
-                                const SizedBox(
-                                  height: 10.0,
-                                ),
-                                SizedBox(
-                                  width: 200.0,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        "${userData.followers} Followers",
-                                        style: Theme.of(context).textTheme.headline2,
+                                child: (Styles.checkIfStringEmpty(userData.profilePhotoURL))
+                                    ? const CircleAvatar(
+                                        backgroundImage: AssetImage(Variables.defaultProfileImageURL),
+                                        backgroundColor: Styles.defaultImageBackgroundColor,
+                                        radius: 70.0,
+                                      )
+                                    : CircleAvatar(
+                                        backgroundImage: NetworkImage(userData.profilePhotoURL),
+                                        backgroundColor: Styles.defaultImageBackgroundColor,
+                                        radius: 70.0,
                                       ),
-                                      Text(
-                                        "${userData.following} Following",
-                                        style: Theme.of(context).textTheme.headline2,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            Text(
+                              userData.displayName,
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                            Text(
+                              "@${userData.username}",
+                              style: Theme.of(context).textTheme.headline2,
+                            ),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            SizedBox(
+                              width: 200.0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    "${userData.followers} Followers",
+                                    style: Theme.of(context).textTheme.headline2,
+                                  ),
+                                  Text(
+                                    "${userData.following} Following",
+                                    style: Theme.of(context).textTheme.headline2,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     )
                   ],
                 ),

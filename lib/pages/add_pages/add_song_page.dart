@@ -40,6 +40,12 @@ class _AddSongPageState extends State<AddSongPage> {
   );
 
   @override
+  void dispose() {
+    songNameTextEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     void addSong() async {
       if (Styles.checkIfStringEmpty(songNameTextEditingController.text)) {

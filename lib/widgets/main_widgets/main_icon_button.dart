@@ -8,6 +8,7 @@ class MainIconButton extends StatelessWidget {
     this.width = 50.0,
     this.height = 50.0,
     this.toggle = false,
+    this.overrideShadow = false,
     this.margin = const EdgeInsets.all(5.0),
     required this.onPressed,
     this.gradient = const LinearGradient(colors: []),
@@ -17,6 +18,7 @@ class MainIconButton extends StatelessWidget {
   final double width;
   final double height;
   final bool toggle;
+  final bool overrideShadow;
   final EdgeInsets margin;
   final Function onPressed;
   final LinearGradient gradient;
@@ -33,11 +35,12 @@ class MainIconButton extends StatelessWidget {
         height: width,
         pressable: true,
         toggleButton: toggle,
+        overrideShadow: overrideShadow,
         gradient: (gradient != const LinearGradient(colors: [])) ? gradient : null,
         margin: margin,
         child: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: Center(child: IconTheme(data: const IconThemeData(color: Colors.black), child: icon)),
+          child: Center(child: icon),
         ),
       ),
     );
