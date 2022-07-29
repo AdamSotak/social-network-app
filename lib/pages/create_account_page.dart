@@ -42,60 +42,67 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               email: emailTextEditingController.text,
               username: usernameTextEditingController.text,
               displayName: displayNameTextEditingController.text,
-              password: passwordTextEditingController.text,
-              profilePhotoURL: Styles.defaultPhotoURL)
+              password: passwordTextEditingController.text)
           .then((value) {
         Navigator.pop(context);
       });
     }
 
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: 200.0,
-                  child: Text(
-                    "Create Account",
-                    style: Theme.of(context).textTheme.headline1!.copyWith(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 10.0),
+        child: Center(
+          child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 200.0,
+                    child: Text(
+                      "Create Account",
+                      style: Theme.of(context).textTheme.headline1!.copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                MainTextField(
-                  controller: emailTextEditingController,
-                  hintText: "Email",
-                ),
-                MainTextField(
-                  controller: usernameTextEditingController,
-                  hintText: "Username",
-                ),
-                MainTextField(
-                  controller: displayNameTextEditingController,
-                  hintText: "Display Name",
-                ),
-                MainTextField(
-                  controller: passwordTextEditingController,
-                  hintText: "Password",
-                  obscureText: true,
-                ),
-                MainTextField(
-                  controller: confirmPasswordTextEditingController,
-                  hintText: "Confirm Password",
-                  obscureText: true,
-                ),
-                const SizedBox(
-                  height: 50.0,
-                ),
-                Center(
-                  child: MainButton(text: "Create Account", onPressed: createAccount),
-                ),
-              ],
-            )),
+                  const SizedBox(
+                    height: 30.0,
+                  ),
+                  MainTextField(
+                    controller: emailTextEditingController,
+                    hintText: "Email",
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                  ),
+                  MainTextField(
+                    controller: usernameTextEditingController,
+                    hintText: "Username",
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                  ),
+                  MainTextField(
+                    controller: displayNameTextEditingController,
+                    hintText: "Display Name",
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                  ),
+                  MainTextField(
+                    controller: passwordTextEditingController,
+                    hintText: "Password",
+                    obscureText: true,
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                  ),
+                  MainTextField(
+                    controller: confirmPasswordTextEditingController,
+                    hintText: "Confirm Password",
+                    obscureText: true,
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                  ),
+                  const SizedBox(
+                    height: 50.0,
+                  ),
+                  Center(
+                    child: MainButton(text: "Create Account", onPressed: createAccount),
+                  ),
+                ],
+              )),
+        ),
       ),
     );
   }

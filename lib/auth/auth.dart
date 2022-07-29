@@ -18,6 +18,11 @@ class Auth {
     return auth.currentUser!.uid;
   }
 
+  // Get user email
+  String getUserEmail() {
+    return auth.currentUser!.email.toString();
+  }
+
   // Get user IDToken
   Future<String> getUserIDToken() {
     return auth.currentUser!.getIdToken(true);
@@ -48,11 +53,7 @@ class Auth {
 
   // Create new account
   Future<bool> createAccount(
-      {required String email,
-      required String username,
-      required String displayName,
-      required String password,
-      required String profilePhotoURL}) async {
+      {required String email, required String username, required String displayName, required String password}) async {
     try {
       await auth.createUserWithEmailAndPassword(email: email.trim(), password: password);
 
@@ -60,7 +61,7 @@ class Auth {
         id: Auth().getUserId(),
         username: username,
         displayName: displayName,
-        profilePhotoURL: profilePhotoURL,
+        profilePhotoURL: "",
         followers: 0,
         following: 0,
       );
@@ -69,6 +70,52 @@ class Auth {
 
       return true;
     } on FirebaseAuthException catch (_) {
+      return false;
+    }
+  }
+
+  // Change email
+  Future<bool> changeEmail({required String currentPassword, required String newEmail}) async {
+    try {
+      await auth.currentUser?.reauthenticateWithCredential(
+          EmailAuthProvider.credential(email: auth.currentUser!.email.toString(), password: currentPassword));
+
+      await auth.currentUser?.updateEmail(newEmail);
+      return true;
+    } catch (error) {
+      log(error.toString());
+      return false;
+    }
+  }
+
+  // Change user password
+  Future<bool> changePassword({required String currentPassword, required String newPassword}) async {
+    try {
+      await auth.currentUser?.reauthenticateWithCredential(
+          EmailAuthProvider.credential(email: auth.currentUser!.email.toString(), password: currentPassword));
+
+      await auth.currentUser?.updatePassword(newPassword);
+      return true;
+    } catch (error) {
+      log(error.toString());
+      return false;
+    }
+  }
+
+  // Send a password reset email
+  Future<void> resetPassword({required String email}) async {
+    await auth.sendPasswordResetEmail(email: email);
+  }
+
+  // Delete user account
+  Future<bool> deleteAccount({required String currentPassword}) async {
+    try {
+      await auth.currentUser?.reauthenticateWithCredential(
+          EmailAuthProvider.credential(email: auth.currentUser!.email.toString(), password: currentPassword));
+      await auth.currentUser?.delete();
+      return true;
+    } catch (error) {
+      log(error.toString());
       return false;
     }
   }

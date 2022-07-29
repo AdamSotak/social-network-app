@@ -4,15 +4,15 @@ import 'package:social_network/styling/styles.dart';
 import 'package:social_network/styling/variables.dart';
 
 class UserDataWidget extends StatelessWidget {
-  const UserDataWidget({Key? key, required this.userData, required this.created}) : super(key: key);
+  const UserDataWidget({Key? key, required this.userData, this.created}) : super(key: key);
 
   final UserData userData;
-  final DateTime created;
+  final DateTime? created;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+      padding: const EdgeInsets.all(10.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -35,10 +35,18 @@ class UserDataWidget extends StatelessWidget {
             children: [
               Text(
                 userData.displayName,
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.black),
               ),
-              Text("@${userData.username}"),
-              Text(Styles.getFormattedDateString(created)),
+              Text(
+                "@${userData.username}",
+                style: Theme.of(context).textTheme.headline2!.copyWith(color: Colors.black),
+              ),
+              (created == null)
+                  ? Container()
+                  : Text(
+                      Styles.getFormattedDateString(created!),
+                      style: Theme.of(context).textTheme.headline2!.copyWith(color: Colors.black),
+                    ),
             ],
           )
         ],

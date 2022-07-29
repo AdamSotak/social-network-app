@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart' as box_shadow;
+import 'package:social_network/storage/app_theme/theme_mode_change_notifier.dart';
 import 'package:social_network/styling/styles.dart';
 
 class MainTextField extends StatefulWidget {
@@ -14,6 +15,7 @@ class MainTextField extends StatefulWidget {
     this.autofocus = false,
     this.margin = const EdgeInsets.all(0.0),
     this.width = 500.0,
+    this.onEditingComplete,
     this.onChanged,
   }) : super(key: key);
 
@@ -26,6 +28,7 @@ class MainTextField extends StatefulWidget {
   final bool autofocus;
   final EdgeInsets margin;
   final double width;
+  final Function? onEditingComplete;
   final Function? onChanged;
 
   @override
@@ -44,6 +47,7 @@ class _MainTextFieldState extends State<MainTextField> {
     var autofocus = widget.autofocus;
     var margin = widget.margin;
     var width = widget.width;
+    var onEditingComplete = widget.onEditingComplete;
     var onChanged = widget.onChanged;
 
     return SizedBox(
@@ -52,9 +56,9 @@ class _MainTextFieldState extends State<MainTextField> {
         margin: margin,
         decoration: box_shadow.BoxDecoration(
           boxShadow: [
-            const box_shadow.BoxShadow(
-              color: Colors.white,
-              offset: Offset(-5.0, -5.0),
+            box_shadow.BoxShadow(
+              color: ThemeModeChangeNotifier().darkMode ? Colors.white.withOpacity(0.7) : Colors.white,
+              offset: const Offset(-5.0, -5.0),
               blurRadius: 15.0,
               spreadRadius: 1.0,
               inset: true,
@@ -75,6 +79,11 @@ class _MainTextFieldState extends State<MainTextField> {
           obscureText: obscureText,
           maxLines: maxLines,
           autofocus: autofocus,
+          onEditingComplete: () {
+            if (onEditingComplete != null) {
+              onEditingComplete();
+            }
+          },
           onChanged: (value) {
             if (onChanged != null) {
               onChanged(value);

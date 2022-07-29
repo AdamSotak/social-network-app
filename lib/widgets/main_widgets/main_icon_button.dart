@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 
 class MainIconButton extends StatelessWidget {
@@ -37,7 +37,7 @@ class MainIconButton extends StatelessWidget {
         margin: margin,
         child: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: Center(child: icon),
+          child: Center(child: IconTheme(data: const IconThemeData(color: Colors.black), child: icon)),
         ),
       ),
     );

@@ -124,7 +124,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
               ),
               MainButton(text: albumImageButton, onPressed: addAlbumArtwork),
               StreamBuilder<QuerySnapshot>(
-                stream: SongsDatabase().getSongStream(),
+                stream: SongsDatabase().getSongStream(userId: Auth().getUserId()),
                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   // Error and loading checking
                   if (snapshot.hasError) {

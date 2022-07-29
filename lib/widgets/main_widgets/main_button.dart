@@ -54,7 +54,7 @@ class _MainButtonState extends State<MainButton> {
               (icon != null) ? icon : Container(),
               Text(
                 text,
-                style: Theme.of(context).textTheme.headline2,
+                style: Theme.of(context).textTheme.headline2!.copyWith(color: Colors.black),
               ),
             ],
           ),

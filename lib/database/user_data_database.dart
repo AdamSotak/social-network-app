@@ -20,8 +20,21 @@ class UserDataDatabase {
 
   // Get UserData
   Future<UserData> getUserData(String userId) async {
-    var doc = await firestore.collection(userDataCollectionName).doc(Auth().getUserId()).get();
+    var doc = await firestore.collection(userDataCollectionName).doc(userId).get();
     return UserData.fromDocumentSnapshot(doc);
+  }
+
+  // Search UserData
+  Stream<QuerySnapshot> searchUserData({required String searchQuery, int take = 10}) {
+    if (searchQuery == "") {
+      return firestore.collection(userDataCollectionName).orderBy('followers', descending: true).limit(10).snapshots();
+    }
+    return firestore
+        .collection(userDataCollectionName)
+        .where('username', isGreaterThanOrEqualTo: searchQuery)
+        .where('username', isLessThanOrEqualTo: '$searchQuery\uf7ff')
+        .snapshots()
+        .take(take);
   }
 
   // Edit UserData

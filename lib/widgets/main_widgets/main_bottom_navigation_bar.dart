@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart' as box_shadow;
+import 'package:social_network/storage/app_theme/theme_mode_change_notifier.dart';
 import 'package:social_network/styling/styles.dart';
 
 class MainBottomNavigationBar extends StatefulWidget {
@@ -84,7 +85,7 @@ class MainBottomNavigationBarItem extends StatelessWidget {
         boxShadow: (selected)
             ? [
                 box_shadow.BoxShadow(
-                  color: Colors.white,
+                  color: ThemeModeChangeNotifier().darkMode ? Colors.white.withOpacity(0.7) : Colors.white,
                   offset: const Offset(-5.0, -5.0),
                   blurRadius: 15.0,
                   spreadRadius: 1.0,

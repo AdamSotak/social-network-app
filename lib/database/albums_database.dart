@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:social_network/auth/auth.dart';
 import 'package:social_network/models/album.dart';
 import 'package:social_network/storage/image_storage.dart';
 
@@ -11,8 +10,8 @@ class AlbumsDatabase {
   final String albumsCollectionName = "albums";
 
   // Get Albums data Stream for loading
-  Stream<QuerySnapshot> getAlbumStream() {
-    return firestore.collection(albumsCollectionName).where('userId', isEqualTo: Auth().getUserId()).snapshots();
+  Stream<QuerySnapshot> getAlbumStream({required String userId}) {
+    return firestore.collection(albumsCollectionName).where('userId', isEqualTo: userId).snapshots();
   }
 
   // Add new Album

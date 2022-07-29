@@ -10,6 +10,7 @@ import 'package:social_network/models/post.dart';
 import 'package:social_network/models/user_data.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
+import 'package:social_network/widgets/post_widgets/options_row.dart';
 import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
 import 'package:video_player/video_player.dart';
 
@@ -84,6 +85,9 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
 
     setupVideoPlayer();
 
+    // Opens PostEditPage
+    void openPostEditPage() {}
+
     // Delete Post from database
     void deletePost() {
       DialogManager().displayConfirmationDialog(
@@ -109,43 +113,6 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
       if (onContentURLCleared != null) {
         onContentURLCleared();
       }
-    }
-
-    // Display Post options modalBottomSheet
-    void displayPostOptions() {
-      DialogManager().displayModalBottomSheet(context: context, title: "Post Options", options: [
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.wand_stars,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Edit", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.delete,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Delete", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-            deletePost();
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.xmark,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Close", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-      ]);
     }
 
     Widget buildPostListViewTile(UserData userData) {
@@ -209,43 +176,7 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
           const SizedBox(
             height: 10.0,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  MainIconButton(
-                    icon: const Icon(
-                      CupertinoIcons.heart,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {},
-                  ),
-                  MainIconButton(
-                    icon: Icon(
-                      CupertinoIcons.bubble_left,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                    onPressed: () {},
-                  ),
-                  MainIconButton(
-                    icon: Icon(
-                      CupertinoIcons.bookmark,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-              MainIconButton(
-                icon: Icon(
-                  CupertinoIcons.settings,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                onPressed: (preview) ? () {} : displayPostOptions,
-              ),
-            ],
-          ),
+          OptionsRow(preview: preview, onEdit: openPostEditPage, onDelete: deletePost)
         ],
       );
     }

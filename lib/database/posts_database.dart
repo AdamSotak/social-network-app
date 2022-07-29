@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:social_network/auth/auth.dart';
 import 'package:social_network/models/post.dart';
 import 'package:social_network/storage/image_storage.dart';
 import 'package:social_network/storage/video_storage.dart';
@@ -12,8 +11,8 @@ class PostsDatabase {
   final String postsCollectionName = "posts";
 
   // Get Posts data Stream for loading
-  Stream<QuerySnapshot> getPostStream() {
-    return firestore.collection(postsCollectionName).where('userId', isEqualTo: Auth().getUserId()).snapshots();
+  Stream<QuerySnapshot> getPostStream({required String userId}) {
+    return firestore.collection(postsCollectionName).where('userId', isEqualTo: userId).snapshots();
   }
 
   // Add new Post

@@ -12,6 +12,7 @@ import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/music_widgets/song_seekbar.dart';
+import 'package:social_network/widgets/post_widgets/options_row.dart';
 import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
 
 class SongListViewTile extends StatefulWidget {
@@ -58,7 +59,7 @@ class _SongListViewTileState extends State<SongListViewTile> {
   Widget build(BuildContext context) {
     var song = widget.song;
 
-    void editSong() {}
+    void openEditSongPage() {}
 
     void deleteSong() {
       DialogManager().displayConfirmationDialog(
@@ -104,43 +105,6 @@ class _SongListViewTileState extends State<SongListViewTile> {
 
     setupAudioPlayer();
 
-    void displaySongOptions() {
-      DialogManager().displayModalBottomSheet(context: context, title: "Post Options", options: [
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.wand_stars,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Edit", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-            editSong();
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.delete,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Delete", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-            deleteSong();
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.xmark,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Close", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-      ]);
-    }
-
     void deleteArtworkURL() {
       setState(() {
         song.artworkURL = "";
@@ -167,7 +131,7 @@ class _SongListViewTileState extends State<SongListViewTile> {
               children: [
                 Text(
                   song.name,
-                  style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0),
+                  style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0, color: Colors.black),
                 )
               ],
             ),
@@ -275,43 +239,7 @@ class _SongListViewTileState extends State<SongListViewTile> {
           const SizedBox(
             height: 30.0,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  MainIconButton(
-                    icon: const Icon(
-                      CupertinoIcons.heart,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {},
-                  ),
-                  MainIconButton(
-                    icon: Icon(
-                      CupertinoIcons.bubble_left,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                    onPressed: () {},
-                  ),
-                  MainIconButton(
-                    icon: Icon(
-                      CupertinoIcons.music_albums,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-              MainIconButton(
-                icon: Icon(
-                  CupertinoIcons.settings,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                onPressed: (preview) ? () {} : displaySongOptions,
-              ),
-            ],
-          ),
+          OptionsRow(preview: preview, song: true, onEdit: openEditSongPage, onDelete: deleteSong)
         ],
       ),
     );

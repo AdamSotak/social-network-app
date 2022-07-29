@@ -1,10 +1,12 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/database/user_data_database.dart';
 import 'package:social_network/models/loop.dart';
 import 'package:social_network/models/user_data.dart';
+import 'package:social_network/pages/add_pages/add_loop_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/styling/variables.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
@@ -23,7 +25,11 @@ class _LoopListViewTileState extends State<LoopListViewTile> {
   Widget build(BuildContext context) {
     var loop = widget.loop;
 
-    void openLoop() {}
+    void openLoop() {
+      if (loop.userId == Auth().getUserId()) {
+        Navigator.push(context, CupertinoPageRoute(builder: (builder) => const AddLoopPage()));
+      } else {}
+    }
 
     return FutureBuilder<UserData>(
       future: UserDataDatabase().getUserData(loop.userId),

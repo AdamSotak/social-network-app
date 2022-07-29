@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
+import 'package:social_network/pages/create_account_page.dart';
+import 'package:social_network/pages/main_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
@@ -25,43 +28,52 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       // Login user
-      await Auth().login(email: emailTextEditingController.text, password: passwordTextEditingController.text);
+      await Auth()
+          .login(email: emailTextEditingController.text, password: passwordTextEditingController.text)
+          .then((value) {
+        Navigator.pushReplacement(context, CupertinoPageRoute(builder: (builder) => const MainPage()));
+      });
     }
 
     void openCreateAccountPage() {
-      Navigator.pushNamed(context, '/createAccount');
+      Navigator.push(context, CupertinoPageRoute(builder: (builder) => const CreateAccountPage()));
     }
 
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                Text(
-                  "Logo",
-                  style: Theme.of(context).textTheme.headline1!.copyWith(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 50.0,
-                ),
-                MainTextField(
-                  controller: emailTextEditingController,
-                  hintText: "Email",
-                ),
-                MainTextField(
-                  controller: passwordTextEditingController,
-                  hintText: "Password",
-                  obscureText: true,
-                ),
-                const SizedBox(
-                  height: 50.0,
-                ),
-                MainButton(text: "Login", onPressed: login),
-                MainButton(text: "Create Account", onPressed: openCreateAccountPage),
-              ],
-            )),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 10.0),
+        child: Center(
+          child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  Text(
+                    "Logo",
+                    style: Theme.of(context).textTheme.headline1!.copyWith(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 50.0,
+                  ),
+                  MainTextField(
+                    controller: emailTextEditingController,
+                    hintText: "Email",
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                  ),
+                  MainTextField(
+                    controller: passwordTextEditingController,
+                    hintText: "Password",
+                    obscureText: true,
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                  ),
+                  const SizedBox(
+                    height: 50.0,
+                  ),
+                  MainButton(text: "Login", onPressed: login),
+                  MainButton(text: "Create Account", onPressed: openCreateAccountPage),
+                ],
+              )),
+        ),
       ),
     );
   }

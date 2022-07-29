@@ -13,7 +13,6 @@ class Styles {
   static const double mainBorderRadius = 20.0;
   static const int calendarViewCarouselInitialPage = 1500;
   static const String defaultPhotoURLValue = "development_assets/images/profile_image.jpg";
-  static const String defaultPhotoURL = '/assets/default_photo.png';
   static const Duration animationDuration = Duration(milliseconds: 200);
 
   // Colors
@@ -77,6 +76,7 @@ class Styles {
     return linearGradients[random.nextInt(linearGradients.length)];
   }
 
+  // Get Formatted Seconds
   static String getFormattedSeconds(int seconds) {
     final duration = Duration(seconds: seconds);
     final minutes = duration.inMinutes;
@@ -85,5 +85,22 @@ class Styles {
     final minutesToString = '$minutes'.padLeft(1, '0');
     final secondsToString = '$newSeconds'.padLeft(2, '0');
     return '$minutesToString:$secondsToString';
+  }
+
+  // Get ThemeMode from String
+  static ThemeMode getThemeMode(String themeModeString) {
+    return ThemeMode.values.firstWhere((element) => element.toString() == themeModeString);
+  }
+
+  // Get String from ThemeMode
+  static String getThemeModeString(ThemeMode themeMode) {
+    switch (themeMode) {
+      case ThemeMode.system:
+        return "Device Default";
+      case ThemeMode.dark:
+        return "Dark";
+      case ThemeMode.light:
+        return "Light";
+    }
   }
 }

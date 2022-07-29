@@ -12,6 +12,7 @@ import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/music_widgets/song_seekbar.dart';
+import 'package:social_network/widgets/post_widgets/options_row.dart';
 import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
 
 class AlbumListViewTile extends StatefulWidget {
@@ -65,9 +66,9 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
       }).toList(),
     );
 
-    void editSong() {}
+    void openEditAlbumPage() {}
 
-    void deleteSong() {
+    void deleteAlbum() {
       DialogManager().displayConfirmationDialog(
         context: context,
         title: "Delete Album?",
@@ -87,6 +88,14 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
       audioPlayer.pause();
     }
 
+    void previous() async {
+      await audioPlayer.seekToPrevious();
+    }
+
+    void next() async {
+      await audioPlayer.seekToNext();
+    }
+
     void playPauseChanged() {
       playing = !playing;
 
@@ -98,47 +107,13 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
     }
 
     void setupAudioPlayer() async {
-      await audioPlayer.setAudioSource(albumPlaylist, initialIndex: 0, initialPosition: Duration.zero);
+      try {
+        await audioPlayer.setAudioSource(albumPlaylist, initialIndex: 0, initialPosition: Duration.zero);
+        await audioPlayer.setLoopMode(LoopMode.all);
+      } catch (_) {}
     }
 
     setupAudioPlayer();
-
-    void displaySongOptions() {
-      DialogManager().displayModalBottomSheet(context: context, title: "Post Options", options: [
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.wand_stars,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Edit", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-            editSong();
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.delete,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Delete", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-            deleteSong();
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.xmark,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Close", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-      ]);
-    }
 
     void deleteArtworkURL() {
       setState(() {
@@ -164,11 +139,11 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
               children: [
                 Text(
                   "Album",
-                  style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: 25.0),
+                  style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: 25.0, color: Colors.black),
                 ),
                 Text(
                   album.name,
-                  style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0),
+                  style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0, color: Colors.black),
                 )
               ],
             ),
@@ -182,9 +157,9 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         MainContainer(
-                          margin: const EdgeInsets.all(10.0),
+                          margin: const EdgeInsets.all(15.0),
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(15.0),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
                               child: Image.file(
@@ -197,7 +172,7 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
                       ],
                     )
                   : MainContainer(
-                      margin: const EdgeInsets.all(10.0),
+                      margin: const EdgeInsets.all(15.0),
                       child: Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: ClipRRect(
@@ -231,6 +206,40 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
                                     return Column(
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
+                                        MainContainer(
+                                          height: 100.0,
+                                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    audioPlayer.playing ? "Now Playing..." : "Play...",
+                                                    style: Theme.of(context).textTheme.headline3,
+                                                  ),
+                                                  const Spacer(),
+                                                  Text(
+                                                    album.songs[audioPlayer.currentIndex ?? 0].name,
+                                                    style: Theme.of(context).textTheme.caption,
+                                                    overflow: TextOverflow.fade,
+                                                  ),
+                                                  Text(
+                                                    album.name,
+                                                    style:
+                                                        Theme.of(context).textTheme.caption!.copyWith(fontSize: 15.0),
+                                                    overflow: TextOverflow.fade,
+                                                  )
+                                                ],
+                                              ),
+                                              const Icon(
+                                                CupertinoIcons.arrow_right,
+                                                size: 30.0,
+                                              )
+                                            ],
+                                          ),
+                                        ),
                                         SeekBar(
                                           duration: duration,
                                           position: position,
@@ -264,14 +273,38 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
                           ],
                         ),
                       ),
-                      MainContainer(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
-                        pressable: true,
-                        toggleButton: true,
-                        onPressed: playPauseChanged,
-                        child: const Center(
-                          child: Icon(CupertinoIcons.playpause_fill),
-                        ),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: MainContainer(
+                              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                              pressable: true,
+                              onPressed: previous,
+                              child: const Center(
+                                child: Icon(CupertinoIcons.backward_fill),
+                              ),
+                            ),
+                          ),
+                          MainContainer(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                            pressable: true,
+                            toggleButton: true,
+                            onPressed: playPauseChanged,
+                            child: const Center(
+                              child: Icon(CupertinoIcons.playpause_fill),
+                            ),
+                          ),
+                          Flexible(
+                            child: MainContainer(
+                              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                              pressable: true,
+                              onPressed: next,
+                              child: const Center(
+                                child: Icon(CupertinoIcons.forward_fill),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 10.0,
@@ -307,43 +340,7 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
           const SizedBox(
             height: 30.0,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  MainIconButton(
-                    icon: const Icon(
-                      CupertinoIcons.heart,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {},
-                  ),
-                  MainIconButton(
-                    icon: Icon(
-                      CupertinoIcons.bubble_left,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                    onPressed: () {},
-                  ),
-                  MainIconButton(
-                    icon: Icon(
-                      CupertinoIcons.music_albums,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-              MainIconButton(
-                icon: Icon(
-                  CupertinoIcons.settings,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                onPressed: (preview) ? () {} : displaySongOptions,
-              ),
-            ],
-          ),
+          OptionsRow(preview: preview, song: true, onEdit: openEditAlbumPage, onDelete: deleteAlbum)
         ],
       ),
     );

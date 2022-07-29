@@ -6,14 +6,16 @@ import 'package:social_network/widgets/music_widgets/album_listview_tile.dart';
 import 'package:social_network/widgets/no_data_tile.dart';
 
 class AlbumsListView extends StatelessWidget {
-  const AlbumsListView({Key? key}) : super(key: key);
+  const AlbumsListView({Key? key, required this.userId}) : super(key: key);
+
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
     List<Album> albums = [];
 
     return StreamBuilder<QuerySnapshot>(
-      stream: AlbumsDatabase().getAlbumStream(),
+      stream: AlbumsDatabase().getAlbumStream(userId: userId),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         // Error and loading checking
         if (snapshot.hasError) {

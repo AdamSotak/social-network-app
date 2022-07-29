@@ -6,14 +6,16 @@ import 'package:social_network/widgets/no_data_tile.dart';
 import 'package:social_network/widgets/post_widgets/post_listview_tile.dart';
 
 class PostsListView extends StatelessWidget {
-  const PostsListView({Key? key}) : super(key: key);
+  const PostsListView({Key? key, required this.userId}) : super(key: key);
+
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
     List<Post> posts = [];
 
     return StreamBuilder<QuerySnapshot>(
-      stream: PostsDatabase().getPostStream(),
+      stream: PostsDatabase().getPostStream(userId: userId),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         // Error and loading checking
         if (snapshot.hasError) {

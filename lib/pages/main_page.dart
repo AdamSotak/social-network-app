@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network/auth/auth.dart';
 import 'package:social_network/pages/add_pages/add_page.dart';
 import 'package:social_network/pages/create_pages/create_page.dart';
 import 'package:social_network/pages/home_page.dart';
@@ -19,12 +20,12 @@ class _MainPageState extends State<MainPage> {
   static int bottomNavigationBarCurrentIndex = 0;
   late PageController pageController;
 
-  List<Widget> pages = const [
-    HomePage(),
-    PlaylistsPage(),
-    AddPage(),
-    CreatePage(),
-    ProfilePage(),
+  List<Widget> pages = [
+    const HomePage(),
+    const PlaylistsPage(),
+    const AddPage(),
+    const CreatePage(),
+    ProfilePage(userId: Auth().getUserId()),
   ];
 
   @override
@@ -37,10 +38,6 @@ class _MainPageState extends State<MainPage> {
   void dispose() {
     pageController.dispose();
     super.dispose();
-  }
-
-  void openAddPage() {
-    Navigator.pushNamed(context, '/addpost');
   }
 
   @override

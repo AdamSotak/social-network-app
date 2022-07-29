@@ -5,6 +5,7 @@ import 'package:social_network/models/album.dart';
 import 'package:social_network/models/hashtag.dart';
 import 'package:social_network/models/loop.dart';
 import 'package:social_network/models/post.dart';
+import 'package:social_network/pages/search_page.dart';
 import 'package:social_network/widgets/home/hashtag_listview_tile.dart';
 import 'package:social_network/widgets/home/loop_listview_tile.dart';
 import 'package:social_network/widgets/listview_widgets/posts_listview.dart';
@@ -29,7 +30,6 @@ class _HomePageState extends State<HomePage> {
     Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
   ];
   List<Loop> loops = [
-    // Sample data
     Loop(
         id: "id",
         userId: Auth().getUserId(),
@@ -37,16 +37,14 @@ class _HomePageState extends State<HomePage> {
         description: "description",
         contentURL: "",
         created: DateTime.now()),
-    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
-    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
-    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
-    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
-    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
-    Loop(id: "id", userId: "userId", name: "name", description: "description", contentURL: "", created: DateTime.now()),
   ];
 
   @override
   Widget build(BuildContext context) {
+    void openSearchPage() {
+      Navigator.push(context, CupertinoPageRoute(builder: (builder) => const SearchPage()));
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -65,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                     "Trending",
                     style: Theme.of(context).textTheme.headline1,
                   ),
-                  MainIconButton(icon: const Icon(CupertinoIcons.search), onPressed: () {})
+                  MainIconButton(icon: const Icon(CupertinoIcons.search), onPressed: openSearchPage)
                 ],
               ),
             ),
@@ -114,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                 style: Theme.of(context).textTheme.headline1,
               ),
             ),
-            const PostsListView()
+            PostsListView(userId: Auth().getUserId())
           ],
         ),
       ),

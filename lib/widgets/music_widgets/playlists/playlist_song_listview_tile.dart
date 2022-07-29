@@ -31,12 +31,12 @@ class PlaylistSongListViewTile extends StatelessWidget {
                 children: [
                   Text(
                     song.name,
-                    style: Theme.of(context).textTheme.headline3,
+                    style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.black),
                   ),
                   !chooseSong
                       ? Text(
                           "Album Name",
-                          style: Theme.of(context).textTheme.headline2,
+                          style: Theme.of(context).textTheme.headline2!.copyWith(color: Colors.black),
                         )
                       : Container()
                 ],

@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:social_network/auth/auth.dart';
 import 'package:social_network/models/song.dart';
 import 'package:social_network/storage/audio_storage.dart';
 import 'package:social_network/storage/image_storage.dart';
@@ -12,8 +11,8 @@ class SongsDatabase {
   final String songsCollectionName = "songs";
 
   // Get Songs data Stream for loading
-  Stream<QuerySnapshot> getSongStream() {
-    return firestore.collection(songsCollectionName).where('userId', isEqualTo: Auth().getUserId()).snapshots();
+  Stream<QuerySnapshot> getSongStream({required String userId}) {
+    return firestore.collection(songsCollectionName).where('userId', isEqualTo: userId).snapshots();
   }
 
   // Add new Song
