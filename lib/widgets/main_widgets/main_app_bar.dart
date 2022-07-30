@@ -34,6 +34,7 @@ class MainAppBar extends StatelessWidget {
         Text(
           title,
           style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: (fontSize == 0.0) ? 30.0 : fontSize),
+          overflow: TextOverflow.fade,
         ),
         const Spacer(),
         MainIconButton(

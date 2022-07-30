@@ -2,12 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network/database/albums_database.dart';
-import 'package:social_network/database/user_data_database.dart';
-import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/album.dart';
 import 'package:social_network/models/enums/audio_player_type.dart';
-import 'package:social_network/models/user_data.dart';
+import 'package:social_network/models/enums/data_type.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
@@ -26,44 +23,10 @@ class AlbumListViewTile extends StatefulWidget {
 
 class _AlbumListViewTileState extends State<AlbumListViewTile> {
   late bool preview = widget.album.id == "preview";
-  UserData userData = UserData(
-    id: "",
-    username: "",
-    displayName: "",
-    profilePhotoURL: "",
-    followers: 0,
-    following: 0,
-  );
-
-  Future<void> getUserData() async {
-    userData = await UserDataDatabase().getUserData(widget.album.userId);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getUserData().whenComplete(() {
-      setState(() {});
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     var album = widget.album;
-
-    void openEditAlbumPage() {}
-
-    void deleteAlbum() {
-      DialogManager().displayConfirmationDialog(
-        context: context,
-        title: "Delete Album?",
-        description: "Confirm album deletion",
-        onConfirmation: () {
-          AlbumsDatabase().deleteAlbum(album);
-        },
-        onCancellation: () {},
-      );
-    }
 
     void deleteArtworkURL() {
       setState(() {
@@ -78,7 +41,7 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          UserDataWidget(userData: userData, created: album.created),
+          UserDataWidget(userId: album.userId, created: album.created),
           const SizedBox(
             height: 10.0,
           ),
@@ -172,7 +135,11 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
           const SizedBox(
             height: 30.0,
           ),
-          OptionsRow(preview: preview, playlist: true, onEdit: openEditAlbumPage, onDelete: deleteAlbum)
+          OptionsRow(
+            dataType: DataType.album,
+            album: album,
+            preview: preview,
+          )
         ],
       ),
     );

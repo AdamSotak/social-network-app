@@ -1,16 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:social_network/database/user_data_database.dart';
 import 'package:social_network/models/user_data.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/styling/variables.dart';
 
-class UserDataWidget extends StatelessWidget {
-  const UserDataWidget({Key? key, required this.userData, this.created}) : super(key: key);
+class UserDataWidget extends StatefulWidget {
+  const UserDataWidget({Key? key, this.userId, this.userData, this.created}) : super(key: key);
 
-  final UserData userData;
+  final String? userId;
+  final UserData? userData;
   final DateTime? created;
 
   @override
+  State<UserDataWidget> createState() => _UserDataWidgetState();
+}
+
+class _UserDataWidgetState extends State<UserDataWidget> {
+  UserData userData = UserData(
+    id: "",
+    username: "",
+    displayName: "",
+    profilePhotoURL: "",
+    followers: 0,
+    following: 0,
+  );
+
+  Future<void> getUserData() async {
+    if (widget.userId == null) {
+      userData = widget.userData!;
+    } else {
+      userData = await UserDataDatabase().getUserData(widget.userId!);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData().whenComplete(() {
+      setState(() {});
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var created = widget.created;
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Row(
@@ -44,7 +78,7 @@ class UserDataWidget extends StatelessWidget {
               (created == null)
                   ? Container()
                   : Text(
-                      Styles.getFormattedDateString(created!),
+                      Styles.getFormattedDateString(created),
                       style: Theme.of(context).textTheme.headline2,
                     ),
             ],

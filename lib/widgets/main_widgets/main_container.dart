@@ -13,6 +13,7 @@ class MainContainer extends StatefulWidget {
     this.padding = const EdgeInsets.all(0.0),
     this.gradient,
     this.toggleButton = false,
+    this.toggled = false,
     this.overrideShadow = false,
     this.onEffect,
     this.onEffectEnd,
@@ -27,6 +28,7 @@ class MainContainer extends StatefulWidget {
   final EdgeInsets padding;
   final LinearGradient? gradient;
   final bool toggleButton;
+  final bool toggled;
   final bool overrideShadow;
   final Function? onPressed;
   final Function? onEffect;
@@ -39,7 +41,7 @@ class MainContainer extends StatefulWidget {
 
 class _MainContainerState extends State<MainContainer> {
   bool pressed = false;
-  bool toggled = false;
+  late bool toggled = widget.toggled;
 
   @override
   Widget build(BuildContext context) {
@@ -55,14 +57,6 @@ class _MainContainerState extends State<MainContainer> {
     var onEffect = widget.onEffect;
     var onEffectEnd = widget.onEffectEnd;
     var child = widget.child;
-
-    LinearGradient pressedLinearGradient =
-        LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
-      Colors.grey.shade200,
-      Colors.grey.shade300,
-      Colors.grey.shade400,
-      Colors.grey.shade500,
-    ]);
 
     return Listener(
       onPointerUp: (event) => setState(() {
@@ -97,7 +91,7 @@ class _MainContainerState extends State<MainContainer> {
         decoration: box_shadow.BoxDecoration(
           borderRadius: BorderRadius.circular(Styles.mainBorderRadius),
           color: ThemeModeChangeNotifier().darkMode ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
-          gradient: (pressed || toggled) ? pressedLinearGradient : gradient,
+          gradient: gradient,
           boxShadow: [
             box_shadow.BoxShadow(
               color: (ThemeModeChangeNotifier().darkMode && !overrideShadow) ? Colors.black : Colors.white,
@@ -107,7 +101,9 @@ class _MainContainerState extends State<MainContainer> {
               inset: pressed || toggled,
             ),
             box_shadow.BoxShadow(
-                color: (ThemeModeChangeNotifier().darkMode && !overrideShadow) ? Colors.grey.shade900 : Colors.grey.shade600,
+                color: (ThemeModeChangeNotifier().darkMode && !overrideShadow)
+                    ? Colors.grey.shade900
+                    : Colors.grey.shade600,
                 offset: const Offset(5.0, 5.0),
                 blurRadius: 15.0,
                 spreadRadius: 1.0,

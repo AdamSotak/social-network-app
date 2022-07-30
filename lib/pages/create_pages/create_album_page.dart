@@ -36,6 +36,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
     artworkURL: "",
     name: "",
     songs: [],
+    likes: 0,
     created: DateTime.now(),
   );
 

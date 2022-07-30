@@ -66,12 +66,12 @@ class App extends StatelessWidget {
             dividerTheme: DividerThemeData(color: Colors.grey.withOpacity(0.5), thickness: 0.5),
             listTileTheme: const ListTileThemeData(textColor: Colors.black),
             dialogTheme: DialogTheme(
-                backgroundColor: const Color.fromARGB(255, 170, 170, 170),
+                backgroundColor: const Color.fromARGB(255, 30, 30, 30),
                 titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20.0),
                 contentTextStyle: const TextStyle(color: Colors.white, fontSize: 15.0),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
             textButtonTheme: TextButtonThemeData(
-                style: ButtonStyle(overlayColor: MaterialStateProperty.all(const Color.fromARGB(255, 200, 200, 200)))),
+                style: ButtonStyle(overlayColor: MaterialStateProperty.all(const Color.fromARGB(255, 75, 75, 75)))),
             textTheme: TextTheme(
                 headline1: GoogleFonts.raleway(color: Colors.black, fontSize: 30.0, fontWeight: FontWeight.bold),
                 headline2: GoogleFonts.raleway(color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.w500),

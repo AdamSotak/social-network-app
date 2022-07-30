@@ -46,7 +46,6 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   Widget build(BuildContext context) {
     var loop = widget.loop;
     var song = widget.song;
-    var playlist = widget.playlist;
     var album = widget.album;
     var audioPlayerType = widget.audioPlayerType;
     var preview = widget.preview;
@@ -89,17 +88,16 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
           break;
         case AudioPlayerType.song:
           try {
-            if (widget.song!.contentURL != "" && preview) {
-              await audioPlayer.setFilePath(widget.song!.contentURL);
+            if (song!.contentURL != "" && preview) {
+              await audioPlayer.setFilePath(song.contentURL);
               await audioPlayer.setLoopMode(LoopMode.one);
-            } else if (widget.song!.contentURL != "" && !preview) {
-              await audioPlayer.setUrl(widget.song!.contentURL);
+            } else if (song.contentURL != "" && !preview) {
+              await audioPlayer.setUrl(song.contentURL);
               await audioPlayer.setLoopMode(LoopMode.one);
             }
           } catch (_) {}
           break;
         case AudioPlayerType.playlist:
-          // TODO: Handle this case.
           break;
         case AudioPlayerType.album:
           final albumPlaylist = ConcatenatingAudioSource(
@@ -119,133 +117,135 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
 
     setupAudioPlayer();
 
-    return Column(children: [
-      MainContainer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            StreamBuilder<Duration?>(
-              stream: audioPlayer.durationStream,
-              builder: ((context, snapshot) {
-                final duration = snapshot.data ?? Duration.zero;
-                return StreamBuilder<Duration>(
-                  stream: audioPlayer.createPositionStream(),
-                  builder: (context, snapshot) {
-                    var position = snapshot.data ?? Duration.zero;
-                    var seekbarValue = (100.0 / duration.inSeconds) * position.inSeconds;
-                    if (seekbarValue.toString() == "NaN") {
-                      seekbarValue = 0.0;
-                    }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        (audioPlayerType == AudioPlayerType.album)
-                            ? MainContainer(
-                                height: 100.0,
-                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          audioPlayer.playing ? "Now Playing..." : "Play...",
-                                          style: Theme.of(context).textTheme.headline3,
-                                        ),
-                                        const Spacer(),
-                                        Text(
-                                          album!.songs[audioPlayer.currentIndex ?? 0].name,
-                                          style: Theme.of(context).textTheme.caption,
-                                          overflow: TextOverflow.fade,
-                                        ),
-                                        Text(
-                                          album.name,
-                                          style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 15.0),
-                                          overflow: TextOverflow.fade,
-                                        )
-                                      ],
-                                    ),
-                                    const Icon(
-                                      CupertinoIcons.arrow_right,
-                                      size: 30.0,
-                                    )
-                                  ],
-                                ),
-                              )
-                            : Container(),
-                        SeekBar(
-                          duration: duration,
-                          position: position,
-                          bufferedPosition: const Duration(milliseconds: 0),
-                          onChangeEnd: (newPosition) async {
-                            await audioPlayer.seek(newPosition);
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                Styles.getFormattedSeconds(position.inSeconds),
-                                style: Theme.of(context).textTheme.caption,
-                              ),
-                              Text(
-                                Styles.getFormattedSeconds(duration.inSeconds),
-                                style: Theme.of(context).textTheme.caption,
-                              ),
-                            ],
+    return Column(
+      children: [
+        MainContainer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              StreamBuilder<Duration?>(
+                stream: audioPlayer.durationStream,
+                builder: ((context, snapshot) {
+                  final duration = snapshot.data ?? Duration.zero;
+                  return StreamBuilder<Duration>(
+                    stream: audioPlayer.createPositionStream(),
+                    builder: (context, snapshot) {
+                      var position = snapshot.data ?? Duration.zero;
+                      var seekbarValue = (100.0 / duration.inSeconds) * position.inSeconds;
+                      if (seekbarValue.toString() == "NaN") {
+                        seekbarValue = 0.0;
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          (audioPlayerType == AudioPlayerType.album)
+                              ? MainContainer(
+                                  height: 100.0,
+                                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            audioPlayer.playing ? "Now Playing..." : "Play...",
+                                            style: Theme.of(context).textTheme.headline3,
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            album!.songs[audioPlayer.currentIndex ?? 0].name,
+                                            style: Theme.of(context).textTheme.caption,
+                                            overflow: TextOverflow.fade,
+                                          ),
+                                          Text(
+                                            album.name,
+                                            style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 15.0),
+                                            overflow: TextOverflow.fade,
+                                          )
+                                        ],
+                                      ),
+                                      const Icon(
+                                        CupertinoIcons.arrow_right,
+                                        size: 30.0,
+                                      )
+                                    ],
+                                  ),
+                                )
+                              : Container(),
+                          SeekBar(
+                            duration: duration,
+                            position: position,
+                            bufferedPosition: const Duration(milliseconds: 0),
+                            onChangeEnd: (newPosition) async {
+                              await audioPlayer.seek(newPosition);
+                            },
                           ),
-                        )
-                      ],
-                    );
-                  },
-                );
-              }),
-            ),
-          ],
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  Styles.getFormattedSeconds(position.inSeconds),
+                                  style: Theme.of(context).textTheme.caption,
+                                ),
+                                Text(
+                                  Styles.getFormattedSeconds(duration.inSeconds),
+                                  style: Theme.of(context).textTheme.caption,
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      );
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
         ),
-      ),
-      Row(
-        children: [
-          (audioPlayerType == AudioPlayerType.album)
-              ? Flexible(
-                  child: MainContainer(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
-                    pressable: true,
-                    onPressed: previous,
-                    child: const Center(
-                      child: Icon(CupertinoIcons.backward_fill),
+        Row(
+          children: [
+            (audioPlayerType == AudioPlayerType.album)
+                ? Flexible(
+                    child: MainContainer(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                      pressable: true,
+                      onPressed: previous,
+                      child: const Center(
+                        child: Icon(CupertinoIcons.backward_fill),
+                      ),
                     ),
-                  ),
-                )
-              : Container(),
-          Flexible(
-            child: MainContainer(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
-              pressable: true,
-              toggleButton: true,
-              onPressed: playPauseChanged,
-              child: const Center(
-                child: Icon(CupertinoIcons.playpause_fill),
+                  )
+                : Container(),
+            Flexible(
+              child: MainContainer(
+                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                pressable: true,
+                toggleButton: true,
+                onPressed: playPauseChanged,
+                child: const Center(
+                  child: Icon(CupertinoIcons.playpause_fill),
+                ),
               ),
             ),
-          ),
-          (audioPlayerType == AudioPlayerType.album)
-              ? Flexible(
-                  child: MainContainer(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
-                    pressable: true,
-                    onPressed: next,
-                    child: const Center(
-                      child: Icon(CupertinoIcons.forward_fill),
+            (audioPlayerType == AudioPlayerType.album)
+                ? Flexible(
+                    child: MainContainer(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                      pressable: true,
+                      onPressed: next,
+                      child: const Center(
+                        child: Icon(CupertinoIcons.forward_fill),
+                      ),
                     ),
-                  ),
-                )
-              : Container(),
-        ],
-      ),
-    ]);
+                  )
+                : Container(),
+          ],
+        ),
+      ],
+    );
   }
 }

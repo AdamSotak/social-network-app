@@ -1,12 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/database/playlists_database.dart';
+import 'package:social_network/managers/dialog_manager.dart';
+import 'package:social_network/models/album.dart';
+import 'package:social_network/models/enums/data_type.dart';
 import 'package:social_network/models/playlist.dart';
+import 'package:social_network/models/song.dart';
+import 'package:social_network/widgets/main_widgets/main_back_button.dart';
 import 'package:social_network/widgets/music_widgets/playlists/playlist_gridview_tile.dart';
 import 'package:social_network/widgets/no_data_tile.dart';
 
 class PlaylistsPage extends StatefulWidget {
-  const PlaylistsPage({Key? key}) : super(key: key);
+  const PlaylistsPage({
+    Key? key,
+    this.dataType = DataType.song,
+    this.select = false,
+    this.song,
+    this.album,
+  }) : super(key: key);
+
+  final bool select;
+  final DataType dataType;
+  final Song? song;
+  final Album? album;
 
   @override
   State<PlaylistsPage> createState() => _PlaylistsPageState();
@@ -17,6 +33,24 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
 
   @override
   Widget build(BuildContext context) {
+    var select = widget.select;
+    var song = widget.song;
+    var album = widget.album;
+
+    void playlistSelected(Playlist playlist) async {
+      if (song != null) {
+        playlist.songs.add(song);
+      } else if (album != null) {
+        playlist.songs.addAll(album.songs);
+      }
+
+      DialogManager().displayLoadingDialog(context: context);
+      await PlaylistsDatabase().editPlaylist(playlist).then((value) {
+        DialogManager().closeDialog(context: context);
+        Navigator.pop(context);
+      });
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -24,13 +58,29 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 0.0),
-              child: Text(
-                "Playlists",
-                style: Theme.of(context).textTheme.headline1,
-              ),
-            ),
+            select
+                ? Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(10.0, 30.0, 0.0, 0.0),
+                        child: MainBackButton(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 0.0),
+                        child: Text(
+                          "Playlists",
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
+                      ),
+                    ],
+                  )
+                : Padding(
+                    padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 0.0),
+                    child: Text(
+                      "Playlists",
+                      style: Theme.of(context).textTheme.headline1,
+                    ),
+                  ),
             StreamBuilder<QuerySnapshot>(
               stream: PlaylistsDatabase().getPlaylistStream(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -54,16 +104,6 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
                   return post;
                 }));
 
-                playlists.add(Playlist(id: "id", userId: "userId", name: "name", songs: [], created: DateTime.now()));
-                playlists.add(Playlist(id: "id", userId: "userId", name: "name", songs: [], created: DateTime.now()));
-                playlists.add(Playlist(id: "id", userId: "userId", name: "name", songs: [], created: DateTime.now()));
-                playlists.add(Playlist(id: "id", userId: "userId", name: "name", songs: [], created: DateTime.now()));
-                playlists.add(Playlist(id: "id", userId: "userId", name: "name", songs: [], created: DateTime.now()));
-                playlists.add(Playlist(id: "id", userId: "userId", name: "name", songs: [], created: DateTime.now()));
-                playlists.add(Playlist(id: "id", userId: "userId", name: "name", songs: [], created: DateTime.now()));
-                playlists.add(Playlist(id: "id", userId: "userId", name: "name", songs: [], created: DateTime.now()));
-                playlists.add(Playlist(id: "id", userId: "userId", name: "name", songs: [], created: DateTime.now()));
-
                 if (playlists.isEmpty) {
                   return Padding(
                     padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 5),
@@ -86,7 +126,14 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
                   itemCount: playlists.length,
                   itemBuilder: ((context, index) {
                     var playlist = playlists[index];
-                    return PlaylistGridViewTile(playlist: playlist);
+                    return select
+                        ? GestureDetector(
+                            onTap: () {
+                              playlistSelected(playlist);
+                            },
+                            child: PlaylistGridViewTile(playlist: playlist, select: true),
+                          )
+                        : PlaylistGridViewTile(playlist: playlist);
                   }),
                 );
               },

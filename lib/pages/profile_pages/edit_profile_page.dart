@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -46,7 +45,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     var userData = widget.userData;
-    log(oldPictureURL);
 
     void editProfileDone() async {
       if (Styles.checkIfStringEmpty(displayNameTextEditingController.text)) {

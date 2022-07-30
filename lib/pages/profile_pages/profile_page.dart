@@ -73,9 +73,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       body: DefaultTabController(
-        length: 3,
+        length: 4,
         child: NestedScrollView(
           clipBehavior: Clip.none,
+          physics: const BouncingScrollPhysics(),
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverList(
@@ -226,6 +227,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: Theme.of(context).iconTheme.color,
                     ),
                   ),
+                  const Tab(
+                    icon: Icon(
+                      CupertinoIcons.heart_fill,
+                      color: Colors.red,
+                    ),
+                  ),
                 ],
               ),
               Expanded(
@@ -236,6 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       PostsListView(userId: userId),
                       SongsListView(userId: userId),
                       AlbumsListView(userId: userId),
+                      Container()
                     ],
                   ),
                 ),

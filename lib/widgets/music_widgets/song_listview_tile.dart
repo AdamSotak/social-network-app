@@ -2,12 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network/database/songs_database.dart';
-import 'package:social_network/database/user_data_database.dart';
-import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/enums/audio_player_type.dart';
+import 'package:social_network/models/enums/data_type.dart';
 import 'package:social_network/models/song.dart';
-import 'package:social_network/models/user_data.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/music_widgets/audio_player_widget.dart';
@@ -25,44 +22,10 @@ class SongListViewTile extends StatefulWidget {
 
 class _SongListViewTileState extends State<SongListViewTile> {
   late bool preview = widget.song.id == "preview";
-  UserData userData = UserData(
-    id: "",
-    username: "",
-    displayName: "",
-    profilePhotoURL: "",
-    followers: 0,
-    following: 0,
-  );
-
-  Future<void> getUserData() async {
-    userData = await UserDataDatabase().getUserData(widget.song.userId);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getUserData().whenComplete(() {
-      setState(() {});
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     var song = widget.song;
-
-    void openEditSongPage() {}
-
-    void deleteSong() {
-      DialogManager().displayConfirmationDialog(
-        context: context,
-        title: "Delete Song?",
-        description: "Confirm song deletion",
-        onConfirmation: () {
-          SongsDatabase().deleteSong(song);
-        },
-        onCancellation: () {},
-      );
-    }
 
     void deleteArtworkURL() {
       setState(() {
@@ -77,7 +40,7 @@ class _SongListViewTileState extends State<SongListViewTile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          UserDataWidget(userData: userData, created: song.created),
+          UserDataWidget(userId: song.userId, created: song.created),
           const SizedBox(
             height: 20.0,
           ),
@@ -133,7 +96,11 @@ class _SongListViewTileState extends State<SongListViewTile> {
           const SizedBox(
             height: 30.0,
           ),
-          OptionsRow(preview: preview, playlist: true, onEdit: openEditSongPage, onDelete: deleteSong)
+          OptionsRow(
+            dataType: DataType.song,
+            song: song,
+            preview: preview,
+          )
         ],
       ),
     );

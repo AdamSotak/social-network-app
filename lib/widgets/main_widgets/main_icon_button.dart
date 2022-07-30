@@ -7,7 +7,8 @@ class MainIconButton extends StatelessWidget {
     required this.icon,
     this.width = 50.0,
     this.height = 50.0,
-    this.toggle = false,
+    this.toggleButton = false,
+    this.toggled = false,
     this.overrideShadow = false,
     this.margin = const EdgeInsets.all(5.0),
     required this.onPressed,
@@ -17,7 +18,8 @@ class MainIconButton extends StatelessWidget {
   final Icon icon;
   final double width;
   final double height;
-  final bool toggle;
+  final bool toggleButton;
+  final bool toggled;
   final bool overrideShadow;
   final EdgeInsets margin;
   final Function onPressed;
@@ -34,7 +36,8 @@ class MainIconButton extends StatelessWidget {
         width: width,
         height: width,
         pressable: true,
-        toggleButton: toggle,
+        toggleButton: toggleButton,
+        toggled: toggled,
         overrideShadow: overrideShadow,
         gradient: (gradient != const LinearGradient(colors: [])) ? gradient : null,
         margin: margin,

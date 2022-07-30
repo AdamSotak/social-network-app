@@ -1,26 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:social_network/database/playlists_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
-import 'package:social_network/models/enums/music_player_repeat_type.dart';
 import 'package:social_network/models/enums/music_player_type.dart';
 import 'package:social_network/models/playlist.dart';
-import 'package:social_network/models/song.dart';
 import 'package:social_network/pages/playlists_pages/playlist_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
+import 'package:social_network/widgets/music_widgets/song_seekbar.dart';
 
 class MusicPlayerPage extends StatefulWidget {
   const MusicPlayerPage({
     Key? key,
-    this.playlist,
-    this.song,
+    required this.playlist,
     required this.musicPlayerType,
   }) : super(key: key);
 
-  final Playlist? playlist;
-  final Song? song;
+  final Playlist playlist;
   final MusicPlayerType musicPlayerType;
 
   @override
@@ -31,78 +30,138 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
   double seekbarValue = 0.5;
   bool shufflePlaylist = false;
   bool playing = false;
-  Icon playPauseIcon = const Icon(CupertinoIcons.play_fill);
-  Icon musicPlayerRepeatIcon = const Icon(CupertinoIcons.chevron_right_2);
-  MusicPlayerRepeatType musicPlayerRepeatType = MusicPlayerRepeatType.none;
-  int musicPlayerRepeatValue = 0;
+  final AudioPlayer audioPlayer = AudioPlayer();
+  Icon musicPlayerLoopModeIcon = const Icon(CupertinoIcons.chevron_right_2);
+  LoopMode musicPlayerLoopMode = LoopMode.off;
+  int musicPlayerLoopModeValue = 0;
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     var playlist = widget.playlist;
-    var song = widget.song;
     var musicPlayerType = widget.musicPlayerType;
 
-    void openPlaylistPage() {
-      Navigator.push(
-        context,
-        CupertinoPageRoute(
-          builder: (builder) => PlaylistPage(
-            playlist: playlist!,
-            gradient: Styles.getRandomLinearGradient(),
-          ),
-        ),
-      );
+    final audioPlaylist = ConcatenatingAudioSource(
+      useLazyPreparation: true,
+      shuffleOrder: DefaultShuffleOrder(),
+      children: playlist.songs.map((song) {
+        return AudioSource.uri(Uri.parse(song.contentURL));
+      }).toList(),
+    );
+
+    void play() {
+      audioPlayer.play();
     }
 
-    void seekbarValueChanged(double value) {
-      setState(() {
-        seekbarValue = value;
-      });
+    void pause() {
+      audioPlayer.pause();
     }
 
-    void shufflePlaylistChanged() {
-      setState(() {
-        shufflePlaylist = !shufflePlaylist;
-      });
+    void previous() async {
+      await audioPlayer.seekToPrevious();
     }
 
-    void repeatChanged() {
-      if (musicPlayerRepeatValue < 2) {
-        musicPlayerRepeatValue++;
-      } else {
-        musicPlayerRepeatValue = 0;
-      }
-
-      setState(() {
-        switch (musicPlayerRepeatValue) {
-          case 0:
-            musicPlayerRepeatIcon = const Icon(CupertinoIcons.chevron_right_2);
-            musicPlayerRepeatType = MusicPlayerRepeatType.none;
-            break;
-          case 1:
-            musicPlayerRepeatIcon = const Icon(CupertinoIcons.repeat);
-            musicPlayerRepeatType = MusicPlayerRepeatType.playlist;
-            break;
-          case 2:
-            musicPlayerRepeatIcon = const Icon(CupertinoIcons.repeat_1);
-            musicPlayerRepeatType = MusicPlayerRepeatType.song;
-            break;
-        }
-      });
+    void next() async {
+      await audioPlayer.seekToNext();
     }
 
     void playPauseChanged() {
       playing = !playing;
-      setState(() {
-        if (playing) {
-          playPauseIcon = const Icon(CupertinoIcons.pause_fill);
-        } else {
-          playPauseIcon = const Icon(CupertinoIcons.play_fill);
+
+      if (!playing) {
+        pause();
+      } else {
+        play();
+      }
+    }
+
+    void setupAudioPlayer() async {
+      try {
+        await audioPlayer.setAudioSource(audioPlaylist, initialIndex: 0, initialPosition: Duration.zero);
+        await audioPlayer.setLoopMode(musicPlayerLoopMode);
+      } catch (_) {}
+    }
+
+    setupAudioPlayer();
+
+    void deletePlaylist({bool confirmation = true}) async {
+      if (!confirmation) {
+        DialogManager().displayLoadingDialog(context: context);
+        await PlaylistsDatabase().deletePlaylist(playlist).then((value) {
+          DialogManager().closeDialog(context: context);
+          Navigator.pop(context);
+        });
+        return;
+      }
+
+      DialogManager().displayConfirmationDialog(
+        context: context,
+        title: "Delete Playlist",
+        description: "Confirm Playlist deletion",
+        onConfirmation: () async {
+          DialogManager().displayLoadingDialog(context: context);
+          await PlaylistsDatabase().deletePlaylist(playlist).then((value) {
+            DialogManager().closeDialog(context: context);
+            Navigator.pop(context);
+          });
+        },
+        onCancellation: () {},
+      );
+    }
+
+    void openPlaylistPage() {
+      pause();
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (builder) => PlaylistPage(playlist: playlist),
+        ),
+      ).then((value) {
+        if (value == "Delete") {
+          deletePlaylist(confirmation: false);
+          return;
         }
+        play();
       });
     }
 
-    void deletePlaylist() {}
+    void shufflePlaylistChanged() async {
+      setState(() {
+        shufflePlaylist = !shufflePlaylist;
+      });
+
+      await audioPlayer.setShuffleModeEnabled(shufflePlaylist);
+    }
+
+    void loopModeChanged() {
+      if (musicPlayerLoopModeValue < 2) {
+        musicPlayerLoopModeValue++;
+      } else {
+        musicPlayerLoopModeValue = 0;
+      }
+
+      setState(() {
+        switch (musicPlayerLoopModeValue) {
+          case 0:
+            musicPlayerLoopModeIcon = const Icon(CupertinoIcons.chevron_right_2);
+            musicPlayerLoopMode = LoopMode.off;
+            break;
+          case 1:
+            musicPlayerLoopModeIcon = const Icon(CupertinoIcons.repeat);
+            musicPlayerLoopMode = LoopMode.all;
+            break;
+          case 2:
+            musicPlayerLoopModeIcon = const Icon(CupertinoIcons.repeat_1);
+            musicPlayerLoopMode = LoopMode.one;
+            break;
+        }
+      });
+    }
 
     void displayPlaylistOptions() {
       DialogManager().displayModalBottomSheet(context: context, title: "Playlist Options", options: [
@@ -149,7 +208,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
           child: Column(
             children: [
               MainAppBar(
-                title: playlist!.name,
+                title: playlist.name,
                 icon: const Icon(CupertinoIcons.bars),
                 onIconPressed: displayPlaylistOptions,
               ),
@@ -174,9 +233,13 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                           children: [
                             Row(
                               children: [
-                                Text(
-                                  playlist.name,
-                                  style: Theme.of(context).textTheme.headline1!.copyWith(color: Colors.white),
+                                SizedBox(
+                                  width: 300.0,
+                                  child: Text(
+                                    playlist.name,
+                                    style: Theme.of(context).textTheme.headline1!.copyWith(color: Colors.white),
+                                    overflow: TextOverflow.clip,
+                                  ),
                                 ),
                               ],
                             ),
@@ -185,112 +248,133 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                       ),
                     ),
                   ),
-                  MainContainer(
-                    height: 100.0,
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-                    pressable: true,
-                    onPressed: openPlaylistPage,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Now Playing...",
-                              style: Theme.of(context).textTheme.headline3,
-                            ),
-                            const Spacer(),
-                            Text(
-                              "Song Name",
-                              style: Theme.of(context).textTheme.caption,
-                              overflow: TextOverflow.fade,
-                            ),
-                            Text(
-                              "Album Name",
-                              style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 15.0),
-                              overflow: TextOverflow.fade,
-                            )
-                          ],
-                        ),
-                        const Icon(
-                          CupertinoIcons.arrow_right,
-                          size: 30.0,
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "0:00",
-                        style: Theme.of(context).textTheme.caption,
-                      ),
-                      MainIconButton(
-                          icon: const Icon(CupertinoIcons.shuffle), toggle: true, onPressed: shufflePlaylistChanged),
-                      MainIconButton(icon: musicPlayerRepeatIcon, onPressed: repeatChanged),
-                      Text(
-                        "3:00",
-                        style: Theme.of(context).textTheme.caption,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  MainContainer(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: CupertinoSlider(
-                            value: seekbarValue,
-                            onChanged: (double value) {
-                              seekbarValueChanged(value);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: MainContainer(
-                          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                          pressable: true,
-                          onPressed: () {},
-                          child: const Center(
-                            child: Icon(CupertinoIcons.backward_fill),
-                          ),
-                        ),
-                      ),
-                      MainContainer(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                        pressable: true,
-                        toggleButton: true,
-                        onPressed: playPauseChanged,
-                        child: Center(
-                          child: playPauseIcon,
-                        ),
-                      ),
-                      Flexible(
-                        child: MainContainer(
-                          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-                          pressable: true,
-                          onPressed: () {},
-                          child: const Center(
-                            child: Icon(CupertinoIcons.forward_fill),
-                          ),
-                        ),
-                      ),
-                    ],
+                  StreamBuilder<Duration?>(
+                    stream: audioPlayer.durationStream,
+                    builder: (context, snapshot) {
+                      final duration = snapshot.data ?? Duration.zero;
+                      return StreamBuilder<Duration>(
+                        stream: audioPlayer.createPositionStream(),
+                        builder: (context, snapshot) {
+                          var position = snapshot.data ?? Duration.zero;
+                          var seekbarValue = (100.0 / duration.inSeconds) * position.inSeconds;
+                          if (seekbarValue.toString() == "NaN") {
+                            seekbarValue = 0.0;
+                          }
+                          return Column(
+                            children: [
+                              MainContainer(
+                                height: 100.0,
+                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                                pressable: true,
+                                onPressed: openPlaylistPage,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          audioPlayer.playing ? "Now Playing..." : "Play...",
+                                          style: Theme.of(context).textTheme.headline3,
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          playlist.songs[audioPlayer.currentIndex ?? 0].name,
+                                          style: Theme.of(context).textTheme.caption,
+                                          overflow: TextOverflow.fade,
+                                        ),
+                                        Text(
+                                          playlist.name,
+                                          style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 15.0),
+                                          overflow: TextOverflow.fade,
+                                        )
+                                      ],
+                                    ),
+                                    const Icon(
+                                      CupertinoIcons.arrow_right,
+                                      size: 30.0,
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    Styles.getFormattedSeconds(position.inSeconds),
+                                    style: Theme.of(context).textTheme.caption,
+                                  ),
+                                  MainIconButton(
+                                      icon: const Icon(CupertinoIcons.shuffle),
+                                      toggleButton: true,
+                                      onPressed: shufflePlaylistChanged),
+                                  MainIconButton(icon: musicPlayerLoopModeIcon, onPressed: loopModeChanged),
+                                  Text(
+                                    Styles.getFormattedSeconds(duration.inSeconds),
+                                    style: Theme.of(context).textTheme.caption,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
+                              MainContainer(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    SeekBar(
+                                      duration: duration,
+                                      position: position,
+                                      bufferedPosition: const Duration(milliseconds: 0),
+                                      onChangeEnd: (newPosition) async {
+                                        await audioPlayer.seek(newPosition);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: MainContainer(
+                                      padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                                      pressable: true,
+                                      onPressed: previous,
+                                      child: const Center(
+                                        child: Icon(CupertinoIcons.backward_fill),
+                                      ),
+                                    ),
+                                  ),
+                                  MainContainer(
+                                    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                                    pressable: true,
+                                    toggleButton: true,
+                                    onPressed: playPauseChanged,
+                                    child: const Center(
+                                      child: Icon(CupertinoIcons.playpause_fill),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: MainContainer(
+                                      padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                                      pressable: true,
+                                      onPressed: next,
+                                      child: const Center(
+                                        child: Icon(CupertinoIcons.forward_fill),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
                 ],
               ),

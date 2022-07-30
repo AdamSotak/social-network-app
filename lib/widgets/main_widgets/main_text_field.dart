@@ -12,9 +12,12 @@ class MainTextField extends StatefulWidget {
     this.style = const TextStyle(),
     this.obscureText = false,
     this.maxLines = 1,
+    this.maxLength = 0,
     this.autofocus = false,
     this.margin = const EdgeInsets.all(0.0),
     this.width = 500.0,
+    this.height = 0.0,
+    this.scrollController,
     this.onEditingComplete,
     this.onChanged,
   }) : super(key: key);
@@ -25,9 +28,12 @@ class MainTextField extends StatefulWidget {
   final TextStyle? style;
   final bool obscureText;
   final int maxLines;
+  final int maxLength;
   final bool autofocus;
   final EdgeInsets margin;
   final double width;
+  final double height;
+  final ScrollController? scrollController;
   final Function? onEditingComplete;
   final Function? onChanged;
 
@@ -44,14 +50,18 @@ class _MainTextFieldState extends State<MainTextField> {
     var style = widget.style;
     var obscureText = widget.obscureText;
     var maxLines = widget.maxLines;
+    var maxLength = widget.maxLength;
     var autofocus = widget.autofocus;
     var margin = widget.margin;
     var width = widget.width;
+    var height = widget.height;
+    var scrollController = widget.scrollController;
     var onEditingComplete = widget.onEditingComplete;
     var onChanged = widget.onChanged;
 
     return SizedBox(
       width: (width == 0.0) ? null : width,
+      height: (height == 0.0) ? null : height,
       child: Container(
         margin: margin,
         decoration: box_shadow.BoxDecoration(
@@ -77,8 +87,10 @@ class _MainTextFieldState extends State<MainTextField> {
           controller: textFieldTextEditingController,
           decoration: decoration.copyWith(hintText: hintText),
           obscureText: obscureText,
-          maxLines: maxLines,
+          maxLines: (maxLines == 0) ? null : maxLines,
+          maxLength: (maxLength == 0) ? null : maxLength,
           autofocus: autofocus,
+          scrollController: scrollController,
           onEditingComplete: () {
             if (onEditingComplete != null) {
               onEditingComplete();

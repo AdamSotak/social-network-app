@@ -36,6 +36,8 @@ class _HomePageState extends State<HomePage> {
         name: "name",
         description: "description",
         contentURL: "",
+        likes: 0,
+        comments: 0,
         created: DateTime.now()),
   ];
 

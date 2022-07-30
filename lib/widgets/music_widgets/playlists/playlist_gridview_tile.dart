@@ -8,9 +8,10 @@ import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 
 class PlaylistGridViewTile extends StatefulWidget {
-  const PlaylistGridViewTile({Key? key, required this.playlist}) : super(key: key);
+  const PlaylistGridViewTile({Key? key, required this.playlist, this.select = false}) : super(key: key);
 
   final Playlist playlist;
+  final bool select;
 
   @override
   State<PlaylistGridViewTile> createState() => _PlaylistGridViewTileState();
@@ -20,6 +21,7 @@ class _PlaylistGridViewTileState extends State<PlaylistGridViewTile> {
   @override
   Widget build(BuildContext context) {
     var playlist = widget.playlist;
+    var select = widget.select;
     LinearGradient gradient = Styles.getRandomLinearGradient();
 
     void openMusicPlayerPage() {
@@ -75,19 +77,21 @@ class _PlaylistGridViewTileState extends State<PlaylistGridViewTile> {
               ),
               Align(
                 alignment: Alignment.bottomRight,
-                child: MainIconButton(
-                  width: 55.0,
-                  height: 55.0,
-                  margin: EdgeInsets.zero,
-                  overrideShadow: true,
-                  gradient: gradient,
-                  icon: const Icon(
-                    Icons.play_arrow_rounded,
-                    color: Colors.white,
-                    size: 30.0,
-                  ),
-                  onPressed: openMusicPlayerPage,
-                ),
+                child: select
+                    ? Container()
+                    : MainIconButton(
+                        width: 55.0,
+                        height: 55.0,
+                        margin: EdgeInsets.zero,
+                        overrideShadow: true,
+                        gradient: gradient,
+                        icon: const Icon(
+                          Icons.play_arrow_rounded,
+                          color: Colors.white,
+                          size: 30.0,
+                        ),
+                        onPressed: openMusicPlayerPage,
+                      ),
               ),
             ],
           ),

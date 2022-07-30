@@ -44,6 +44,8 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
         Navigator.pushAndRemoveUntil(
             context, CupertinoPageRoute(builder: (builder) => const LoginPage()), (route) => false);
       });
+
+      // TODO: Delete user data in a Firebase Function
     }
 
     return Scaffold(

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/styling/styles.dart';
@@ -35,13 +33,11 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     // Create a new account
     void createAccount() async {
       // Check if values are empty
-      log(Styles.checkIfStringEmpty("a ").toString());
       if (Styles.checkIfStringEmpty(emailTextEditingController.text) ||
           Styles.checkIfStringEmpty(usernameTextEditingController.text) ||
           Styles.checkIfStringEmpty(displayNameTextEditingController.text) ||
           Styles.checkIfStringEmpty(passwordTextEditingController.text) ||
           Styles.checkIfStringEmpty(confirmPasswordTextEditingController.text)) return;
-      log("Run");
 
       // Check if password match
       if (passwordTextEditingController.text != confirmPasswordTextEditingController.text) return;

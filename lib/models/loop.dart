@@ -6,6 +6,8 @@ class Loop {
   String name;
   String description;
   String contentURL;
+  int likes;
+  int comments;
   DateTime created;
 
   Loop({
@@ -14,6 +16,8 @@ class Loop {
     required this.name,
     required this.description,
     required this.contentURL,
+    required this.likes,
+    required this.comments,
     required this.created,
   });
 
@@ -25,7 +29,9 @@ class Loop {
       userId: data['userId'] as String,
       name: data['name'] as String,
       description: data['description'] as String,
-      contentURL: data['contentURL'],
+      contentURL: data['contentURL'] as String,
+      likes: data['likes'] as int,
+      comments: data['comment'] as int,
       created: DateTime.fromMillisecondsSinceEpoch(data['created'].seconds * 1000),
     );
   }
@@ -37,6 +43,8 @@ class Loop {
       'name': name,
       'description': description,
       'contentURL': contentURL,
+      'likes': likes,
+      'comments': comments,
       'created': created,
     };
   }

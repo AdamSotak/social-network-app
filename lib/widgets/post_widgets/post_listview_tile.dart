@@ -3,11 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network/database/posts_database.dart';
-import 'package:social_network/database/user_data_database.dart';
-import 'package:social_network/managers/dialog_manager.dart';
+import 'package:social_network/models/enums/data_type.dart';
 import 'package:social_network/models/post.dart';
-import 'package:social_network/models/user_data.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/post_widgets/options_row.dart';
@@ -27,18 +24,6 @@ class PostListViewTile extends StatefulWidget {
 class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepAliveClientMixin {
   late VideoPlayerController _videoPlayerController;
   late bool preview = widget.post.id == "preview";
-  UserData userData = UserData(
-    id: "",
-    username: "",
-    displayName: "",
-    profilePhotoURL: "",
-    followers: 0,
-    following: 0,
-  );
-
-  Future<void> getUserData() async {
-    userData = await UserDataDatabase().getUserData(widget.post.userId);
-  }
 
   @override
   bool get wantKeepAlive => true;
@@ -46,9 +31,6 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
   @override
   void initState() {
     super.initState();
-    getUserData().whenComplete(() {
-      setState(() {});
-    });
     _videoPlayerController = VideoPlayerController.network(widget.post.contentURL)
       ..initialize().then(
         (value) {
@@ -85,22 +67,6 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
 
     setupVideoPlayer();
 
-    // Opens PostEditPage
-    void openPostEditPage() {}
-
-    // Delete Post from database
-    void deletePost() {
-      DialogManager().displayConfirmationDialog(
-        context: context,
-        title: "Delete Post?",
-        description: "Confirm post deletion",
-        onConfirmation: () {
-          PostsDatabase().deletePost(post);
-        },
-        onCancellation: () {},
-      );
-    }
-
     void deletePostContentURL() {
       setState(() {
         post.contentURL = "";
@@ -115,12 +81,12 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
       }
     }
 
-    Widget buildPostListViewTile(UserData userData) {
+    Widget buildPostListViewTile() {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          UserDataWidget(userData: userData, created: post.created),
+          UserDataWidget(userId: post.userId, created: post.created),
           const SizedBox(
             height: 20.0,
           ),
@@ -176,7 +142,11 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
           const SizedBox(
             height: 10.0,
           ),
-          OptionsRow(preview: preview, onEdit: openPostEditPage, onDelete: deletePost)
+          OptionsRow(
+            dataType: DataType.post,
+            post: post,
+            preview: preview,
+          )
         ],
       );
     }
@@ -184,6 +154,6 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
     return MainContainer(
         margin: const EdgeInsets.only(bottom: 20.0),
         padding: const EdgeInsets.only(bottom: 5.0),
-        child: buildPostListViewTile(userData));
+        child: buildPostListViewTile());
   }
 }

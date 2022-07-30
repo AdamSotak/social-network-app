@@ -27,6 +27,7 @@ class _AddPostPageState extends State<AddPostPage> {
     userId: Auth().getUserId(),
     description: "",
     contentURL: "",
+    likes: 0,
     video: false,
     created: DateTime.now(),
   );

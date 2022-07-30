@@ -5,6 +5,7 @@ class Post {
   String userId;
   String description;
   String contentURL;
+  int likes;
   bool video;
   DateTime created;
 
@@ -13,6 +14,7 @@ class Post {
       required this.userId,
       required this.description,
       required this.contentURL,
+      required this.likes,
       required this.video,
       required this.created});
 
@@ -24,6 +26,7 @@ class Post {
         userId: data['userId'] as String,
         description: data['description'] as String,
         contentURL: data['contentURL'] as String,
+        likes: data['likes'] as int,
         video: data['video'] == true,
         created: DateTime.fromMillisecondsSinceEpoch(data['created'].seconds * 1000));
   }
@@ -34,6 +37,7 @@ class Post {
       'userId': userId,
       'description': description,
       'contentURL': contentURL,
+      'likes': likes,
       'video': video,
       'created': created
     };
