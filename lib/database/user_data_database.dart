@@ -40,7 +40,7 @@ class UserDataDatabase {
   // Edit UserData
   Future<void> editUserData(UserData userData) async {
     try {
-      await firestore.collection(userDataCollectionName).doc(Auth().getUserId()).set(userData.toJson());
+      await firestore.collection(userDataCollectionName).doc(userData.id).set(userData.toJson());
     } catch (error) {
       log("Edit UserData Exception: $error");
     }

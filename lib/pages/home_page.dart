@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/models/album.dart';
 import 'package:social_network/models/hashtag.dart';
-import 'package:social_network/models/loop.dart';
 import 'package:social_network/models/post.dart';
 import 'package:social_network/pages/search_page.dart';
 import 'package:social_network/widgets/home/hashtag_listview_tile.dart';
-import 'package:social_network/widgets/home/loop_listview_tile.dart';
+import 'package:social_network/widgets/listview_widgets/loops_listview.dart';
 import 'package:social_network/widgets/listview_widgets/posts_listview.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 
@@ -28,17 +27,6 @@ class _HomePageState extends State<HomePage> {
     Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
     Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
     Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
-  ];
-  List<Loop> loops = [
-    Loop(
-        id: "id",
-        userId: Auth().getUserId(),
-        name: "name",
-        description: "description",
-        contentURL: "",
-        likes: 0,
-        comments: 0,
-        created: DateTime.now()),
   ];
 
   @override
@@ -92,17 +80,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(
               height: 80.0,
-              child: ListView.builder(
-                clipBehavior: Clip.none,
-                padding: const EdgeInsets.only(left: 15.0),
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemCount: loops.length,
-                itemBuilder: ((context, index) {
-                  var loop = loops[index];
-                  return LoopListViewTile(loop: loop);
-                }),
-              ),
+              child: LoopsListView(userId: Auth().getUserId()),
             ),
             const SizedBox(
               height: 20.0,

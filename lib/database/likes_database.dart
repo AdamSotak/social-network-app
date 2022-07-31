@@ -8,6 +8,11 @@ class LikesDatabase {
 
   final String likesCollectionName = "likes";
 
+  // Get Likes data Stream for loading
+  Stream<QuerySnapshot> getLikeStream({required String userId}) {
+    return firestore.collection(likesCollectionName).where('userId', isEqualTo: userId).snapshots();
+  }
+
   // Add new Like
   Future<void> addLike(Like like) async {
     try {

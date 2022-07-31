@@ -31,7 +31,6 @@ class _AddLoopPageState extends State<AddLoopPage> {
     description: "",
     contentURL: "",
     likes: 0,
-    comments: 0,
     created: DateTime.now(),
   );
 

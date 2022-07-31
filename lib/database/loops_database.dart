@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:social_network/auth/auth.dart';
 import 'package:social_network/models/loop.dart';
 import 'package:social_network/storage/audio_storage.dart';
 
@@ -11,8 +10,8 @@ class LoopsDatabase {
   final String loopsCollectionName = "loops";
 
   // Get Loops data Stream for loading
-  Stream<QuerySnapshot> getLoopStream() {
-    return firestore.collection(loopsCollectionName).where('userId', isEqualTo: Auth().getUserId()).snapshots();
+  Stream<QuerySnapshot> getLoopStream({required String userId}) {
+    return firestore.collection(loopsCollectionName).where('userId', isEqualTo: userId).snapshots();
   }
 
   // Add new Loop

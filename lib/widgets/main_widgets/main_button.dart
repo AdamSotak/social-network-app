@@ -8,6 +8,8 @@ class MainButton extends StatefulWidget {
       this.icon,
       this.width = 0.0,
       this.height = 0.0,
+      this.toggleButton = false,
+      this.toggled = false,
       this.margin = const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
       this.padding = const EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 10.0),
       required this.onPressed})
@@ -17,6 +19,8 @@ class MainButton extends StatefulWidget {
   final Icon? icon;
   final double width;
   final double height;
+  final bool toggleButton;
+  final bool toggled;
   final EdgeInsets margin;
   final EdgeInsets padding;
   final Function onPressed;
@@ -33,6 +37,8 @@ class _MainButtonState extends State<MainButton> {
     var icon = widget.icon;
     var width = widget.width;
     var height = widget.height;
+    var toggleButton = widget.toggleButton;
+    var toggled = widget.toggled;
     var margin = widget.margin;
     var padding = widget.padding;
     var onPressed = widget.onPressed;
@@ -44,6 +50,8 @@ class _MainButtonState extends State<MainButton> {
       child: MainContainer(
         width: (width != 0.0) ? width : null,
         height: (height != 0.0) ? height : null,
+        toggleButton: toggleButton,
+        toggled: toggled,
         margin: margin,
         pressable: true,
         child: Padding(

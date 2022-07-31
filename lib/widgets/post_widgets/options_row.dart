@@ -56,8 +56,10 @@ class _OptionsRowState extends State<OptionsRow> {
           : widget.album!.likes;
 
   Future<void> load() async {
-    bool likedValue = await LikesDatabase().checkIfLiked(postId: postId, userId: Auth().getUserId());
-    streamController.add({"liked": likedValue, "buttonEnabled": true});
+    try {
+      bool likedValue = await LikesDatabase().checkIfLiked(postId: postId, userId: Auth().getUserId());
+      streamController.add({"liked": likedValue, "buttonEnabled": true});
+    } catch (_) {}
   }
 
   @override

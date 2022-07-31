@@ -12,9 +12,10 @@ import 'package:social_network/styling/variables.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 
 class LoopListViewTile extends StatefulWidget {
-  const LoopListViewTile({Key? key, required this.loop}) : super(key: key);
+  const LoopListViewTile({Key? key, required this.loop, required this.index}) : super(key: key);
 
   final Loop loop;
+  final int index;
 
   @override
   State<LoopListViewTile> createState() => _LoopListViewTileState();
@@ -24,9 +25,10 @@ class _LoopListViewTileState extends State<LoopListViewTile> {
   @override
   Widget build(BuildContext context) {
     var loop = widget.loop;
+    var index = widget.index;
 
     void openLoop() {
-      if (loop.userId == Auth().getUserId()) {
+      if (loop.userId == Auth().getUserId() && index == 0) {
         Navigator.push(context, CupertinoPageRoute(builder: (builder) => const AddLoopPage()));
       } else {}
     }
@@ -68,7 +70,7 @@ class _LoopListViewTileState extends State<LoopListViewTile> {
                 onTap: () {},
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(50.0),
-                  child: (loop.userId == Auth().getUserId())
+                  child: (loop.userId == Auth().getUserId() && index == 0)
                       ? BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
                           child: Stack(

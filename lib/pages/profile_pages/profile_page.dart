@@ -1,17 +1,24 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
+import 'package:social_network/database/follows_database.dart';
 import 'package:social_network/database/user_data_database.dart';
+import 'package:social_network/models/follow.dart';
 import 'package:social_network/models/user_data.dart';
 import 'package:social_network/pages/profile_pages/edit_profile_page.dart';
+import 'package:social_network/pages/profile_pages/follows_page.dart';
 import 'package:social_network/pages/profile_pages/settings_page.dart';
 import 'package:social_network/storage/app_theme/theme_mode_change_notifier.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/styling/variables.dart';
 import 'package:social_network/widgets/listview_widgets/albums_listview.dart';
+import 'package:social_network/widgets/listview_widgets/likes_listview.dart';
 import 'package:social_network/widgets/listview_widgets/posts_listview.dart';
 import 'package:social_network/widgets/listview_widgets/songs_listview.dart';
 import 'package:social_network/widgets/main_widgets/main_back_button.dart';
+import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_circle_tab_indicator.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/main_widgets/main_scroll_behavior.dart';
@@ -27,6 +34,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool following = false;
+  StreamController<Map<String, bool>> streamController = StreamController();
   late bool localUser = widget.userId == Auth().getUserId();
   UserData userData = UserData(
     id: "",
@@ -41,8 +50,21 @@ class _ProfilePageState extends State<ProfilePage> {
     userData = await UserDataDatabase().getUserData(widget.userId);
   }
 
+  Future<void> checkFollowing() async {
+    var followingValue =
+        await FollowsDatabase().checkIfFollowed(fromUserId: Auth().getUserId(), toUserId: widget.userId);
+    streamController.add({"following": followingValue, "buttonEnabled": true});
+  }
+
+  @override
+  void didUpdateWidget(covariant ProfilePage oldWidget) {
+    checkFollowing();
+    super.didUpdateWidget(oldWidget);
+  }
+
   @override
   void initState() {
+    checkFollowing();
     super.initState();
     getUserData().whenComplete(() {
       setState(() {});
@@ -50,9 +72,71 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   @override
+  void dispose() {
+    streamController.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var userId = widget.userId;
     var backButton = widget.backButton;
+
+    void openFollowersPage() {
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (builder) => FollowsPage(userId: userId, followers: true),
+        ),
+      );
+    }
+
+    void openFollowingsPage() {
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (builder) => FollowsPage(userId: userId, followers: false),
+        ),
+      );
+    }
+
+    void updateUserData(int increment) async {
+      var localUserData = await UserDataDatabase().getUserData(Auth().getUserId());
+      localUserData.following += increment;
+
+      await UserDataDatabase().editUserData(userData);
+      await UserDataDatabase().editUserData(localUserData);
+    }
+
+    void follow() async {
+      streamController.add({"following": false, "buttonEnabled": false});
+      Follow follow = Follow(
+        id: Auth.getUUID(),
+        fromUserId: Auth().getUserId(),
+        toUserId: userId,
+        created: DateTime.now(),
+      );
+      await FollowsDatabase().addFollow(follow).then((value) {
+        setState(() {
+          following = true;
+          userData.followers++;
+        });
+        updateUserData(1);
+      });
+      streamController.add({"following": true, "buttonEnabled": true});
+    }
+
+    void unfollow() async {
+      streamController.add({"following": true, "buttonEnabled": false});
+      await FollowsDatabase().deleteFollow(fromUserId: Auth().getUserId(), toUserId: userId).then((value) {
+        setState(() {
+          following = false;
+          userData.followers--;
+        });
+        updateUserData(-1);
+      });
+      streamController.add({"following": false, "buttonEnabled": true});
+    }
 
     void openEditPage() {
       Navigator.push(
@@ -135,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Center(
                       child: SizedBox(
-                        height: 250.0,
+                        height: localUser ? 250.0 : 300.0,
                         child: Column(
                           children: [
                             Container(
@@ -182,17 +266,55 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text(
-                                    "${userData.followers} Followers",
-                                    style: Theme.of(context).textTheme.headline2,
+                                  GestureDetector(
+                                    onTap: openFollowersPage,
+                                    child: Text(
+                                      "${userData.followers} Followers",
+                                      style: Theme.of(context).textTheme.headline2,
+                                    ),
                                   ),
-                                  Text(
-                                    "${userData.following} Following",
-                                    style: Theme.of(context).textTheme.headline2,
+                                  GestureDetector(
+                                    onTap: openFollowingsPage,
+                                    child: Text(
+                                      "${userData.following} Following",
+                                      style: Theme.of(context).textTheme.headline2,
+                                    ),
                                   ),
                                 ],
                               ),
-                            )
+                            ),
+                            const SizedBox(
+                              height: 5.0,
+                            ),
+                            localUser
+                                ? Container()
+                                : StreamBuilder<Map<String, bool>>(
+                                    stream: streamController.stream,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+
+                                      following = snapshot.data!['following']!;
+                                      bool buttonEnabled = snapshot.data!['buttonEnabled']!;
+
+                                      return SizedBox(
+                                        width: 200.0,
+                                        child: MainButton(
+                                          text: following ? "Following" : "Follow",
+                                          toggleButton: true,
+                                          toggled: following,
+                                          onPressed: buttonEnabled
+                                              ? following
+                                                  ? unfollow
+                                                  : follow
+                                              : () {},
+                                        ),
+                                      );
+                                    },
+                                  )
                           ],
                         ),
                       ),
@@ -207,7 +329,7 @@ class _ProfilePageState extends State<ProfilePage> {
               TabBar(
                 indicator: MainCircleTabIndicator(
                     color: ThemeModeChangeNotifier().darkMode ? Colors.white : Colors.black, radius: 3.0),
-                padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 5.0),
+                padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
                 tabs: [
                   Tab(
                     icon: Icon(
@@ -243,7 +365,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       PostsListView(userId: userId),
                       SongsListView(userId: userId),
                       AlbumsListView(userId: userId),
-                      Container()
+                      LikesListView(userId: userId)
                     ],
                   ),
                 ),
