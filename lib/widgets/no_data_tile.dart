@@ -14,29 +14,32 @@ class NoDataTile extends StatelessWidget {
       tween: Tween<double>(begin: 0.0, end: 1.0),
       builder: (context, value, _) => Opacity(
         opacity: value,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.blur_on,
-                size: 200.0,
-                color: (Theme.of(context).iconTheme.color == Colors.black) ? Colors.grey : Colors.white,
-              ),
-              Text(
-                text,
-                style: Theme.of(context).textTheme.headline1,
-                textAlign: TextAlign.center,
-              ),
-              (subtext != "")
-                  ? Text(
-                      subtext,
-                      style: Theme.of(context).textTheme.headline2,
-                      textAlign: TextAlign.center,
-                    )
-                  : Container(),
-            ],
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.blur_on,
+                  size: 200.0,
+                  color: (Theme.of(context).iconTheme.color == Colors.black) ? Colors.grey : Colors.white,
+                ),
+                Text(
+                  text,
+                  style: Theme.of(context).textTheme.headline1,
+                  textAlign: TextAlign.center,
+                ),
+                (subtext != "")
+                    ? Text(
+                        subtext,
+                        style: Theme.of(context).textTheme.headline2,
+                        textAlign: TextAlign.center,
+                      )
+                    : Container(),
+              ],
+            ),
           ),
         ),
       ),

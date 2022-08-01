@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/database/albums_database.dart';
 import 'package:social_network/database/likes_database.dart';
+import 'package:social_network/database/loops_database.dart';
 import 'package:social_network/database/playlists_database.dart';
 import 'package:social_network/database/posts_database.dart';
 import 'package:social_network/database/songs_database.dart';
@@ -13,28 +14,34 @@ import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/album.dart';
 import 'package:social_network/models/enums/data_type.dart';
 import 'package:social_network/models/like.dart';
+import 'package:social_network/models/loop.dart';
 import 'package:social_network/models/playlist.dart';
 import 'package:social_network/models/post.dart';
 import 'package:social_network/models/song.dart';
 import 'package:social_network/pages/comment_pages/comments_page.dart';
 import 'package:social_network/pages/playlists_pages/playlists_page.dart';
+import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 
 class OptionsRow extends StatefulWidget {
   const OptionsRow({
     Key? key,
     required this.dataType,
+    this.loop,
     this.post,
     this.song,
     this.album,
     required this.preview,
+    this.onDelete,
   }) : super(key: key);
 
   final DataType dataType;
+  final Loop? loop;
   final Post? post;
   final Song? song;
   final Album? album;
   final bool preview;
+  final Function? onDelete;
 
   @override
   State<OptionsRow> createState() => _OptionsRowState();
@@ -43,17 +50,25 @@ class OptionsRow extends StatefulWidget {
 class _OptionsRowState extends State<OptionsRow> {
   bool liked = false;
   StreamController<Map<String, bool>> streamController = StreamController();
-  late String postId = (widget.dataType == DataType.post)
-      ? widget.post!.id
-      : (widget.dataType == DataType.song)
-          ? widget.song!.id
-          : widget.album!.id;
+  late String postId = (widget.dataType == DataType.loop)
+      ? widget.loop!.id
+      : (widget.dataType == DataType.post)
+          ? widget.post!.id
+          : (widget.dataType == DataType.song)
+              ? widget.song!.id
+              : (widget.dataType == DataType.album)
+                  ? widget.album!.id
+                  : "";
 
-  late int likes = (widget.dataType == DataType.post)
-      ? widget.post!.likes
-      : (widget.dataType == DataType.song)
-          ? widget.song!.likes
-          : widget.album!.likes;
+  late int likes = (widget.dataType == DataType.loop)
+      ? widget.loop!.likes
+      : (widget.dataType == DataType.post)
+          ? widget.post!.likes
+          : (widget.dataType == DataType.song)
+              ? widget.song!.likes
+              : (widget.dataType == DataType.album)
+                  ? widget.album!.likes
+                  : 0;
 
   Future<void> load() async {
     try {
@@ -73,6 +88,10 @@ class _OptionsRowState extends State<OptionsRow> {
     load();
     super.initState();
     switch (widget.dataType) {
+      case DataType.loop:
+        postId = widget.loop!.id;
+        likes = widget.loop!.likes;
+        break;
       case DataType.post:
         postId = widget.post!.id;
         likes = widget.post!.likes;
@@ -97,15 +116,21 @@ class _OptionsRowState extends State<OptionsRow> {
   @override
   Widget build(BuildContext context) {
     var dataType = widget.dataType;
+    var loop = widget.loop;
     var post = widget.post;
     var song = widget.song;
     var album = widget.album;
     var preview = widget.preview;
+    var onDelete = widget.onDelete;
 
     // Updates the post with the new likes count
     void updatePost() async {
       log(liked.toString());
       switch (dataType) {
+        case DataType.loop:
+          loop!.likes = likes;
+          LoopsDatabase().editLoop(loop);
+          break;
         case DataType.post:
           post!.likes = likes;
           PostsDatabase().editPost(post);
@@ -166,6 +191,22 @@ class _OptionsRowState extends State<OptionsRow> {
     // Depending on the dataType, deletes the post
     void delete() {
       switch (dataType) {
+        case DataType.loop:
+          if (loop!.userId != Auth().getUserId()) return;
+
+          DialogManager().displayConfirmationDialog(
+            context: context,
+            title: "Delete Loop?",
+            description: "Confirm loop deletion",
+            onConfirmation: () {
+              LoopsDatabase().deleteLoop(loop);
+              if (onDelete != null) {
+                onDelete();
+              }
+            },
+            onCancellation: () {},
+          );
+          break;
         case DataType.post:
           if (post!.userId != Auth().getUserId()) return;
 
@@ -212,7 +253,8 @@ class _OptionsRowState extends State<OptionsRow> {
 
     // Display Post options modalBottomSheet
     void displayPostOptions() {
-      DialogManager().displayModalBottomSheet(context: context, title: "Post Options", options: [
+      DialogManager()
+          .displayModalBottomSheet(context: context, title: "${Styles.getDataTypeString(dataType)} Options", options: [
         ListTile(
           leading: Icon(
             CupertinoIcons.wand_stars,
@@ -262,6 +304,7 @@ class _OptionsRowState extends State<OptionsRow> {
 
         await PlaylistsDatabase().addPlaylist(playlist).then((value) {
           DialogManager().closeDialog(context: context);
+          DialogManager().displaySnackBar(context: context, text: "Playlist has been created");
         });
       } else if (dataType == DataType.album && album != null) {
         DialogManager().displayLoadingDialog(context: context);
@@ -448,13 +491,15 @@ class _OptionsRowState extends State<OptionsRow> {
                               : Container()
                         ],
                       ),
-                      MainIconButton(
-                        icon: Icon(
-                          CupertinoIcons.settings,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                        onPressed: (preview) ? () {} : displayPostOptions,
-                      ),
+                      (dataType == DataType.loop && loop!.userId == Auth().getUserId())
+                          ? MainIconButton(
+                              icon: Icon(
+                                CupertinoIcons.settings,
+                                color: Theme.of(context).iconTheme.color,
+                              ),
+                              onPressed: (preview) ? () {} : displayPostOptions,
+                            )
+                          : Container(),
                     ],
                   ),
                 ],

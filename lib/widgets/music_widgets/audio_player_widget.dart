@@ -37,6 +37,14 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   bool playing = false;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.audioPlayerType == AudioPlayerType.loop && !widget.preview) {
+      playing = true;
+    }
+  }
+
+  @override
   void dispose() {
     audioPlayer.dispose();
     super.dispose();
@@ -79,22 +87,24 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     void setupAudioPlayer() async {
       switch (audioPlayerType) {
         case AudioPlayerType.loop:
-          if (loop!.contentURL != "") {
-            try {
+          try {
+            if (loop!.contentURL != "" && preview) {
               await audioPlayer.setFilePath(loop.contentURL);
-              await audioPlayer.setLoopMode(LoopMode.one);
-            } catch (_) {}
-          }
+            } else if (loop.contentURL != "" && !preview) {
+              await audioPlayer.setUrl(loop.contentURL);
+              audioPlayer.play();
+            }
+            await audioPlayer.setLoopMode(LoopMode.one);
+          } catch (_) {}
           break;
         case AudioPlayerType.song:
           try {
             if (song!.contentURL != "" && preview) {
               await audioPlayer.setFilePath(song.contentURL);
-              await audioPlayer.setLoopMode(LoopMode.one);
             } else if (song.contentURL != "" && !preview) {
               await audioPlayer.setUrl(song.contentURL);
-              await audioPlayer.setLoopMode(LoopMode.one);
             }
+            await audioPlayer.setLoopMode(LoopMode.one);
           } catch (_) {}
           break;
         case AudioPlayerType.playlist:
@@ -225,6 +235,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
                 pressable: true,
                 toggleButton: true,
+                toggled: (audioPlayerType == AudioPlayerType.loop && !preview),
                 onPressed: playPauseChanged,
                 child: const Center(
                   child: Icon(CupertinoIcons.playpause_fill),

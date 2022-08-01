@@ -7,6 +7,7 @@ import 'package:social_network/database/follows_database.dart';
 import 'package:social_network/database/user_data_database.dart';
 import 'package:social_network/models/follow.dart';
 import 'package:social_network/models/user_data.dart';
+import 'package:social_network/pages/loops_pages/loops_page.dart';
 import 'package:social_network/pages/profile_pages/edit_profile_page.dart';
 import 'package:social_network/pages/profile_pages/follows_page.dart';
 import 'package:social_network/pages/profile_pages/settings_page.dart';
@@ -106,6 +107,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
       await UserDataDatabase().editUserData(userData);
       await UserDataDatabase().editUserData(localUserData);
+    }
+
+    // Open Loops Page with the current profile
+    void openLoopsPage() {
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (builder) => LoopsPage(
+            follows: [Follow(id: "", fromUserId: "", toUserId: userId, created: DateTime.now())],
+            userId: userId,
+          ),
+        ),
+      );
     }
 
     void follow() async {
@@ -222,29 +236,32 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: localUser ? 250.0 : 300.0,
                         child: Column(
                           children: [
-                            Container(
-                              padding: const EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                gradient: Styles.linearGradients[2],
-                                borderRadius: BorderRadius.circular(150.0),
-                              ),
+                            GestureDetector(
+                              onTap: openLoopsPage,
                               child: Container(
-                                padding: const EdgeInsets.all(2.0),
+                                padding: const EdgeInsets.all(5.0),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).scaffoldBackgroundColor,
+                                  gradient: Styles.linearGradients[2],
                                   borderRadius: BorderRadius.circular(150.0),
                                 ),
-                                child: (Styles.checkIfStringEmpty(userData.profilePhotoURL))
-                                    ? const CircleAvatar(
-                                        backgroundImage: AssetImage(Variables.defaultProfileImageURL),
-                                        backgroundColor: Styles.defaultImageBackgroundColor,
-                                        radius: 70.0,
-                                      )
-                                    : CircleAvatar(
-                                        backgroundImage: NetworkImage(userData.profilePhotoURL),
-                                        backgroundColor: Styles.defaultImageBackgroundColor,
-                                        radius: 70.0,
-                                      ),
+                                child: Container(
+                                  padding: const EdgeInsets.all(2.0),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).scaffoldBackgroundColor,
+                                    borderRadius: BorderRadius.circular(150.0),
+                                  ),
+                                  child: (Styles.checkIfStringEmpty(userData.profilePhotoURL))
+                                      ? const CircleAvatar(
+                                          backgroundImage: AssetImage(Variables.defaultProfileImageURL),
+                                          backgroundColor: Styles.defaultImageBackgroundColor,
+                                          radius: 70.0,
+                                        )
+                                      : CircleAvatar(
+                                          backgroundImage: NetworkImage(userData.profilePhotoURL),
+                                          backgroundColor: Styles.defaultImageBackgroundColor,
+                                          radius: 70.0,
+                                        ),
+                                ),
                               ),
                             ),
                             const SizedBox(
@@ -261,27 +278,25 @@ class _ProfilePageState extends State<ProfilePage> {
                             const SizedBox(
                               height: 10.0,
                             ),
-                            SizedBox(
-                              width: 200.0,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  GestureDetector(
-                                    onTap: openFollowersPage,
-                                    child: Text(
-                                      "${userData.followers} Followers",
-                                      style: Theme.of(context).textTheme.headline2,
-                                    ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: openFollowersPage,
+                                  child: Text(
+                                    "${Styles.getFormattedNumberString(userData.followers)} Followers",
+                                    style: Theme.of(context).textTheme.headline2,
                                   ),
-                                  GestureDetector(
-                                    onTap: openFollowingsPage,
-                                    child: Text(
-                                      "${userData.following} Following",
-                                      style: Theme.of(context).textTheme.headline2,
-                                    ),
+                                ),
+                                const SizedBox(width: 10.0),
+                                GestureDetector(
+                                  onTap: openFollowingsPage,
+                                  child: Text(
+                                    "${Styles.getFormattedNumberString(userData.following)} Following",
+                                    style: Theme.of(context).textTheme.headline2,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                             const SizedBox(
                               height: 5.0,

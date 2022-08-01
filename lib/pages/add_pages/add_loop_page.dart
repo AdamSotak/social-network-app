@@ -84,7 +84,7 @@ class _AddLoopPageState extends State<AddLoopPage> {
               const SizedBox(
                 height: 50.0,
               ),
-              AudioPlayerWidget(audioPlayerType: AudioPlayerType.loop, loop: loop, preview: false),
+              AudioPlayerWidget(audioPlayerType: AudioPlayerType.loop, loop: loop, preview: true),
               const SizedBox(
                 height: 20.0,
               ),

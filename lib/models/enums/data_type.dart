@@ -1,1 +1,1 @@
-enum DataType { post, song, album }
+enum DataType { loop, post, song, album }

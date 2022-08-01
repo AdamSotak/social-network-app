@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:social_network/database/loops_database.dart';
 import 'package:social_network/models/follow.dart';
 
 class FollowsDatabase {
@@ -16,6 +17,26 @@ class FollowsDatabase {
   // Get Followings data Stream for loading
   Stream<QuerySnapshot> getFollowingStream({required String fromUserId}) {
     return firestore.collection(followsCollectionName).where('fromUserId', isEqualTo: fromUserId).snapshots();
+  }
+
+  Future<List<Follow>> getFollowingsLoopsForUser({required String userId}) async {
+    List<Follow> returnValue = [];
+    List<Follow> docs = await firestore
+        .collection(followsCollectionName)
+        .where('fromUserId', isEqualTo: userId)
+        .get()
+        .then((value) async {
+      return value.docs.map((follow) => Follow.fromDocumentSnapshot(follow)).toList();
+    });
+
+    for (var follow in docs) {
+      var loops = await LoopsDatabase().getLoopsForUser(userId: follow.toUserId);
+      if (loops.isNotEmpty) {
+        returnValue.add(follow);
+      }
+    }
+
+    return returnValue;
   }
 
   // Add new Follow

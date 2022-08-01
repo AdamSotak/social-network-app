@@ -10,8 +10,22 @@ class LoopsDatabase {
   final String loopsCollectionName = "loops";
 
   // Get Loops data Stream for loading
-  Stream<QuerySnapshot> getLoopStream({required String userId}) {
+  Stream<QuerySnapshot> getLoopStreamForUser({required String userId}) {
     return firestore.collection(loopsCollectionName).where('userId', isEqualTo: userId).snapshots();
+  }
+
+  // Get Loops for user
+  Future<List<Loop>> getLoopsForUser({required String userId}) async {
+    return await firestore.collection(loopsCollectionName).where('userId', isEqualTo: userId).get().then((value) {
+      return value.docs.map((loop) => Loop.fromDocumentSnapshot(loop)).toList();
+    });
+  }
+
+  // Get Loops for users
+  Future<List<Loop>> getLoopsForUsers({required List<String> users}) async {
+    return await firestore.collection(loopsCollectionName).where('userId', whereIn: users).get().then((value) {
+      return value.docs.map((loop) => Loop.fromDocumentSnapshot(loop)).toList();
+    });
   }
 
   // Add new Loop

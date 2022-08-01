@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:social_network/models/enums/data_type.dart';
 
 class Styles {
   // Values
@@ -102,5 +103,11 @@ class Styles {
       case ThemeMode.light:
         return "Light";
     }
+  }
+
+  // Get String from DataType
+  static String getDataTypeString(DataType dataType) {
+    String dataTypeString = dataType.toString().split('.')[1];
+    return "${dataTypeString[0].toUpperCase()}${dataTypeString.substring(1)}";
   }
 }
