@@ -6,8 +6,8 @@ import 'package:social_network/models/hashtag.dart';
 import 'package:social_network/models/post.dart';
 import 'package:social_network/pages/search_page.dart';
 import 'package:social_network/widgets/home/hashtag_listview_tile.dart';
+import 'package:social_network/widgets/listview_widgets/home_listview.dart';
 import 'package:social_network/widgets/listview_widgets/loops_listview.dart';
-import 'package:social_network/widgets/listview_widgets/posts_listview.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,10 +23,10 @@ class _HomePageState extends State<HomePage> {
   List<Hashtag> hashtags = [
     // Sample data
     Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
-    Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
-    Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
-    Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
-    Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
+    Hashtag(id: "id", name: "#loops", postCount: 100, created: DateTime.now()),
+    Hashtag(id: "id", name: "#beats", postCount: 100, created: DateTime.now()),
+    Hashtag(id: "id", name: "#summer", postCount: 100, created: DateTime.now()),
+    Hashtag(id: "id", name: "#design", postCount: 100, created: DateTime.now()),
   ];
 
   @override
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                 style: Theme.of(context).textTheme.headline1,
               ),
             ),
-            PostsListView(userId: Auth().getUserId())
+            const HomeListView()
           ],
         ),
       ),

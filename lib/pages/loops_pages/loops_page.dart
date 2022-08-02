@@ -67,7 +67,7 @@ class _LoopsPageState extends State<LoopsPage> {
                 children: [
                   Row(
                     children: [
-                      const MainBackButton(),
+                      MainBackButton(buildContext: context),
                       const SizedBox(width: 20.0),
                       Text("Loops", style: Theme.of(context).textTheme.headline1)
                     ],
@@ -76,7 +76,7 @@ class _LoopsPageState extends State<LoopsPage> {
                     padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 5),
                     child: NoDataTile(
                       text: "No Loops Yet",
-                      subtext: localUser ? "" :"Follow a profile or create your\nown Loop to get started",
+                      subtext: localUser ? "" : "Follow a profile or create your\nown Loop to get started",
                     ),
                   ),
                 ],
@@ -128,7 +128,7 @@ class LoopPage extends StatelessWidget {
       children: [
         Row(
           children: [
-            const MainBackButton(),
+            MainBackButton(buildContext: context),
             const SizedBox(width: 20.0),
             Text("Loops", style: Theme.of(context).textTheme.headline1)
           ],

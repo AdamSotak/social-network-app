@@ -15,6 +15,33 @@ class PostsDatabase {
     return firestore.collection(postsCollectionName).where('userId', isEqualTo: userId).snapshots();
   }
 
+  // Get Posts
+  Future<List<Post>> getPosts({int days = 7}) async {
+    return await firestore
+        .collection(postsCollectionName)
+        .where('created', isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: days)))
+        .orderBy('created')
+        .orderBy('likes')
+        .get()
+        .then((value) {
+      return value.docs.map((post) => Post.fromDocumentSnapshot(post)).toList();
+    });
+  }
+
+  // Get liked Posts
+  Future<List<Post>> getLikedPosts({required List<String> likedPosts}) async {
+    return await firestore.collection(postsCollectionName).where('id', whereIn: likedPosts).get().then((value) {
+      return value.docs.map((post) => Post.fromDocumentSnapshot(post)).toList();
+    });
+  }
+
+  // Get Post
+  Future<Post> getPost({required String postId}) async {
+    return await firestore.collection(postsCollectionName).where('id', isEqualTo: postId).get().then((value) {
+      return value.docs.map((loop) => Post.fromDocumentSnapshot(loop)).toList().first;
+    });
+  }
+
   // Add new Post
   Future<void> addPost(Post post) async {
     try {

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/models/enums/data_type.dart';
 import 'package:social_network/models/post.dart';
+import 'package:social_network/widgets/linked_text.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/post_widgets/options_row.dart';
@@ -128,11 +129,11 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
             child: Column(
               children: [
                 (post.contentURL != "")
-                    ? Text(
+                    ? LinkedText(
                         post.description,
                         style: Theme.of(context).textTheme.headline2,
                       )
-                    : Text(
+                    : LinkedText(
                         post.description,
                         style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0),
                       ),

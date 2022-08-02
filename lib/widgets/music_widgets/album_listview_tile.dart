@@ -6,6 +6,7 @@ import 'package:social_network/models/album.dart';
 import 'package:social_network/models/enums/audio_player_type.dart';
 import 'package:social_network/models/enums/data_type.dart';
 import 'package:social_network/styling/styles.dart';
+import 'package:social_network/widgets/linked_text.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/music_widgets/audio_player_widget.dart';
@@ -54,7 +55,7 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
                   "Album",
                   style: Theme.of(context).textTheme.headline1,
                 ),
-                Text(
+                LinkedText(
                   album.name,
                   style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 25.0),
                 )

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +57,16 @@ class _OptionsRowState extends State<OptionsRow> {
               ? widget.song!.id
               : (widget.dataType == DataType.album)
                   ? widget.album!.id
+                  : "";
+
+  late String userId = (widget.dataType == DataType.loop)
+      ? widget.loop!.userId
+      : (widget.dataType == DataType.post)
+          ? widget.post!.userId
+          : (widget.dataType == DataType.song)
+              ? widget.song!.userId
+              : (widget.dataType == DataType.album)
+                  ? widget.album!.userId
                   : "";
 
   late int likes = (widget.dataType == DataType.loop)
@@ -124,24 +133,27 @@ class _OptionsRowState extends State<OptionsRow> {
     var onDelete = widget.onDelete;
 
     // Updates the post with the new likes count
-    void updatePost() async {
-      log(liked.toString());
+    void updatePost(int increment) async {
       switch (dataType) {
         case DataType.loop:
-          loop!.likes = likes;
-          LoopsDatabase().editLoop(loop);
+          var loopValue = await LoopsDatabase().getLoop(loopId: loop!.id);
+          loopValue.likes += increment;
+          await LoopsDatabase().editLoop(loopValue);
           break;
         case DataType.post:
-          post!.likes = likes;
-          PostsDatabase().editPost(post);
+          var postValue = await PostsDatabase().getPost(postId: post!.id);
+          postValue.likes += increment;
+          await PostsDatabase().editPost(postValue);
           break;
         case DataType.song:
-          song!.likes = likes;
-          SongsDatabase().editSong(song);
+          var songValue = await SongsDatabase().getSong(songId: song!.id);
+          songValue.likes += increment;
+          await SongsDatabase().editSong(songValue);
           break;
         case DataType.album:
-          album!.likes = likes;
-          AlbumsDatabase().editAlbum(album);
+          var albumValue = await AlbumsDatabase().getAlbum(albumId: album!.id);
+          albumValue.likes += increment;
+          await AlbumsDatabase().editAlbum(albumValue);
           break;
       }
     }
@@ -161,7 +173,7 @@ class _OptionsRowState extends State<OptionsRow> {
           liked = true;
           likes++;
         });
-        updatePost();
+        updatePost(1);
       });
       streamController.add({"liked": true, "buttonEnabled": true});
     }
@@ -174,7 +186,7 @@ class _OptionsRowState extends State<OptionsRow> {
         liked = false;
         likes--;
       });
-      updatePost();
+      updatePost(-1);
       streamController.add({"liked": false, "buttonEnabled": true});
     }
 
@@ -460,19 +472,25 @@ class _OptionsRowState extends State<OptionsRow> {
                     children: [
                       Row(
                         children: [
-                          MainIconButton(
-                            icon: Icon(
-                              liked ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                              color: Colors.red,
-                            ),
-                            toggleButton: true,
-                            toggled: liked,
-                            onPressed: buttonEnabled
-                                ? liked
-                                    ? unlike
-                                    : like
-                                : () {},
-                          ),
+                          liked
+                              ? MainIconButton(
+                                  icon: const Icon(
+                                    CupertinoIcons.heart_fill,
+                                    color: Colors.red,
+                                  ),
+                                  toggleButton: true,
+                                  toggled: true,
+                                  onPressed: buttonEnabled ? unlike : () {},
+                                )
+                              : MainIconButton(
+                                  icon: const Icon(
+                                    CupertinoIcons.heart,
+                                    color: Colors.red,
+                                  ),
+                                  toggleButton: true,
+                                  toggled: false,
+                                  onPressed: buttonEnabled ? like : () {},
+                                ),
                           MainIconButton(
                             icon: Icon(
                               CupertinoIcons.bubble_left,
@@ -491,7 +509,7 @@ class _OptionsRowState extends State<OptionsRow> {
                               : Container()
                         ],
                       ),
-                      (dataType == DataType.loop && loop!.userId == Auth().getUserId())
+                      (userId == Auth().getUserId())
                           ? MainIconButton(
                               icon: Icon(
                                 CupertinoIcons.settings,

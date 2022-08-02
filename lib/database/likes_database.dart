@@ -13,6 +13,13 @@ class LikesDatabase {
     return firestore.collection(likesCollectionName).where('userId', isEqualTo: userId).snapshots();
   }
 
+  // Get Likes
+  Future<List<Like>> getLikes({required String userId}) async {
+    return await firestore.collection(likesCollectionName).where('userId', isEqualTo: userId).get().then((value) {
+      return value.docs.map((like) => Like.fromDocumentSnapshot(like)).toList();
+    });
+  }
+
   // Add new Like
   Future<void> addLike(Like like) async {
     try {

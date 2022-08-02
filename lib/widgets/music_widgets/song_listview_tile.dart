@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:social_network/models/enums/audio_player_type.dart';
 import 'package:social_network/models/enums/data_type.dart';
 import 'package:social_network/models/song.dart';
+import 'package:social_network/widgets/linked_text.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/music_widgets/audio_player_widget.dart';
@@ -51,7 +52,7 @@ class _SongListViewTileState extends State<SongListViewTile> {
             padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
             child: Column(
               children: [
-                Text(
+                LinkedText(
                   song.name,
                   style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 25.0),
                 )

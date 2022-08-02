@@ -7,14 +7,9 @@ import 'package:social_network/pages/add_pages/add_song_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 
-class AddPage extends StatefulWidget {
+class AddPage extends StatelessWidget {
   const AddPage({Key? key}) : super(key: key);
 
-  @override
-  State<AddPage> createState() => _AddPageState();
-}
-
-class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

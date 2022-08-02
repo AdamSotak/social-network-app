@@ -14,6 +14,32 @@ class AlbumsDatabase {
     return firestore.collection(albumsCollectionName).where('userId', isEqualTo: userId).snapshots();
   }
 
+  // Get Albums
+  Future<List<Album>> getAlbums({int days = 7}) async {
+    return await firestore
+        .collection(albumsCollectionName)
+        .where('created', isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: days)))
+        .orderBy('created')
+        .orderBy('likes')
+        .get()
+        .then((value) {
+      return value.docs.map((album) => Album.fromDocumentSnapshot(album)).toList();
+    });
+  }
+
+  Future<List<Album>> getLikedAlbums({required List<String> likedAlbums}) async {
+    return await firestore.collection(albumsCollectionName).where('id', whereIn: likedAlbums).get().then((value) {
+      return value.docs.map((album) => Album.fromDocumentSnapshot(album)).toList();
+    });
+  }
+
+  // Get Album
+  Future<Album> getAlbum({required String albumId}) async {
+    return await firestore.collection(albumsCollectionName).where('id', isEqualTo: albumId).get().then((value) {
+      return value.docs.map((loop) => Album.fromDocumentSnapshot(loop)).toList().first;
+    });
+  }
+
   // Add new Album
   Future<void> addAlbum(Album album) async {
     try {

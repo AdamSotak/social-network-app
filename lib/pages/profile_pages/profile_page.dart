@@ -192,9 +192,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                     children: [
                                       backButton
                                           ? Row(
-                                              children: const [
-                                                MainBackButton(),
-                                                SizedBox(
+                                              children: [
+                                                MainBackButton(buildContext: context),
+                                                const SizedBox(
                                                   width: 20.0,
                                                 ),
                                               ],
@@ -219,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             : Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  const MainBackButton(),
+                                  MainBackButton(buildContext: context),
                                   const SizedBox(
                                     width: 20.0,
                                   ),
@@ -342,6 +342,11 @@ class _ProfilePageState extends State<ProfilePage> {
           body: Column(
             children: [
               TabBar(
+                onTap: (index) {
+                  if (index == 3) {
+                    setState(() {});
+                  }
+                },
                 indicator: MainCircleTabIndicator(
                     color: ThemeModeChangeNotifier().darkMode ? Colors.white : Colors.black, radius: 3.0),
                 padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),

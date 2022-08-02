@@ -28,6 +28,13 @@ class LoopsDatabase {
     });
   }
 
+  // Get Loop
+  Future<Loop> getLoop({required String loopId}) async {
+    return await firestore.collection(loopsCollectionName).where('id', isEqualTo: loopId).get().then((value) {
+      return value.docs.map((loop) => Loop.fromDocumentSnapshot(loop)).toList().first;
+    });
+  }
+
   // Add new Loop
   Future<void> addLoop(Loop loop) async {
     try {

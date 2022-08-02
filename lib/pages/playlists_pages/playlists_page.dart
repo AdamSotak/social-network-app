@@ -61,9 +61,9 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
             select
                 ? Row(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(10.0, 30.0, 0.0, 0.0),
-                        child: MainBackButton(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10.0, 30.0, 0.0, 0.0),
+                        child: MainBackButton(buildContext: context),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 0.0),
@@ -92,8 +92,9 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3),
+                    child: const Center(child: CircularProgressIndicator()),
                   );
                 }
 

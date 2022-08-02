@@ -52,7 +52,7 @@ class _SearchPageState extends State<SearchPage> {
           children: [
             Row(
               children: [
-                const MainBackButton(),
+                MainBackButton(buildContext: context),
                 const SizedBox(
                   width: 10.0,
                 ),

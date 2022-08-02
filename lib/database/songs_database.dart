@@ -15,6 +15,33 @@ class SongsDatabase {
     return firestore.collection(songsCollectionName).where('userId', isEqualTo: userId).snapshots();
   }
 
+  // Get Songs
+  Future<List<Song>> getSongs({int days = 7}) async {
+    return await firestore
+        .collection(songsCollectionName)
+        .where('created', isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(days: days)))
+        .orderBy('created')
+        .orderBy('likes')
+        .get()
+        .then((value) {
+      return value.docs.map((song) => Song.fromDocumentSnapshot(song)).toList();
+    });
+  }
+
+  // Get liked Songs
+  Future<List<Song>> getLikedSongs({required List<String> likedSongs}) async {
+    return await firestore.collection(songsCollectionName).where('id', whereIn: likedSongs).get().then((value) {
+      return value.docs.map((song) => Song.fromDocumentSnapshot(song)).toList();
+    });
+  }
+
+  // Get Song
+  Future<Song> getSong({required String songId}) async {
+    return await firestore.collection(songsCollectionName).where('id', isEqualTo: songId).get().then((value) {
+      return value.docs.map((loop) => Song.fromDocumentSnapshot(loop)).toList().first;
+    });
+  }
+
   // Add new Song
   Future<void> addSong(Song song) async {
     try {
