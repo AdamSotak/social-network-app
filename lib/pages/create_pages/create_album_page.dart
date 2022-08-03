@@ -10,6 +10,7 @@ import 'package:social_network/models/album.dart';
 import 'package:social_network/models/song.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/styling/variables.dart';
+import 'package:social_network/widgets/linked_text.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
@@ -37,6 +38,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
     name: "",
     songs: [],
     likes: 0,
+    hashtags: [],
     created: DateTime.now(),
   );
 
@@ -69,6 +71,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
       album.id = Auth.getUUID();
       album.name = albumNameTextEditingController.text;
       album.songs = albumSongs;
+      album.hashtags = LinkedTextTools.getAllHashtags(album.name);
       album.created = DateTime.now();
 
       AlbumsDatabase().addAlbum(album).then((value) {

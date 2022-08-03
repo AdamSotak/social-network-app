@@ -259,8 +259,6 @@ class _OptionsRowState extends State<OptionsRow> {
           );
           break;
       }
-
-      // TODO: Delete all post comments in Firebase
     }
 
     // Display Post options modalBottomSheet

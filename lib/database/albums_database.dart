@@ -27,6 +27,19 @@ class AlbumsDatabase {
     });
   }
 
+  // Get Albums with hashtag
+  Future<List<Album>> getHashtagAlbums({required String hashtagName}) async {
+    return await firestore
+        .collection(albumsCollectionName)
+        .where('hashtags', arrayContains: hashtagName)
+        .orderBy('created')
+        .orderBy('likes')
+        .get()
+        .then((value) {
+      return value.docs.map((album) => Album.fromDocumentSnapshot(album)).toList();
+    });
+  }
+
   Future<List<Album>> getLikedAlbums({required List<String> likedAlbums}) async {
     return await firestore.collection(albumsCollectionName).where('id', whereIn: likedAlbums).get().then((value) {
       return value.docs.map((album) => Album.fromDocumentSnapshot(album)).toList();

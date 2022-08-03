@@ -16,9 +16,9 @@ class TrendingListView extends StatelessWidget {
   Future<List<Map<String, dynamic>>> load() async {
     List<Map<String, dynamic>> data = [];
     List<dynamic> dataMix = [];
-    var posts = await PostsDatabase().getPosts(days: 1);
-    var songs = await SongsDatabase().getSongs(days: 1);
-    var albums = await AlbumsDatabase().getAlbums(days: 1);
+    var posts = await PostsDatabase().getHashtagPosts(hashtagName: hashtag.name);
+    var songs = await SongsDatabase().getHashtagSongs(hashtagName: hashtag.name);
+    var albums = await AlbumsDatabase().getHashtagAlbums(hashtagName: hashtag.name);
     dataMix.addAll(posts);
     dataMix.addAll(songs);
     dataMix.addAll(albums);
@@ -61,9 +61,9 @@ class TrendingListView extends StatelessWidget {
         if (data.isEmpty) {
           return Padding(
             padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 5),
-            child: const NoDataTile(
+            child: NoDataTile(
               text: "Ooops...",
-              subtext: "Please check your Internet connection",
+              subtext: "There are no posts tagged ${hashtag.name}",
             ),
           );
         }

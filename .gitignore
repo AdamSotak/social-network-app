@@ -60,3 +60,6 @@ app.*.map.json
 /backend/azure-storage/node_modules
 /backend/azure-storage/credentials
 /backend/azure-storage/.deployment
+/backend/functions/node_modules
+/backend/.firebaserc
+/backend/firebase.json

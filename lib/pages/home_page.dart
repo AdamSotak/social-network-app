@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
-import 'package:social_network/models/album.dart';
-import 'package:social_network/models/hashtag.dart';
-import 'package:social_network/models/post.dart';
 import 'package:social_network/pages/search_page.dart';
-import 'package:social_network/widgets/home/hashtag_listview_tile.dart';
+import 'package:social_network/widgets/listview_widgets/hashtags_listview.dart';
 import 'package:social_network/widgets/listview_widgets/home_listview.dart';
 import 'package:social_network/widgets/listview_widgets/loops_listview.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
@@ -18,17 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Post> posts = [];
-  List<Album> albums = [];
-  List<Hashtag> hashtags = [
-    // Sample data
-    Hashtag(id: "id", name: "#trending", postCount: 100, created: DateTime.now()),
-    Hashtag(id: "id", name: "#loops", postCount: 100, created: DateTime.now()),
-    Hashtag(id: "id", name: "#beats", postCount: 100, created: DateTime.now()),
-    Hashtag(id: "id", name: "#summer", postCount: 100, created: DateTime.now()),
-    Hashtag(id: "id", name: "#design", postCount: 100, created: DateTime.now()),
-  ];
-
   @override
   Widget build(BuildContext context) {
     void openSearchPage() {
@@ -57,19 +43,9 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 250.0,
-              child: ListView.builder(
-                clipBehavior: Clip.none,
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.only(left: 10.0),
-                itemCount: hashtags.length,
-                itemBuilder: ((context, index) {
-                  var hashtag = hashtags[index];
-                  return HashtagListViewTile(hashtag: hashtag);
-                }),
-              ),
+              child: HashtagsListView(),
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),

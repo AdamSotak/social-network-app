@@ -6,6 +6,7 @@ import 'package:social_network/database/posts_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/enums/post_type.dart';
 import 'package:social_network/models/post.dart';
+import 'package:social_network/widgets/linked_text.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
@@ -29,6 +30,7 @@ class _AddPostPageState extends State<AddPostPage> {
     contentURL: "",
     likes: 0,
     video: false,
+    hashtags: [],
     created: DateTime.now(),
   );
   String addPictureButtonText = "Add Picture";
@@ -49,6 +51,7 @@ class _AddPostPageState extends State<AddPostPage> {
 
       post.id = Auth.getUUID();
       post.description = postDescriptionTextEditingController.text;
+      post.hashtags = LinkedTextTools.getAllHashtags(post.description);
       post.created = DateTime.now();
 
       await PostsDatabase().addPost(post).then((value) {

@@ -27,8 +27,6 @@ class _AddLoopPageState extends State<AddLoopPage> {
   Loop loop = Loop(
     id: "id",
     userId: Auth().getUserId(),
-    name: "",
-    description: "",
     contentURL: "",
     likes: 0,
     created: DateTime.now(),

@@ -8,6 +8,7 @@ class Album {
   String artworkURL;
   List<Song> songs;
   int likes;
+  List<String> hashtags;
   DateTime created;
 
   Album({
@@ -17,6 +18,7 @@ class Album {
     required this.artworkURL,
     required this.songs,
     required this.likes,
+    required this.hashtags,
     required this.created,
   });
 
@@ -30,6 +32,7 @@ class Album {
       artworkURL: data['artworkURL'] as String,
       songs: (data['songs'] as List).map((song) => Song.fromJson(song)).toList(),
       likes: data['likes'] as int,
+      hashtags: (data['hashtags'] as List).map((hashtag) => hashtag.toString()).toList(),
       created: DateTime.fromMillisecondsSinceEpoch(data['created'].seconds * 1000),
     );
   }
@@ -46,6 +49,7 @@ class Album {
       'artworkURL': artworkURL,
       'songs': songsJson,
       'likes': likes,
+      'hashtags': hashtags,
       'created': created,
     };
   }

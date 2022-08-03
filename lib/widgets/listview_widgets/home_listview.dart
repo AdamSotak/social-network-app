@@ -55,7 +55,7 @@ class HomeListView extends StatelessWidget {
         if (data.isEmpty) {
           return const NoDataTile(
             text: "Ooops...",
-            subtext: "Please check your Internet connection",
+            subtext: "No Posts Yet",
           );
         }
 

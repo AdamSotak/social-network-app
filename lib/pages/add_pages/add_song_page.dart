@@ -11,6 +11,7 @@ import 'package:social_network/database/songs_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/song.dart';
 import 'package:social_network/styling/styles.dart';
+import 'package:social_network/widgets/linked_text.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
@@ -36,6 +37,7 @@ class _AddSongPageState extends State<AddSongPage> {
     artworkURL: "",
     contentURL: "",
     likes: 0,
+    hashtags: [],
     created: DateTime.now(),
   );
 
@@ -62,6 +64,7 @@ class _AddSongPageState extends State<AddSongPage> {
 
       song.id = Auth.getUUID();
       song.contentURL = songContentURL;
+      song.hashtags = LinkedTextTools.getAllHashtags(song.name);
       song.created = DateTime.now();
 
       await SongsDatabase().addSong(song).then((value) {

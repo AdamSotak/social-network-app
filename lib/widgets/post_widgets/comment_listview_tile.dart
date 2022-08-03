@@ -4,6 +4,7 @@ import 'package:social_network/auth/auth.dart';
 import 'package:social_network/database/comments_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/comment.dart';
+import 'package:social_network/widgets/linked_text.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
@@ -51,7 +52,7 @@ class CommentListViewTile extends StatelessWidget {
               : UserDataWidget(userId: comment.userId),
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
-            child: Text(
+            child: LinkedText(
               comment.text,
               style: Theme.of(context).textTheme.headline2,
               textAlign: TextAlign.justify,

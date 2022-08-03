@@ -7,6 +7,7 @@ class Post {
   String contentURL;
   int likes;
   bool video;
+  List<String> hashtags;
   DateTime created;
 
   Post(
@@ -16,6 +17,7 @@ class Post {
       required this.contentURL,
       required this.likes,
       required this.video,
+      required this.hashtags,
       required this.created});
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -28,6 +30,7 @@ class Post {
         contentURL: data['contentURL'] as String,
         likes: data['likes'] as int,
         video: data['video'] == true,
+        hashtags: (data['hashtags'] as List).map((hashtag) => hashtag.toString()).toList(),
         created: DateTime.fromMillisecondsSinceEpoch(data['created'].seconds * 1000));
   }
 
@@ -39,6 +42,7 @@ class Post {
       'contentURL': contentURL,
       'likes': likes,
       'video': video,
+      'hashtags': hashtags,
       'created': created
     };
   }

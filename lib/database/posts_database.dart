@@ -28,6 +28,19 @@ class PostsDatabase {
     });
   }
 
+  // Get Posts with hashtag
+  Future<List<Post>> getHashtagPosts({required String hashtagName}) async {
+    return await firestore
+        .collection(postsCollectionName)
+        .where('hashtags', arrayContains: hashtagName)
+        .orderBy('created')
+        .orderBy('likes')
+        .get()
+        .then((value) {
+      return value.docs.map((post) => Post.fromDocumentSnapshot(post)).toList();
+    });
+  }
+
   // Get liked Posts
   Future<List<Post>> getLikedPosts({required List<String> likedPosts}) async {
     return await firestore.collection(postsCollectionName).where('id', whereIn: likedPosts).get().then((value) {

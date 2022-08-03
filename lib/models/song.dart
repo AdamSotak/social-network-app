@@ -8,6 +8,7 @@ class Song {
   String artworkURL;
   String contentURL;
   int likes;
+  List<String> hashtags;
   DateTime created;
 
   Song({
@@ -18,6 +19,7 @@ class Song {
     required this.artworkURL,
     required this.contentURL,
     required this.likes,
+    required this.hashtags,
     required this.created,
   });
 
@@ -32,6 +34,7 @@ class Song {
       artworkURL: data['artworkURL'] as String,
       contentURL: data['contentURL'] as String,
       likes: data['likes'] as int,
+      hashtags: (data['hashtags'] as List).map((hashtag) => hashtag.toString()).toList(),
       created: DateTime.fromMillisecondsSinceEpoch(data['created'].seconds * 1000),
     );
   }
@@ -44,6 +47,7 @@ class Song {
         artworkURL = json['artworkURL'],
         contentURL = json['contentURL'],
         likes = json['likes'],
+        hashtags = (json['hashtags'] as List).map((song) => song.toString()).toList(),
         created = DateTime.fromMillisecondsSinceEpoch(json['created'].seconds * 1000);
 
   Map<String, dynamic> toJson() {
@@ -55,6 +59,7 @@ class Song {
       'artworkURL': artworkURL,
       'contentURL': contentURL,
       'likes': likes,
+      'hashtags': hashtags,
       'created': created,
     };
   }

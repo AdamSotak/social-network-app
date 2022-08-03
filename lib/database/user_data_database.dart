@@ -24,6 +24,13 @@ class UserDataDatabase {
     return UserData.fromDocumentSnapshot(doc);
   }
 
+  // Get UserData by username
+  Future<UserData> getUserDataByUsername({required String username}) async {
+    return await firestore.collection(userDataCollectionName).where('username', isEqualTo: username).get().then((value) {
+      return value.docs.map((userData) =>  UserData.fromDocumentSnapshot(userData)).toList().first;
+    });
+  }
+
   // Search UserData
   Stream<QuerySnapshot> searchUserData({required String searchQuery, int take = 10}) {
     if (searchQuery == "") {

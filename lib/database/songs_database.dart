@@ -28,6 +28,19 @@ class SongsDatabase {
     });
   }
 
+  // Get Songs with hashtag
+  Future<List<Song>> getHashtagSongs({required String hashtagName}) async {
+    return await firestore
+        .collection(songsCollectionName)
+        .where('hashtags', arrayContains: hashtagName)
+        .orderBy('created')
+        .orderBy('likes')
+        .get()
+        .then((value) {
+      return value.docs.map((song) => Song.fromDocumentSnapshot(song)).toList();
+    });
+  }
+
   // Get liked Songs
   Future<List<Song>> getLikedSongs({required List<String> likedSongs}) async {
     return await firestore.collection(songsCollectionName).where('id', whereIn: likedSongs).get().then((value) {

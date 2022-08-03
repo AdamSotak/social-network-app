@@ -1,19 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network/database/hashtags_database.dart';
+import 'package:social_network/database/user_data_database.dart';
+import 'package:social_network/managers/dialog_manager.dart';
+import 'package:social_network/pages/profile_pages/profile_page.dart';
+import 'package:social_network/pages/trending_pages/trending_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class LinkedText extends StatelessWidget {
-  const LinkedText(this.text, {Key? key, this.style = const TextStyle()}) : super(key: key);
-
-  final String text;
-  final TextStyle? style;
-
-  String cleanText(String textValue) {
+class LinkedTextTools {
+  static String cleanText(String textValue) {
     textValue = textValue.replaceAllMapped(RegExp(r'\w#+'), (match) => "${match[0]?.split('').join(" ")}");
     textValue = textValue.replaceAllMapped(RegExp(r'\w@+'), (match) => "${match[0]?.split('').join(" ")}");
     return textValue;
   }
 
-  List<String> getAllHashtags(String textValue) {
+  static List<String> getAllHashtags(String textValue) {
     List<String> hashtags = [];
 
     RegExp(r'\#[a-zA-Z0-9]+\b()').allMatches(textValue).forEach((hashtag) {
@@ -25,7 +27,7 @@ class LinkedText extends StatelessWidget {
     return hashtags;
   }
 
-  List<String> getAllMentions(String textValue) {
+  static List<String> getAllMentions(String textValue) {
     List<String> mentions = [];
 
     RegExp(r'\@[a-zA-Z0-9]+\b()').allMatches(textValue).forEach((mention) {
@@ -36,6 +38,15 @@ class LinkedText extends StatelessWidget {
 
     return mentions;
   }
+}
+
+class LinkedText extends StatelessWidget {
+  const LinkedText(this.text, {Key? key, this.style = const TextStyle(), this.textAlign = TextAlign.left})
+      : super(key: key);
+
+  final String text;
+  final TextStyle? style;
+  final TextAlign textAlign;
 
   List<String> getAllUrls(String textValue) {
     List<String> urls = [];
@@ -53,16 +64,48 @@ class LinkedText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void openHashtag(String hashtag) {}
+    void openHashtag(String hashtagName) async {
+      try {
+        await HashtagsDatabase().getHashtag(hashtagName: hashtagName).then((hashtag) {
+          Navigator.push(context, CupertinoPageRoute(builder: (builder) => TrendingPage(hashtag: hashtag)));
+        });
+      } catch (_) {
+        DialogManager()
+            .displayInformationDialog(context: context, title: "Ooops...", description: "Hashtag does not exist");
+      }
+    }
 
-    void openProfile(String username) {}
+    void openProfile(String username) async {
+      username = username.replaceFirst('@', '');
+      try {
+        await UserDataDatabase().getUserDataByUsername(username: username).then((userData) {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (builder) => ProfilePage(
+                userId: userData.id,
+                backButton: true,
+              ),
+            ),
+          );
+        });
+      } catch (_) {
+        DialogManager()
+            .displayInformationDialog(context: context, title: "Ooops...", description: "User does not exist");
+      }
+    }
 
-    void openUrl(String url) {}
+    void openUrl(String url) async {
+      Uri uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      }
+    }
 
-    String textValue = cleanText(text);
+    String textValue = LinkedTextTools.cleanText(text);
 
-    List<String> hashtags = getAllHashtags(textValue);
-    List<String> mentions = getAllMentions(textValue);
+    List<String> hashtags = LinkedTextTools.getAllHashtags(textValue);
+    List<String> mentions = LinkedTextTools.getAllMentions(textValue);
     List<String> urls = getAllUrls(textValue);
 
     List<TextSpan> textSpans = [];
@@ -102,6 +145,9 @@ class LinkedText extends StatelessWidget {
       }
     });
 
-    return RichText(text: TextSpan(children: textSpans));
+    return RichText(
+      text: TextSpan(children: textSpans),
+      textAlign: textAlign,
+    );
   }
 }
