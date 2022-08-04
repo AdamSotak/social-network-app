@@ -28,6 +28,13 @@ class SongsDatabase {
     });
   }
 
+  // Get Songs by id
+  Future<List<Song>> getSongsById({required List<String> songs}) async {
+    return await firestore.collection(songsCollectionName).where('id', whereIn: songs).get().then((value) {
+      return value.docs.map((song) => Song.fromDocumentSnapshot(song)).toList();
+    });
+  }
+
   // Get Songs with hashtag
   Future<List<Song>> getHashtagSongs({required String hashtagName}) async {
     return await firestore

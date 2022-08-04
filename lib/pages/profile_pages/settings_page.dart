@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network/auth/auth.dart';
+import 'package:social_network/main.dart';
 import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/pages/account_pages/change_email_page.dart';
 import 'package:social_network/pages/account_pages/change_password_page.dart';
 import 'package:social_network/pages/account_pages/delete_account_page.dart';
-import 'package:social_network/pages/login_page.dart';
 import 'package:social_network/storage/app_theme/theme_mode_change_notifier.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
@@ -113,10 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
         onConfirmation: () {
           Auth().logout().then((value) {
             Navigator.pushAndRemoveUntil(
-              context,
-              CupertinoPageRoute(builder: (builder) => const LoginPage()),
-              (route) => false,
-            );
+                context, CupertinoPageRoute(builder: (builder) => const App()), (route) => false);
           });
         },
         onCancellation: () {

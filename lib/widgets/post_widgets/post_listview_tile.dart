@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -25,6 +24,7 @@ class PostListViewTile extends StatefulWidget {
 class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepAliveClientMixin {
   late VideoPlayerController _videoPlayerController;
   late bool preview = widget.post.id == "preview";
+  bool videoPlayerSetup = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -32,20 +32,34 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
   @override
   void initState() {
     super.initState();
-    _videoPlayerController = VideoPlayerController.network(widget.post.contentURL)
-      ..initialize().then(
-        (value) {
-          setState(() {
-            _videoPlayerController.setLooping(true);
-            _videoPlayerController.play();
-          });
-        },
-      );
+    if (!preview && widget.post.video) {
+      _videoPlayerController = VideoPlayerController.network(widget.post.contentURL)
+        ..initialize().then(
+          (value) {
+            setState(() {
+              _videoPlayerController.setLooping(true);
+              _videoPlayerController.play();
+            });
+          },
+        );
+    } else if (preview && widget.post.video) {
+      _videoPlayerController = VideoPlayerController.file(File(widget.post.contentURL))
+        ..initialize().then(
+          (value) {
+            setState(() {
+              _videoPlayerController.setLooping(true);
+              _videoPlayerController.play();
+            });
+          },
+        );
+    }
   }
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
+    try {
+      _videoPlayerController.dispose();
+    } catch (_) {}
     super.dispose();
   }
 
@@ -57,25 +71,25 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
 
     void setupVideoPlayer() async {
       if (preview && post.contentURL != "" && post.video) {
-        _videoPlayerController.dispose();
-        _videoPlayerController = VideoPlayerController.file(File(widget.post.contentURL));
-        await _videoPlayerController.initialize();
-        _videoPlayerController.setLooping(true);
-        _videoPlayerController.play();
-        log(_videoPlayerController.value.size.height.toString());
+        _videoPlayerController = VideoPlayerController.file(File(widget.post.contentURL))
+          ..initialize().then((value) {
+            setState(() {
+              _videoPlayerController.setLooping(true);
+              _videoPlayerController.play();
+              videoPlayerSetup = true;
+            });
+          });
       }
     }
 
-    setupVideoPlayer();
+    if (!videoPlayerSetup) {
+      setupVideoPlayer();
+    }
 
     void deletePostContentURL() {
       setState(() {
         post.contentURL = "";
       });
-
-      if (post.video) {
-        _videoPlayerController.dispose();
-      }
 
       if (onContentURLCleared != null) {
         onContentURLCleared();

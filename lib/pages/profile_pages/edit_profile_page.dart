@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_network/auth/auth.dart';
 import 'package:social_network/database/user_data_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/user_data.dart';
@@ -58,6 +59,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
       }
 
       DialogManager().displayLoadingDialog(context: context);
+
+      UserData userData = await UserDataDatabase().getUserData(Auth().getUserId());
+      if (!await Auth().checkUsername(username: usernameTextEditingController.text) &&
+          userData.username != usernameTextEditingController.text) {
+        DialogManager().closeDialog(context: context);
+        DialogManager().displaySnackBar(context: context, text: "Username not available");
+        return;
+      }
 
       userData.displayName = displayNameTextEditingController.text;
       userData.username = usernameTextEditingController.text;

@@ -39,17 +39,6 @@ class Song {
     );
   }
 
-  Song.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        userId = json['userId'],
-        name = json['name'],
-        albumId = json['albumId'],
-        artworkURL = json['artworkURL'],
-        contentURL = json['contentURL'],
-        likes = json['likes'],
-        hashtags = (json['hashtags'] as List).map((song) => song.toString()).toList(),
-        created = DateTime.fromMillisecondsSinceEpoch(json['created'].seconds * 1000);
-
   Map<String, dynamic> toJson() {
     return {
       'id': id,

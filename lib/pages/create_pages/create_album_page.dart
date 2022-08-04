@@ -70,7 +70,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
 
       album.id = Auth.getUUID();
       album.name = albumNameTextEditingController.text;
-      album.songs = albumSongs;
+      album.songs = albumSongs.map((song) => song.id).toList();
       album.hashtags = LinkedTextTools.getAllHashtags(album.name);
       album.created = DateTime.now();
 

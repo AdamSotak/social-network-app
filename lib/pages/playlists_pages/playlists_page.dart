@@ -38,10 +38,11 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
     var album = widget.album;
 
     void playlistSelected(Playlist playlist) async {
-      if (song != null) {
-        playlist.songs.add(song);
+      if (song != null && !playlist.songs.contains(song.id)) {
+        playlist.songs.add(song.id);
       } else if (album != null) {
         playlist.songs.addAll(album.songs);
+        playlist.songs = playlist.songs.toSet().toList();
       }
 
       DialogManager().displayLoadingDialog(context: context);

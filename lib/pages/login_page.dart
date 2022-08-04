@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
+import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/pages/create_account_page.dart';
-import 'package:social_network/pages/main_page.dart';
+import 'package:social_network/pages/account_pages/reset_password_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
@@ -38,12 +39,21 @@ class _LoginPageState extends State<LoginPage> {
       await Auth()
           .login(email: emailTextEditingController.text, password: passwordTextEditingController.text)
           .then((value) {
-        Navigator.pushReplacement(context, CupertinoPageRoute(builder: (builder) => const MainPage()));
+        if (!value) {
+          DialogManager().displayInformationDialog(
+              context: context, title: "Wrong login info", description: "Wrong email and/or password");
+          emailTextEditingController.text = "";
+          passwordTextEditingController.text = "";
+        }
       });
     }
 
     void openCreateAccountPage() {
       Navigator.push(context, CupertinoPageRoute(builder: (builder) => const CreateAccountPage()));
+    }
+
+    void openResetPasswordPage() {
+      Navigator.push(context, CupertinoPageRoute(builder: (builder) => const ResetPasswordPage()));
     }
 
     return Scaffold(
@@ -78,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   MainButton(text: "Login", onPressed: login),
                   MainButton(text: "Create Account", onPressed: openCreateAccountPage),
+                  MainButton(text: "Reset Password", onPressed: openResetPasswordPage),
                 ],
               )),
         ),

@@ -308,7 +308,7 @@ class _OptionsRowState extends State<OptionsRow> {
           id: Auth.getUUID(),
           userId: Auth().getUserId(),
           name: song.name,
-          songs: [song],
+          songs: [song.id],
           created: DateTime.now(),
         );
 
@@ -416,7 +416,7 @@ class _OptionsRowState extends State<OptionsRow> {
                           CupertinoIcons.bubble_left,
                           color: Theme.of(context).iconTheme.color,
                         ),
-                        onPressed: openCommentsPage,
+                        onPressed: () {},
                       ),
                       (dataType == DataType.song || dataType == DataType.album)
                           ? MainIconButton(
@@ -434,7 +434,7 @@ class _OptionsRowState extends State<OptionsRow> {
                       CupertinoIcons.settings,
                       color: Theme.of(context).iconTheme.color,
                     ),
-                    onPressed: (preview) ? () {} : displayPostOptions,
+                    onPressed: () {},
                   ),
                 ],
               ),

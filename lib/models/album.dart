@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:social_network/models/song.dart';
 
 class Album {
   String id;
   String userId;
   String name;
   String artworkURL;
-  List<Song> songs;
+  List<String> songs;
   int likes;
   List<String> hashtags;
   DateTime created;
@@ -30,7 +29,7 @@ class Album {
       userId: data['userId'] as String,
       name: data['name'] as String,
       artworkURL: data['artworkURL'] as String,
-      songs: (data['songs'] as List).map((song) => Song.fromJson(song)).toList(),
+      songs: (data['songs'] as List).map((song) => song.toString()).toList(),
       likes: data['likes'] as int,
       hashtags: (data['hashtags'] as List).map((hashtag) => hashtag.toString()).toList(),
       created: DateTime.fromMillisecondsSinceEpoch(data['created'].seconds * 1000),
@@ -38,16 +37,12 @@ class Album {
   }
 
   Map<String, dynamic> toJson() {
-    List<Map<String, dynamic>> songsJson = [];
-    for (var song in songs) {
-      songsJson.add(song.toJson());
-    }
     return {
       'id': id,
       'userId': userId,
       'name': name,
       'artworkURL': artworkURL,
-      'songs': songsJson,
+      'songs': songs,
       'likes': likes,
       'hashtags': hashtags,
       'created': created,

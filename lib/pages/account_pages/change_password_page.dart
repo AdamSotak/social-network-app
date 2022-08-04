@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/managers/dialog_manager.dart';
+import 'package:social_network/pages/account_pages/reset_password_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
+import 'package:social_network/widgets/main_widgets/main_button.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -64,6 +66,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       });
     }
 
+    void openResetPasswordPage() {
+      Navigator.push(context, CupertinoPageRoute(builder: (builder) => const ResetPasswordPage()));
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -101,6 +107,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 margin: const EdgeInsets.symmetric(vertical: 10.0),
                 obscureText: true,
               ),
+              const SizedBox(
+                height: 50.0,
+              ),
+              Text(
+                "Reset your password if you don't remember it",
+                style: Theme.of(context).textTheme.headline2,
+              ),
+              MainButton(text: "Reset Password", onPressed: openResetPasswordPage)
             ],
           ),
         ),

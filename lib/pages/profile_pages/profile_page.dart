@@ -349,7 +349,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 indicator: MainCircleTabIndicator(
                     color: ThemeModeChangeNotifier().darkMode ? Colors.white : Colors.black, radius: 3.0),
-                padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+                padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
                 tabs: [
                   Tab(
                     icon: Icon(

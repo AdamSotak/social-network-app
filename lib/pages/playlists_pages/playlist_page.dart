@@ -10,9 +10,10 @@ import 'package:social_network/widgets/main_widgets/main_text_field.dart';
 import 'package:social_network/widgets/music_widgets/playlists/playlist_song_listview_tile.dart';
 
 class PlaylistPage extends StatefulWidget {
-  const PlaylistPage({Key? key, required this.playlist}) : super(key: key);
+  const PlaylistPage({Key? key, required this.playlist, required this.songs}) : super(key: key);
 
   final Playlist playlist;
+  final List<Song> songs;
 
   @override
   State<PlaylistPage> createState() => _PlaylistPageState();
@@ -30,6 +31,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
   @override
   Widget build(BuildContext context) {
     var playlist = widget.playlist;
+    var songs = widget.songs;
     playlistNameTextEditingController.text = playlist.name;
 
     void playlistEditDone() async {
@@ -53,7 +55,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
 
     void removeSong(Song song) async {
       DialogManager().displayLoadingDialog(context: context);
-      playlist.songs.remove(song);
+      playlist.songs.remove(song.id);
       await PlaylistsDatabase().editPlaylist(playlist).then((value) {
         DialogManager().closeDialog(context: context);
         setState(() {});
@@ -82,9 +84,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: playlist.songs.length,
+                itemCount: songs.length,
                 itemBuilder: (context, index) {
-                  var song = playlist.songs[index];
+                  var song = songs[index];
                   return PlaylistSongListViewTile(
                     song: song,
                     onSongDelete: removeSong,

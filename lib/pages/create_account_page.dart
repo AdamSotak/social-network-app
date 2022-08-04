@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
+import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/styling/styles.dart';
-import 'package:social_network/widgets/main_widgets/main_button.dart';
+import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
 
 class CreateAccountPage extends StatefulWidget {
@@ -37,10 +39,24 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           Styles.checkIfStringEmpty(usernameTextEditingController.text) ||
           Styles.checkIfStringEmpty(displayNameTextEditingController.text) ||
           Styles.checkIfStringEmpty(passwordTextEditingController.text) ||
-          Styles.checkIfStringEmpty(confirmPasswordTextEditingController.text)) return;
+          Styles.checkIfStringEmpty(confirmPasswordTextEditingController.text)) {
+        DialogManager().displaySnackBar(context: context, text: "Please enter the required information");
+        return;
+      }
 
       // Check if password match
-      if (passwordTextEditingController.text != confirmPasswordTextEditingController.text) return;
+      if (passwordTextEditingController.text != confirmPasswordTextEditingController.text) {
+        DialogManager().displaySnackBar(context: context, text: "Password do not match");
+        return;
+      }
+
+      DialogManager().displayLoadingDialog(context: context);
+
+      if (!await Auth().checkUsername(username: usernameTextEditingController.text)) {
+        DialogManager().closeDialog(context: context);
+        DialogManager().displaySnackBar(context: context, text: "Username not available");
+        return;
+      }
 
       // Create account
       await Auth()
@@ -50,64 +66,58 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               displayName: displayNameTextEditingController.text,
               password: passwordTextEditingController.text)
           .then((value) {
-        Navigator.pop(context);
+        DialogManager().closeDialog(context: context);
+        if (!value) {
+          DialogManager().displaySnackBar(context: context, text: "Email already in use");
+        } else {
+          Navigator.pop(context);
+        }
       });
     }
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 10.0),
-        child: Center(
-          child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: 200.0,
-                    child: Text(
-                      "Create Account",
-                      style: Theme.of(context).textTheme.headline1!.copyWith(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30.0,
-                  ),
-                  MainTextField(
-                    controller: emailTextEditingController,
-                    hintText: "Email",
-                    margin: const EdgeInsets.symmetric(vertical: 10.0),
-                  ),
-                  MainTextField(
-                    controller: usernameTextEditingController,
-                    hintText: "Username",
-                    margin: const EdgeInsets.symmetric(vertical: 10.0),
-                  ),
-                  MainTextField(
-                    controller: displayNameTextEditingController,
-                    hintText: "Display Name",
-                    margin: const EdgeInsets.symmetric(vertical: 10.0),
-                  ),
-                  MainTextField(
-                    controller: passwordTextEditingController,
-                    hintText: "Password",
-                    obscureText: true,
-                    margin: const EdgeInsets.symmetric(vertical: 10.0),
-                  ),
-                  MainTextField(
-                    controller: confirmPasswordTextEditingController,
-                    hintText: "Confirm Password",
-                    obscureText: true,
-                    margin: const EdgeInsets.symmetric(vertical: 10.0),
-                  ),
-                  const SizedBox(
-                    height: 50.0,
-                  ),
-                  Center(
-                    child: MainButton(text: "Create Account", onPressed: createAccount),
-                  ),
-                ],
-              )),
+        padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              MainAppBar(
+                title: "Create Account",
+                icon: const Icon(CupertinoIcons.check_mark),
+                onIconPressed: createAccount,
+              ),
+              const SizedBox(
+                height: 30.0,
+              ),
+              MainTextField(
+                controller: emailTextEditingController,
+                hintText: "Email",
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
+              ),
+              MainTextField(
+                controller: usernameTextEditingController,
+                hintText: "Username",
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
+              ),
+              MainTextField(
+                controller: displayNameTextEditingController,
+                hintText: "Display Name",
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
+              ),
+              MainTextField(
+                controller: passwordTextEditingController,
+                hintText: "Password",
+                obscureText: true,
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
+              ),
+              MainTextField(
+                controller: confirmPasswordTextEditingController,
+                hintText: "Confirm Password",
+                obscureText: true,
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -19,7 +19,6 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController searchTextEditingController = TextEditingController();
-  List<UserData> userData = [];
 
   @override
   void dispose() {
@@ -85,7 +84,7 @@ class _SearchPageState extends State<SearchPage> {
                   );
                 }
 
-                userData.clear();
+                List<UserData> userData = [];
 
                 userData.addAll(snapshot.data!.docs.map((DocumentSnapshot documentSnapshot) {
                   var userData = UserData.fromDocumentSnapshot(documentSnapshot);

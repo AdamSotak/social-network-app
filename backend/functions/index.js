@@ -4,5 +4,6 @@ admin.initializeApp();
 
 module.exports = {
     ...require('./post-functions'),
-    ...require('./hashtag-functions')
+    ...require('./hashtag-functions'),
+    ...require('./user-functions')
 };

@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social_network/database/user_data_database.dart';
 import 'package:social_network/models/user_data.dart';
+import 'package:social_network/styling/variables.dart';
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
 
 class Auth {
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -49,6 +52,19 @@ class Auth {
     } catch (error) {
       return false;
     }
+  }
+
+  // Check if username available
+  Future<bool> checkUsername({required String username}) async {
+    var response = await http.get(Uri.parse("${Variables.firebaseFunctionsURL}/checkUsername/$username"));
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      log(data["usernameAvailable"].toString());
+      return data["usernameAvailable"] == true;
+    }
+
+    return false;
   }
 
   // Create new account
