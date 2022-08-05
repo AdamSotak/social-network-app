@@ -26,7 +26,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    void deleteAccountDone() {
+    void deleteAccountDone() async {
       if (Styles.checkIfStringEmpty(currentPasswordTextEditingController.text) || !checkboxValue) {
         DialogManager().displaySnackBar(context: context, text: "Please enter the required information");
         return;
@@ -34,18 +34,20 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
 
       DialogManager().displayLoadingDialog(context: context);
 
-      Auth().deleteAccount(currentPassword: currentPasswordTextEditingController.text).then((value) {
-        DialogManager().closeDialog(context: context);
-        if (!value) {
+      await Auth().reauthenticateUser(currentPassword: currentPasswordTextEditingController.text).then((value) async {
+        if (value) {
+          await Auth().deleteUserData();
+        } else {
           DialogManager().displaySnackBar(context: context, text: "Incorrect password");
           return;
         }
+      });
 
+      await Auth().deleteAccount(currentPassword: currentPasswordTextEditingController.text).then((value) {
+        DialogManager().closeDialog(context: context);
         Navigator.pushAndRemoveUntil(
             context, CupertinoPageRoute(builder: (builder) => const LoginPage()), (route) => false);
       });
-
-      // TODO: Delete user data in a Firebase Function
     }
 
     return Scaffold(

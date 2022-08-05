@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:social_network/models/enums/post_type.dart';
 import 'package:social_network/pages/add_pages/add_loop_page.dart';
 import 'package:social_network/pages/add_pages/add_post_page.dart';
@@ -83,7 +84,9 @@ class _AddWidgetState extends State<AddWidget> {
     var nextPage = widget.nextPage;
 
     void openPage() {
-      Navigator.push(context, CupertinoPageRoute(builder: (builder) => nextPage));
+      Navigator.push(context, CupertinoPageRoute(builder: (builder) => nextPage)).then((value) {
+        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+      });
     }
 
     return Flexible(

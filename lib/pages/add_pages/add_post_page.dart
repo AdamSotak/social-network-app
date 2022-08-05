@@ -6,6 +6,7 @@ import 'package:social_network/database/posts_database.dart';
 import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/enums/post_type.dart';
 import 'package:social_network/models/post.dart';
+import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/linked_text.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
@@ -47,6 +48,11 @@ class _AddPostPageState extends State<AddPostPage> {
     var postType = widget.postType;
 
     void addPost() async {
+      if (Styles.checkIfStringEmpty(postDescriptionTextEditingController.text)) {
+        DialogManager().displaySnackBar(context: context, text: "Please enter post description");
+        return;
+      }
+
       DialogManager().displayLoadingDialog(context: context);
 
       post.id = Auth.getUUID();
@@ -124,6 +130,7 @@ class _AddPostPageState extends State<AddPostPage> {
                     controller: postDescriptionTextEditingController,
                     hintText: "Description",
                     onChanged: onDescriptionChanged,
+                    height: 250.0,
                   ),
                   const SizedBox(
                     height: 10.0,

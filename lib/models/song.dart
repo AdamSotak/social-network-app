@@ -4,7 +4,6 @@ class Song {
   String id;
   String userId;
   String name;
-  String albumId;
   String artworkURL;
   String contentURL;
   int likes;
@@ -15,7 +14,6 @@ class Song {
     required this.id,
     required this.userId,
     required this.name,
-    required this.albumId,
     required this.artworkURL,
     required this.contentURL,
     required this.likes,
@@ -30,7 +28,6 @@ class Song {
       id: documentSnapshot.id,
       userId: data['userId'] as String,
       name: data['name'] as String,
-      albumId: data['albumId'] as String,
       artworkURL: data['artworkURL'] as String,
       contentURL: data['contentURL'] as String,
       likes: data['likes'] as int,
@@ -44,7 +41,6 @@ class Song {
       'id': id,
       'userId': userId,
       'name': name,
-      'albumId': albumId,
       'artworkURL': artworkURL,
       'contentURL': contentURL,
       'likes': likes,

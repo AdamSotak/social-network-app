@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_network/pages/add_pages/add_page.dart';
 import 'package:social_network/pages/create_pages/create_album_page.dart';
-import 'package:social_network/pages/create_pages/create_song_page.dart';
 
 class CreatePage extends StatefulWidget {
   const CreatePage({Key? key}) : super(key: key);
@@ -24,12 +23,14 @@ class _CreatePageState extends State<CreatePage> {
               style: Theme.of(context).textTheme.headline1,
             ),
           ),
-          const AddWidget(
-            text: "Song",
-            subtext: "Digital Audio Workstation to create your own tracks",
-            nextPage: CreateSongPage(),
-            index: 0,
-          ),
+          // Future project
+          
+          // const AddWidget(
+          //   text: "Song",
+          //   subtext: "Digital Audio Workstation to create your own tracks",
+          //   nextPage: CreateSongPage(),
+          //   index: 0,
+          // ),
           const AddWidget(
             text: "Album",
             subtext: "Create Album with songs you created",

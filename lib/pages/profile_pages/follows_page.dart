@@ -94,9 +94,9 @@ class FollowsPage extends StatelessWidget {
                       return MainContainer(
                         pressable: true,
                         onPressed: () {
-                          openProfilePage(followers ? follow.fromUserId : follow.toUserId);
+                          openProfilePage(followers ? follow.userId : follow.toUserId);
                         },
-                        child: UserDataWidget(userId: followers ? follow.fromUserId : follow.toUserId),
+                        child: UserDataWidget(userId: followers ? follow.userId : follow.toUserId),
                       );
                     },
                   );

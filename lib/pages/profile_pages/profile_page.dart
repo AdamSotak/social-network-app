@@ -115,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
         context,
         CupertinoPageRoute(
           builder: (builder) => LoopsPage(
-            follows: [Follow(id: "", fromUserId: "", toUserId: userId, created: DateTime.now())],
+            follows: [Follow(id: "", userId: "", toUserId: userId, created: DateTime.now())],
             userId: userId,
           ),
         ),
@@ -126,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
       streamController.add({"following": false, "buttonEnabled": false});
       Follow follow = Follow(
         id: Auth.getUUID(),
-        fromUserId: Auth().getUserId(),
+        userId: Auth().getUserId(),
         toUserId: userId,
         created: DateTime.now(),
       );

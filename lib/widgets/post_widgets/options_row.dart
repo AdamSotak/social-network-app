@@ -18,6 +18,9 @@ import 'package:social_network/models/playlist.dart';
 import 'package:social_network/models/post.dart';
 import 'package:social_network/models/song.dart';
 import 'package:social_network/pages/comment_pages/comments_page.dart';
+import 'package:social_network/pages/edit_pages/edit_album_page.dart';
+import 'package:social_network/pages/edit_pages/edit_post_page.dart';
+import 'package:social_network/pages/edit_pages/edit_song_page.dart';
 import 'package:social_network/pages/playlists_pages/playlists_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
@@ -200,6 +203,22 @@ class _OptionsRowState extends State<OptionsRow> {
       );
     }
 
+    void edit() {
+      switch (dataType) {
+        case DataType.loop:
+          break;
+        case DataType.post:
+          Navigator.push(context, CupertinoPageRoute(builder: (builder) => EditPostPage(post: post!)));
+          break;
+        case DataType.song:
+          Navigator.push(context, CupertinoPageRoute(builder: (builder) => EditSongPage(song: song!)));
+          break;
+        case DataType.album:
+          Navigator.push(context, CupertinoPageRoute(builder: (builder) => EditAlbumPage(album: album!)));
+          break;
+      }
+    }
+
     // Depending on the dataType, deletes the post
     void delete() {
       switch (dataType) {
@@ -265,16 +284,19 @@ class _OptionsRowState extends State<OptionsRow> {
     void displayPostOptions() {
       DialogManager()
           .displayModalBottomSheet(context: context, title: "${Styles.getDataTypeString(dataType)} Options", options: [
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.wand_stars,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Edit", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
+        (dataType != DataType.loop)
+            ? ListTile(
+                leading: Icon(
+                  CupertinoIcons.wand_stars,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                title: Text("Edit", style: Theme.of(context).textTheme.headline4),
+                onTap: () {
+                  Navigator.pop(context);
+                  edit();
+                },
+              )
+            : Container(),
         ListTile(
           leading: Icon(
             CupertinoIcons.delete,

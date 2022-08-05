@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/managers/dialog_manager.dart';
+import 'package:social_network/pages/main_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';
@@ -34,6 +35,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   Widget build(BuildContext context) {
     // Create a new account
     void createAccount() async {
+      displayNameTextEditingController.text = displayNameTextEditingController.text.trim();
+      usernameTextEditingController.text = usernameTextEditingController.text.trim();
       // Check if values are empty
       if (Styles.checkIfStringEmpty(emailTextEditingController.text) ||
           Styles.checkIfStringEmpty(usernameTextEditingController.text) ||
@@ -52,7 +55,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
       DialogManager().displayLoadingDialog(context: context);
 
-      if (!await Auth().checkUsername(username: usernameTextEditingController.text)) {
+      if (!await Auth().checkUsername(username: usernameTextEditingController.text) ||
+          usernameTextEditingController.text.contains(' ')) {
         DialogManager().closeDialog(context: context);
         DialogManager().displaySnackBar(context: context, text: "Username not available");
         return;
@@ -70,7 +74,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         if (!value) {
           DialogManager().displaySnackBar(context: context, text: "Email already in use");
         } else {
-          Navigator.pop(context);
+          Navigator.pushAndRemoveUntil(
+              context, CupertinoPageRoute(builder: (builder) => const MainPage()), (route) => false);
         }
       });
     }

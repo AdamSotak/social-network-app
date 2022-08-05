@@ -63,11 +63,15 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Logo",
-                    style: Theme.of(context).textTheme.headline1!.copyWith(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+                    "Login.",
+                    style: Theme.of(context).textTheme.headline1!.copyWith(fontWeight: FontWeight.bold, fontSize: 50.0),
+                  ),
+                  Text(
+                    "Music-centric social media app",
+                    style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0),
                   ),
                   const SizedBox(
                     height: 50.0,

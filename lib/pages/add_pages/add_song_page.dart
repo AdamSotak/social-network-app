@@ -33,7 +33,6 @@ class _AddSongPageState extends State<AddSongPage> {
     id: "preview",
     userId: Auth().getUserId(),
     name: "",
-    albumId: "",
     artworkURL: "",
     contentURL: "",
     likes: 0,

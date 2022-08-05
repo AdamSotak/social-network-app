@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Follow {
   String id;
-  String fromUserId;
+  String userId;
   String toUserId;
   DateTime created;
 
   Follow({
     required this.id,
-    required this.fromUserId,
+    required this.userId,
     required this.toUserId,
     required this.created,
   });
@@ -18,7 +18,7 @@ class Follow {
 
     return Follow(
       id: data['id'] as String,
-      fromUserId: data['fromUserId'] as String,
+      userId: data['userId'] as String,
       toUserId: data['toUserId'] as String,
       created: DateTime.fromMillisecondsSinceEpoch(data['created'].seconds * 1000),
     );
@@ -27,7 +27,7 @@ class Follow {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'fromUserId': fromUserId,
+      'userId': userId,
       'toUserId': toUserId,
       'created': created,
     };

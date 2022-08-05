@@ -30,7 +30,7 @@ class LoopsListView extends StatelessWidget {
         }
 
         follows.clear();
-        follows.add(Follow(id: "", fromUserId: "", toUserId: Auth().getUserId(), created: DateTime.now()));
+        follows.add(Follow(id: "", userId: "", toUserId: Auth().getUserId(), created: DateTime.now()));
         follows.addAll(snapshot.data!);
 
         if (follows.isEmpty) {
