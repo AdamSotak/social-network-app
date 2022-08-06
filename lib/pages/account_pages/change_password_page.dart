@@ -110,9 +110,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               const SizedBox(
                 height: 50.0,
               ),
-              Text(
-                "Reset your password if you don't remember it",
-                style: Theme.of(context).textTheme.headline2,
+              Center(
+                child: Text(
+                  "Reset your password if you don't remember it",
+                  style: Theme.of(context).textTheme.headline2,
+                ),
+              ),
+              const SizedBox(
+                height: 20.0,
               ),
               MainButton(text: "Reset Password", onPressed: openResetPasswordPage)
             ],

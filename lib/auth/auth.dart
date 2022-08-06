@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:social_network/database/user_data_database.dart';
+import 'package:social_network/managers/dialog_manager.dart';
 import 'package:social_network/models/user_data.dart';
 import 'package:social_network/styling/variables.dart';
 import 'package:uuid/uuid.dart';
@@ -34,10 +36,11 @@ class Auth {
   }
 
   // Login user
-  Future<bool> login({required String email, required String password}) async {
+  Future<bool> login({required String email, required String password, required BuildContext context}) async {
     try {
-      await auth.signInWithEmailAndPassword(email: email.trim(), password: password);
-
+      auth.signInWithEmailAndPassword(email: email.trim(), password: password).whenComplete(() {
+        DialogManager().closeDialog(context: context);
+      });
       return true;
     } catch (error) {
       log(error.toString());
@@ -139,9 +142,7 @@ class Auth {
 
   Future<bool> deleteUserData() async {
     try {
-      await functions.httpsCallable('deleteUserData').call({
-        "token": await Auth().getUserIDToken()
-      });
+      await functions.httpsCallable('deleteUserData').call({"token": await Auth().getUserIDToken()});
       return true;
     } catch (error) {
       log(error.toString());

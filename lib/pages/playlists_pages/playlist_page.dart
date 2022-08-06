@@ -10,10 +10,12 @@ import 'package:social_network/widgets/main_widgets/main_text_field.dart';
 import 'package:social_network/widgets/music_widgets/playlists/playlist_song_listview_tile.dart';
 
 class PlaylistPage extends StatefulWidget {
-  const PlaylistPage({Key? key, required this.playlist, required this.songs}) : super(key: key);
+  const PlaylistPage({Key? key, required this.playlist, required this.songs, required this.songRemovedFromPlaylist})
+      : super(key: key);
 
   final Playlist playlist;
   final List<Song> songs;
+  final Function songRemovedFromPlaylist;
 
   @override
   State<PlaylistPage> createState() => _PlaylistPageState();
@@ -21,6 +23,7 @@ class PlaylistPage extends StatefulWidget {
 
 class _PlaylistPageState extends State<PlaylistPage> {
   final TextEditingController playlistNameTextEditingController = TextEditingController();
+  final _animatedListKey = GlobalKey<AnimatedListState>();
 
   @override
   void dispose() {
@@ -32,6 +35,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
   Widget build(BuildContext context) {
     var playlist = widget.playlist;
     var songs = widget.songs;
+    var songRemovedFromPlaylist = widget.songRemovedFromPlaylist;
     playlistNameTextEditingController.text = playlist.name;
 
     void playlistEditDone() async {
@@ -54,8 +58,24 @@ class _PlaylistPageState extends State<PlaylistPage> {
     }
 
     void removeSong(Song song) async {
+      if (songs.length != playlist.songs.length) {
+        DialogManager().displayInformationDialog(
+            context: context, title: "Notice", description: "Playlist contains songs that are no longer available");
+        return;
+      }
+      var index = playlist.songs.indexOf(song.id);
+      _animatedListKey.currentState!.removeItem(
+        index,
+        (context, animation) {
+          return SizeTransition(
+            sizeFactor: animation,
+            child: PlaylistSongListViewTile(song: song),
+          );
+        },
+      );
       DialogManager().displayLoadingDialog(context: context);
       playlist.songs.remove(song.id);
+      songRemovedFromPlaylist(song);
       await PlaylistsDatabase().editPlaylist(playlist).then((value) {
         DialogManager().closeDialog(context: context);
         setState(() {});
@@ -83,9 +103,10 @@ class _PlaylistPageState extends State<PlaylistPage> {
               hintText: "Playlist Name",
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: songs.length,
-                itemBuilder: (context, index) {
+              child: AnimatedList(
+                key: _animatedListKey,
+                initialItemCount: songs.length,
+                itemBuilder: (context, index, animation) {
                   var song = songs[index];
                   return PlaylistSongListViewTile(
                     song: song,

@@ -174,9 +174,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(
                 height: 20.0,
               ),
-              Text(
-                "Changes might need a few minutes to propagate",
-                style: Theme.of(context).textTheme.headline2,
+              Center(
+                child: Text(
+                  "Changes might need a few minutes to propagate",
+                  style: Theme.of(context).textTheme.headline2,
+                ),
               )
             ],
           ),

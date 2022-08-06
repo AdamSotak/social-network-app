@@ -83,7 +83,7 @@ class DialogManager {
             borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0))),
         builder: (context) {
           return SizedBox(
-            height: options.length * 75.0,
+            height: options.length * 75.0 + 10.0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

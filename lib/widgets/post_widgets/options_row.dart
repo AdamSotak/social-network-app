@@ -282,43 +282,67 @@ class _OptionsRowState extends State<OptionsRow> {
 
     // Display Post options modalBottomSheet
     void displayPostOptions() {
-      DialogManager()
-          .displayModalBottomSheet(context: context, title: "${Styles.getDataTypeString(dataType)} Options", options: [
-        (dataType != DataType.loop)
-            ? ListTile(
-                leading: Icon(
-                  CupertinoIcons.wand_stars,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                title: Text("Edit", style: Theme.of(context).textTheme.headline4),
-                onTap: () {
-                  Navigator.pop(context);
-                  edit();
-                },
-              )
-            : Container(),
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.delete,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Delete", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-            delete();
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            CupertinoIcons.xmark,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: Text("Close", style: Theme.of(context).textTheme.headline4),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-      ]);
+      DialogManager().displayModalBottomSheet(
+          context: context,
+          title: "${Styles.getDataTypeString(dataType)} Options",
+          options: (dataType != DataType.loop)
+              ? [
+                  ListTile(
+                    leading: Icon(
+                      CupertinoIcons.wand_stars,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    title: Text("Edit", style: Theme.of(context).textTheme.headline4),
+                    onTap: () {
+                      Navigator.pop(context);
+                      edit();
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      CupertinoIcons.delete,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    title: Text("Delete", style: Theme.of(context).textTheme.headline4),
+                    onTap: () {
+                      Navigator.pop(context);
+                      delete();
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      CupertinoIcons.xmark,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    title: Text("Close", style: Theme.of(context).textTheme.headline4),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ]
+              : [
+                  ListTile(
+                    leading: Icon(
+                      CupertinoIcons.delete,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    title: Text("Delete", style: Theme.of(context).textTheme.headline4),
+                    onTap: () {
+                      Navigator.pop(context);
+                      delete();
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      CupertinoIcons.xmark,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    title: Text("Close", style: Theme.of(context).textTheme.headline4),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ]);
     }
 
     // Creates a new playlist and adds the songs

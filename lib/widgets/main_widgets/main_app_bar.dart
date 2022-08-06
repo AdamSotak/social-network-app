@@ -31,10 +31,13 @@ class MainAppBar extends StatelessWidget {
           },
         ),
         const Spacer(),
-        Text(
-          title,
-          style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: (fontSize == 0.0) ? 30.0 : fontSize),
-          overflow: TextOverflow.fade,
+        FittedBox(
+          fit: BoxFit.fitWidth,
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.headline1!.copyWith(fontSize: (fontSize == 0.0) ? 25.0 : fontSize),
+            overflow: TextOverflow.fade,
+          ),
         ),
         const Spacer(),
         MainIconButton(

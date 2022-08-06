@@ -35,7 +35,7 @@ class AudioPlayerWidget extends StatefulWidget {
 
 class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   final AudioPlayer audioPlayer = AudioPlayer();
-  late bool playing = widget.loop != null ? true : false;
+  late bool playing = (widget.loop != null && !widget.preview) ? true : false;
   List<Song> songs = [];
   late final Future<List<Song>> loadSongsFuture;
   Future<List<Song>> empty() async {

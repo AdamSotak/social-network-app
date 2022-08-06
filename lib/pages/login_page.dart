@@ -35,9 +35,11 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
+      DialogManager().displayLoadingDialog(context: context);
+
       // Login user
       await Auth()
-          .login(email: emailTextEditingController.text, password: passwordTextEditingController.text)
+          .login(email: emailTextEditingController.text, password: passwordTextEditingController.text, context: context)
           .then((value) {
         if (!value) {
           DialogManager().displayInformationDialog(
@@ -57,44 +59,45 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 10.0),
-        child: Center(
-          child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Login.",
-                    style: Theme.of(context).textTheme.headline1!.copyWith(fontWeight: FontWeight.bold, fontSize: 50.0),
-                  ),
-                  Text(
-                    "Music-centric social media app",
-                    style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0),
-                  ),
-                  const SizedBox(
-                    height: 50.0,
-                  ),
-                  MainTextField(
-                    controller: emailTextEditingController,
-                    hintText: "Email",
-                    margin: const EdgeInsets.symmetric(vertical: 10.0),
-                  ),
-                  MainTextField(
-                    controller: passwordTextEditingController,
-                    hintText: "Password",
-                    obscureText: true,
-                    margin: const EdgeInsets.symmetric(vertical: 10.0),
-                  ),
-                  const SizedBox(
-                    height: 50.0,
-                  ),
-                  MainButton(text: "Login", onPressed: login),
-                  MainButton(text: "Create Account", onPressed: openCreateAccountPage),
-                  MainButton(text: "Reset Password", onPressed: openResetPasswordPage),
-                ],
-              )),
+      body: Center(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Login.",
+                  style: Theme.of(context).textTheme.headline1!.copyWith(fontWeight: FontWeight.bold, fontSize: 50.0),
+                ),
+                Text(
+                  "Music-centric social media app",
+                  style: Theme.of(context).textTheme.headline2!.copyWith(fontSize: 20.0),
+                ),
+                const SizedBox(
+                  height: 50.0,
+                ),
+                MainTextField(
+                  controller: emailTextEditingController,
+                  hintText: "Email",
+                  margin: const EdgeInsets.symmetric(vertical: 10.0),
+                ),
+                MainTextField(
+                  controller: passwordTextEditingController,
+                  hintText: "Password",
+                  obscureText: true,
+                  margin: const EdgeInsets.symmetric(vertical: 10.0),
+                ),
+                const SizedBox(
+                  height: 50.0,
+                ),
+                MainButton(text: "Login", onPressed: login),
+                MainButton(text: "Create Account", onPressed: openCreateAccountPage),
+                MainButton(text: "Reset Password", onPressed: openResetPasswordPage),
+              ],
+            ),
+          ),
         ),
       ),
     );

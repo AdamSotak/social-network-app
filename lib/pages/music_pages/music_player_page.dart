@@ -37,6 +37,13 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
   LoopMode musicPlayerLoopMode = LoopMode.off;
   int musicPlayerLoopModeValue = 0;
   List<Song> songs = [];
+  late Future<List<Song>> loadSongsFuture;
+
+  @override
+  void initState() {
+    loadSongsFuture = SongsDatabase().getSongsById(songs: widget.playlist.songs);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -119,14 +126,24 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       Navigator.push(
         context,
         CupertinoPageRoute(
-          builder: (builder) => PlaylistPage(playlist: playlist, songs: songs),
+          builder: (builder) => PlaylistPage(
+            playlist: playlist,
+            songs: songs,
+            songRemovedFromPlaylist: (Song song) {
+              playlist.songs.remove(song.id);
+              songs.remove(song);
+            },
+          ),
         ),
       ).then((value) {
         if (value == "Delete") {
           deletePlaylist(confirmation: false);
           return;
         }
-        play();
+        if (playing) {
+          play();
+        }
+        setState(() {});
       });
     }
 
@@ -213,7 +230,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                 onIconPressed: displayPlaylistOptions,
               ),
               FutureBuilder<List<Song>>(
-                future: SongsDatabase().getSongsById(songs: playlist.songs),
+                future: loadSongsFuture,
                 builder: (context, snapshot) {
                   // Error and loading checking
                   if (snapshot.hasError) {
@@ -329,6 +346,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                                       MainIconButton(
                                           icon: const Icon(CupertinoIcons.shuffle),
                                           toggleButton: true,
+                                          toggled: shufflePlaylist,
                                           onPressed: shufflePlaylistChanged),
                                       MainIconButton(icon: musicPlayerLoopModeIcon, onPressed: loopModeChanged),
                                       Text(
@@ -372,6 +390,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                                         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
                                         pressable: true,
                                         toggleButton: true,
+                                        toggled: playing,
                                         onPressed: playPauseChanged,
                                         child: const Center(
                                           child: Icon(CupertinoIcons.playpause_fill),
