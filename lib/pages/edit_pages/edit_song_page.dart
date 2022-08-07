@@ -30,6 +30,7 @@ class _EditSongPageState extends State<EditSongPage> {
   Widget build(BuildContext context) {
     var song = widget.song;
 
+    // Check data and update the Song in the database
     void editSong() async {
       if (Styles.checkIfStringEmpty(songNameTextEditingController.text)) {
         DialogManager().displaySnackBar(context: context, text: "Please enter song name");
@@ -47,6 +48,7 @@ class _EditSongPageState extends State<EditSongPage> {
       });
     }
 
+    // Update the SongListViewTile preview widget with new song name
     void onSongNameChanged(String value) {
       setState(() {
         song.name = value;

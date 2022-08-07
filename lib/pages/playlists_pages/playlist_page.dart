@@ -38,6 +38,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
     var songRemovedFromPlaylist = widget.songRemovedFromPlaylist;
     playlistNameTextEditingController.text = playlist.name;
 
+    // Check data and update the Playlist in the database
     void playlistEditDone() async {
       if (Styles.checkIfStringEmpty(playlistNameTextEditingController.text)) {
         DialogManager().displaySnackBar(context: context, text: "Please enter playlist name");
@@ -57,6 +58,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
       });
     }
 
+    // Remove song from Playlist and update the Playlist in the database
     void removeSong(Song song) async {
       if (songs.length != playlist.songs.length) {
         DialogManager().displayInformationDialog(

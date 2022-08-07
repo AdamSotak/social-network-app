@@ -8,6 +8,8 @@ class TrendingPage extends StatelessWidget {
 
   final Hashtag hashtag;
 
+  // Display trending posts according to selected hashtag
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

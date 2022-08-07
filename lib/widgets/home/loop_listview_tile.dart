@@ -10,6 +10,8 @@ import 'package:social_network/styling/styles.dart';
 import 'package:social_network/styling/variables.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 
+// ListView tile for displaying a Loop
+
 class LoopListViewTile extends StatefulWidget {
   const LoopListViewTile({Key? key, required this.follows, required this.userId}) : super(key: key);
 
@@ -26,6 +28,7 @@ class _LoopListViewTileState extends State<LoopListViewTile> {
     var follows = widget.follows;
     var userId = widget.userId;
 
+    // Open LoopsPage with the selected userId
     void openLoop(UserData userData) {
       Navigator.push(
         context,

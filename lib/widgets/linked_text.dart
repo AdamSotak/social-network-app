@@ -8,13 +8,17 @@ import 'package:social_network/pages/profile_pages/profile_page.dart';
 import 'package:social_network/pages/trending_pages/trending_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// Widget to match hashtags, user mentions and URLs in a String and render the text
+
 class LinkedTextTools {
+  // Clean the text
   static String cleanText(String textValue) {
     textValue = textValue.replaceAllMapped(RegExp(r'\w#+'), (match) => "${match[0]?.split('').join(" ")}");
     textValue = textValue.replaceAllMapped(RegExp(r'\w@+'), (match) => "${match[0]?.split('').join(" ")}");
     return textValue;
   }
 
+  // Match String to a Regex to get all hashtags
   static List<String> getAllHashtags(String textValue) {
     List<String> hashtags = [];
 
@@ -27,6 +31,7 @@ class LinkedTextTools {
     return hashtags;
   }
 
+  // Match String to a Regex to get all user mentions
   static List<String> getAllMentions(String textValue) {
     List<String> mentions = [];
 
@@ -38,17 +43,9 @@ class LinkedTextTools {
 
     return mentions;
   }
-}
 
-class LinkedText extends StatelessWidget {
-  const LinkedText(this.text, {Key? key, this.style = const TextStyle(), this.textAlign = TextAlign.left})
-      : super(key: key);
-
-  final String text;
-  final TextStyle? style;
-  final TextAlign textAlign;
-
-  List<String> getAllUrls(String textValue) {
+  // Match String to a Regex to get all URLs
+  static List<String> getAllUrls(String textValue) {
     List<String> urls = [];
 
     RegExp(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)')
@@ -61,9 +58,20 @@ class LinkedText extends StatelessWidget {
 
     return urls;
   }
+}
+
+class LinkedText extends StatelessWidget {
+  const LinkedText(this.text, {Key? key, this.style = const TextStyle(), this.textAlign = TextAlign.left})
+      : super(key: key);
+
+  final String text;
+  final TextStyle? style;
+  final TextAlign textAlign;
+
 
   @override
   Widget build(BuildContext context) {
+    // Check if the hashtag in the database and open TrendingPage for the hashtag
     void openHashtag(String hashtagName) async {
       try {
         await HashtagsDatabase().getHashtag(hashtagName: hashtagName).then((hashtag) {
@@ -75,6 +83,7 @@ class LinkedText extends StatelessWidget {
       }
     }
 
+    // Check the user in the database and open ProfilePage for the user
     void openProfile(String username) async {
       username = username.replaceFirst('@', '');
       try {
@@ -95,6 +104,7 @@ class LinkedText extends StatelessWidget {
       }
     }
 
+    // Open the URL in a web browser
     void openUrl(String url) async {
       Uri uri = Uri.parse(url);
       if (await canLaunchUrl(uri)) {
@@ -106,10 +116,11 @@ class LinkedText extends StatelessWidget {
 
     List<String> hashtags = LinkedTextTools.getAllHashtags(textValue);
     List<String> mentions = LinkedTextTools.getAllMentions(textValue);
-    List<String> urls = getAllUrls(textValue);
+    List<String> urls = LinkedTextTools.getAllUrls(textValue);
 
     List<TextSpan> textSpans = [];
 
+    // Match the values to TextSpans and display them in RichText
     textValue.split(' ').forEach((value) {
       if (hashtags.contains(value)) {
         textSpans.add(

@@ -20,6 +20,8 @@ class CommentsPage extends StatefulWidget {
 class _CommentsPageState extends State<CommentsPage> {
   List<Comment> comments = [];
 
+  // Load the comments from comments data stream and display them
+
   @override
   Widget build(BuildContext context) {
     var postId = widget.postId;

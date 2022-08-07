@@ -10,6 +10,9 @@ import 'package:social_network/widgets/post_widgets/post_listview_tile.dart';
 class HomeListView extends StatelessWidget {
   const HomeListView({Key? key}) : super(key: key);
 
+  // ListView for displaying all post data types on the HomePage
+
+  // Load all post data types into a Map with a data type key and shuffle
   Future<List<Map<String, dynamic>>> load() async {
     List<Map<String, dynamic>> data = [];
     List<dynamic> dataMix = [];

@@ -25,6 +25,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Check for empty data and send a reset password email
     void resetPassword() async {
       if (Styles.checkIfStringEmpty(emailTextEditingController.text)) {
         DialogManager().displaySnackBar(context: context, text: "Please enter the required information");

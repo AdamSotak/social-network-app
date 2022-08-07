@@ -28,10 +28,12 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Update the page with new search results
     void search() {
       setState(() {});
     }
 
+    // Open ProfilePage with selected account
     void onSearchResultPressed(UserData searchUserData) {
       Navigator.push(
         context,

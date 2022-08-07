@@ -48,6 +48,7 @@ class _AddSongPageState extends State<AddSongPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Check the data and add new song to the database
     void addSong() async {
       if (Styles.checkIfStringEmpty(songNameTextEditingController.text)) {
         DialogManager().displaySnackBar(context: context, text: "Please enter song name");
@@ -72,6 +73,7 @@ class _AddSongPageState extends State<AddSongPage> {
       });
     }
 
+    // Update the SongListViewTile preview widget with new description
     void onSongNameChanged(String value) {
       setState(() {
         song.contentURL = "";
@@ -79,6 +81,7 @@ class _AddSongPageState extends State<AddSongPage> {
       });
     }
 
+    // Open audio picker to choose audio for the song and setup audio playback
     void chooseSong() async {
       try {
         FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false, type: FileType.audio);
@@ -96,6 +99,7 @@ class _AddSongPageState extends State<AddSongPage> {
       }
     }
 
+    // Open image picker to choose artwork image for the song and display the image
     void chooseSongArtwork() async {
       final ImagePicker imagePicker = ImagePicker();
       final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);

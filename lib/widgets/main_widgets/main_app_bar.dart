@@ -16,7 +16,7 @@ class MainAppBar extends StatelessWidget {
   final Icon icon;
   final Function onIconPressed;
 
-  // Builds a MainAppBar widget
+  // Builds a custom neuromorphic MainAppBar widget
   @override
   Widget build(BuildContext context) {
     return Row(

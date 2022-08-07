@@ -13,6 +13,8 @@ import 'package:social_network/widgets/music_widgets/audio_player_widget.dart';
 import 'package:social_network/widgets/post_widgets/options_row.dart';
 import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
 
+// ListView tile for displaying an Album
+
 class AlbumListViewTile extends StatefulWidget {
   const AlbumListViewTile({Key? key, required this.album}) : super(key: key);
 
@@ -29,6 +31,7 @@ class _AlbumListViewTileState extends State<AlbumListViewTile> {
   Widget build(BuildContext context) {
     var album = widget.album;
 
+    // Delete the album artwork URL
     void deleteArtworkURL() {
       setState(() {
         album.artworkURL = "";

@@ -25,6 +25,8 @@ import 'package:social_network/pages/playlists_pages/playlists_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 
+// Row widget with like, comment, add to playlist and post options functionality
+
 class OptionsRow extends StatefulWidget {
   const OptionsRow({
     Key? key,
@@ -52,6 +54,7 @@ class OptionsRow extends StatefulWidget {
 class _OptionsRowState extends State<OptionsRow> {
   bool liked = false;
   StreamController<Map<String, bool>> streamController = StreamController();
+  // Setup values according to the DataType
   late String postId = (widget.dataType == DataType.loop)
       ? widget.loop!.id
       : (widget.dataType == DataType.post)
@@ -82,6 +85,7 @@ class _OptionsRowState extends State<OptionsRow> {
                   ? widget.album!.likes
                   : 0;
 
+  // Check if post was liked by the current user
   Future<void> load() async {
     try {
       bool likedValue = await LikesDatabase().checkIfLiked(postId: postId, userId: Auth().getUserId());
@@ -99,6 +103,7 @@ class _OptionsRowState extends State<OptionsRow> {
   void initState() {
     load();
     super.initState();
+    // Setup values according to the DataType
     switch (widget.dataType) {
       case DataType.loop:
         postId = widget.loop!.id;

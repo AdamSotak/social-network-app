@@ -34,6 +34,7 @@ class _AddLoopPageState extends State<AddLoopPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Check data and add new Loop to database
     void addLoop() async {
       if (Styles.checkIfStringEmpty(loop.contentURL)) {
         DialogManager().displaySnackBar(context: context, text: "Please choose Loop audio");
@@ -51,6 +52,7 @@ class _AddLoopPageState extends State<AddLoopPage> {
       });
     }
 
+    // Open audio picker to choose audio and setup audio playback
     void chooseLoopAudio() async {
       try {
         FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false, type: FileType.audio);

@@ -56,6 +56,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
     var playlist = widget.playlist;
     var musicPlayerType = widget.musicPlayerType;
 
+    // AudioPlayer controls
     void play() {
       audioPlayer.play();
     }
@@ -82,6 +83,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       }
     }
 
+    // Setup AudioPlayer to play the playlist
     void setupAudioPlayer() async {
       try {
         final audioPlaylist = ConcatenatingAudioSource(
@@ -96,6 +98,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       } catch (_) {}
     }
 
+    // Remove Playlist from the database
     void deletePlaylist({bool confirmation = true}) async {
       if (!confirmation) {
         DialogManager().displayLoadingDialog(context: context);
@@ -121,6 +124,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       );
     }
 
+    // Open PlaylistPage to edit the playlist
     void openPlaylistPage() {
       pause();
       Navigator.push(
@@ -147,6 +151,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       });
     }
 
+    // Change the AudioPlayer shuffle mode setting
     void shufflePlaylistChanged() async {
       setState(() {
         shufflePlaylist = !shufflePlaylist;
@@ -155,6 +160,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       await audioPlayer.setShuffleModeEnabled(shufflePlaylist);
     }
 
+    // Change icon and the AudioPlayer loop mode setting
     void loopModeChanged() {
       if (musicPlayerLoopModeValue < 2) {
         musicPlayerLoopModeValue++;
@@ -180,6 +186,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       });
     }
 
+    // Display a modal bottom sheet with playlist options
     void displayPlaylistOptions() {
       DialogManager().displayModalBottomSheet(context: context, title: "Playlist Options", options: [
         ListTile(

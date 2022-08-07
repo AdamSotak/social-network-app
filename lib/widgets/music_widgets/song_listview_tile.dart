@@ -12,6 +12,8 @@ import 'package:social_network/widgets/music_widgets/audio_player_widget.dart';
 import 'package:social_network/widgets/post_widgets/options_row.dart';
 import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
 
+// ListView tile for displaying a Song
+
 class SongListViewTile extends StatefulWidget {
   const SongListViewTile({Key? key, required this.song}) : super(key: key);
 
@@ -28,6 +30,7 @@ class _SongListViewTileState extends State<SongListViewTile> {
   Widget build(BuildContext context) {
     var song = widget.song;
 
+    // Delete the artwork URL
     void deleteArtworkURL() {
       setState(() {
         song.artworkURL = "";

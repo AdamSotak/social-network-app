@@ -7,6 +7,8 @@ import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 
+// GridView tile for displaying a Playlist
+
 class PlaylistGridViewTile extends StatefulWidget {
   const PlaylistGridViewTile({Key? key, required this.playlist, this.select = false}) : super(key: key);
 
@@ -24,6 +26,7 @@ class _PlaylistGridViewTileState extends State<PlaylistGridViewTile> {
     var select = widget.select;
     LinearGradient gradient = Styles.getRandomLinearGradient();
 
+    // Open MusicPlayerPage for the selected playlist
     void openMusicPlayerPage() {
       Navigator.push(
         context,

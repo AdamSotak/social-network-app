@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+// Seekbar for the AudioPlayer
+
 class SeekBar extends StatefulWidget {
   final Duration duration;
   final Duration position;

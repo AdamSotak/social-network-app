@@ -47,10 +47,12 @@ class _ProfilePageState extends State<ProfilePage> {
     following: 0,
   );
 
+  // Load user data
   Future<void> getUserData() async {
     userData = await UserDataDatabase().getUserData(widget.userId);
   }
 
+  // Check if the currentUser is following the ProfilePage account
   Future<void> checkFollowing() async {
     var followingValue =
         await FollowsDatabase().checkIfFollowed(fromUserId: Auth().getUserId(), toUserId: widget.userId);
@@ -83,6 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
     var userId = widget.userId;
     var backButton = widget.backButton;
 
+    // Open FollowersPage
     void openFollowersPage() {
       Navigator.push(
         context,
@@ -92,6 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     }
 
+    // Open FollowingsPage
     void openFollowingsPage() {
       Navigator.push(
         context,
@@ -101,6 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     }
 
+    // Update UserData in the database
     void updateUserData(int increment) async {
       var localUserData = await UserDataDatabase().getUserData(Auth().getUserId());
       localUserData.following += increment;
@@ -122,6 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     }
 
+    // Follow the account and update the UI
     void follow() async {
       streamController.add({"following": false, "buttonEnabled": false});
       Follow follow = Follow(
@@ -140,6 +146,7 @@ class _ProfilePageState extends State<ProfilePage> {
       streamController.add({"following": true, "buttonEnabled": true});
     }
 
+    // Unfollow the account and update the UI
     void unfollow() async {
       streamController.add({"following": true, "buttonEnabled": false});
       await FollowsDatabase().deleteFollow(fromUserId: Auth().getUserId(), toUserId: userId).then((value) {
@@ -152,6 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
       streamController.add({"following": false, "buttonEnabled": true});
     }
 
+    // Open EditPage
     void openEditPage() {
       Navigator.push(
         context,
@@ -165,6 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
 
+    // Open SettingsPage
     void openSettingsPage() {
       Navigator.push(context, CupertinoPageRoute(builder: (builder) => const SettingsPage()));
     }

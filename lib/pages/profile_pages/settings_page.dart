@@ -27,14 +27,17 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     void settingsDone() {}
 
+    // Open ChangeEmailPage
     void openChangeEmailPage() {
       Navigator.push(context, CupertinoPageRoute(builder: (builder) => const ChangeEmailPage()));
     }
 
+    // Open ChangePasswordPage
     void openChangePasswordPage() {
       Navigator.push(context, CupertinoPageRoute(builder: (builder) => const ChangePasswordPage()));
     }
 
+    // Set app ThemeMode and update the app UI
     void setThemeMode(ThemeMode newThemeMode) {
       final provider = Provider.of<ThemeModeChangeNotifier>(context, listen: false);
       provider.setTheme(newThemeMode);
@@ -105,6 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ]);
     }
 
+    // Display a confirmation dialog and log the user out on confirmation
     void logout() {
       DialogManager().displayConfirmationDialog(
         context: context,
@@ -122,6 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
       );
     }
 
+    // Open DeleteAccountPage
     void openDeleteAccountPage() {
       Navigator.push(context, CupertinoPageRoute(builder: (builder) => const DeleteAccountPage()));
     }

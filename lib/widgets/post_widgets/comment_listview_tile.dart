@@ -9,6 +9,8 @@ import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
 
+// ListView tile for displaying a Comment
+
 class CommentListViewTile extends StatelessWidget {
   const CommentListViewTile({Key? key, required this.comment}) : super(key: key);
 
@@ -16,6 +18,7 @@ class CommentListViewTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Delete the Comment from the database
     void deleteComment() {
       if (comment.userId != Auth().getUserId()) {
         return;

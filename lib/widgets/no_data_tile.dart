@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_network/styling/styles.dart';
 
+// Widget displayed if there's no data to show
+
 class NoDataTile extends StatelessWidget {
   const NoDataTile({Key? key, required this.text, this.subtext = ""}) : super(key: key);
 

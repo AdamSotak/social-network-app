@@ -47,7 +47,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         return;
       }
 
-      // Check if password match
+      // Check if passwords match
       if (passwordTextEditingController.text != confirmPasswordTextEditingController.text) {
         DialogManager().displaySnackBar(context: context, text: "Password do not match");
         return;

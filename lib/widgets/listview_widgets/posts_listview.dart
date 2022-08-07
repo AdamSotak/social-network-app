@@ -10,6 +10,8 @@ class PostsListView extends StatelessWidget {
 
   final String userId;
 
+  // ListView for displaying posts
+
   @override
   Widget build(BuildContext context) {
     List<Post> posts = [];

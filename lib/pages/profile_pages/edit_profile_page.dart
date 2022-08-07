@@ -47,6 +47,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     var userData = widget.userData;
 
+    // Check data and update the database with new UserData
     void editProfileDone() async {
       if (Styles.checkIfStringEmpty(displayNameTextEditingController.text)) {
         DialogManager().displaySnackBar(context: context, text: "Please enter a Display Name");
@@ -84,6 +85,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       });
     }
 
+    // Open image picker to change profile picture
     void changeProfilePicture() async {
       final ImagePicker imagePicker = ImagePicker();
       final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -95,6 +97,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       });
     }
 
+    // Delete profile picture
     void deleteProfilePicture() {
       setState(() {
         userData.profilePhotoURL = "";

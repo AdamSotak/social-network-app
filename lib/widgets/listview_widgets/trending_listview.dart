@@ -13,6 +13,9 @@ class TrendingListView extends StatelessWidget {
 
   final Hashtag hashtag;
 
+  // ListView for displaying all post data types according to a Hashtag
+
+  // Load every post data type into a Map with a data type key according to a Hashtag and mix
   Future<List<Map<String, dynamic>>> load() async {
     List<Map<String, dynamic>> data = [];
     List<dynamic> dataMix = [];

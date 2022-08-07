@@ -30,6 +30,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
   Widget build(BuildContext context) {
     var album = widget.album;
 
+    // Check data and update the album in the database
     void editAlbum() async {
       if (Styles.checkIfStringEmpty(albumNameTextEditingController.text)) {
         DialogManager().displaySnackBar(context: context, text: "Please enter album name");
@@ -47,6 +48,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
       });
     }
 
+    // Update the AlbumListViewTile preview widget with new album name
     void onAlbumNameChanged(String value) {
       setState(() {
         album.name = value;

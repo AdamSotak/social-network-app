@@ -26,6 +26,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Check for empty data and change email
     void changeEmailDone() {
       if (Styles.checkIfStringEmpty(currentPasswordTextEditingController.text) ||
           Styles.checkIfStringEmpty(emailTextEditingController.text)) {

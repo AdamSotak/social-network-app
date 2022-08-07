@@ -30,6 +30,7 @@ class _EditPostPageState extends State<EditPostPage> {
   Widget build(BuildContext context) {
     var post = widget.post;
 
+    // Check data and update the post in the database
     void editPost() async {
       if (Styles.checkIfStringEmpty(postDescriptionTextEditingController.text)) {
         DialogManager().displaySnackBar(context: context, text: "Please enter post description");
@@ -47,6 +48,7 @@ class _EditPostPageState extends State<EditPostPage> {
       });
     }
 
+    // Update the PostListViewTile preview widget with new post description
     void onDescriptionChanged(String value) {
       setState(() {
         post.description = value;

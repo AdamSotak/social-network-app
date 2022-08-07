@@ -55,6 +55,7 @@ class AddPage extends StatelessWidget {
   }
 }
 
+// Selector widget to choose post data type
 class AddWidget extends StatefulWidget {
   const AddWidget({
     Key? key,

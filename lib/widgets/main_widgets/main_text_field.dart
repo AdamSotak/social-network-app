@@ -59,6 +59,8 @@ class _MainTextFieldState extends State<MainTextField> {
     var onEditingComplete = widget.onEditingComplete;
     var onChanged = widget.onChanged;
 
+    // Custom neuromorphic TextField
+
     return SizedBox(
       width: (width == 0.0) ? null : width,
       height: (height == 0.0) ? null : height,

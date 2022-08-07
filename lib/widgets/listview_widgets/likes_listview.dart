@@ -13,6 +13,9 @@ class LikesListView extends StatelessWidget {
 
   final String userId;
 
+  // ListView for displaying liked posts
+
+  // Load all liked post data types into a Map with a data type key in the liked order
   Future<List<Map<String, dynamic>>> load() async {
     List<Map<String, dynamic>> data = [];
     var likes = await LikesDatabase().getLikes(userId: userId);

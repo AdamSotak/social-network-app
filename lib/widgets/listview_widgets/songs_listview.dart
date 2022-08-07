@@ -10,6 +10,8 @@ class SongsListView extends StatelessWidget {
 
   final String userId;
 
+  // ListView for displaying songs
+
   @override
   Widget build(BuildContext context) {
     List<Song> songs = [];

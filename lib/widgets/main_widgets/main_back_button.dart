@@ -6,6 +6,8 @@ class MainBackButton extends StatelessWidget {
 
   final BuildContext buildContext;
 
+  // Custom neuromorphic BackButton
+
   @override
   Widget build(BuildContext context) {
     return MainIconButton(

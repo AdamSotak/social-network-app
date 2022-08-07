@@ -26,6 +26,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Check for correct data, reauthenticate user and delete account
     void deleteAccountDone() async {
       if (Styles.checkIfStringEmpty(currentPasswordTextEditingController.text) || !checkboxValue) {
         DialogManager().displaySnackBar(context: context, text: "Please enter the required information");

@@ -29,6 +29,8 @@ class _LoopsPageState extends State<LoopsPage> {
   late final PageController pageController;
   List<Loop> loops = [];
 
+  // Loops page to display loops from followed accounts in a vertical carousel
+
   @override
   Widget build(BuildContext context) {
     var follows = widget.follows;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// Draw a selected tab in TabBar dot indicator
+
 class MainCircleTabIndicator extends Decoration {
   final BoxPainter boxPainter;
 

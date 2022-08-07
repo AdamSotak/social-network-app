@@ -50,10 +50,12 @@ class _LoginPageState extends State<LoginPage> {
       });
     }
 
+    // Open CreateAccountPage
     void openCreateAccountPage() {
       Navigator.push(context, CupertinoPageRoute(builder: (builder) => const CreateAccountPage()));
     }
 
+    // Open ResetPasswordPage
     void openResetPasswordPage() {
       Navigator.push(context, CupertinoPageRoute(builder: (builder) => const ResetPasswordPage()));
     }

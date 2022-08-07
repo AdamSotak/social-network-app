@@ -50,6 +50,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Check data and add Album to the database
     void createAlbum() {
       if (Styles.checkIfStringEmpty(albumNameTextEditingController.text)) {
         DialogManager().displaySnackBar(context: context, text: "Please enter the Album's name");
@@ -80,6 +81,7 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
       });
     }
 
+    // Add or remove selected song from albumSongs list
     void onSongChosen(Song song) {
       if (albumSongs.contains(song)) {
         albumSongs.remove(song);
@@ -88,12 +90,14 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
       }
     }
 
+    // Update the AlbumListViewTile preview widget with new album name
     void onAlbumNameChanged(String value) {
       setState(() {
         album.name = value;
       });
     }
 
+    // Open image picker to choose artwork image and display the image
     void addAlbumArtwork() async {
       final ImagePicker imagePicker = ImagePicker();
       final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);

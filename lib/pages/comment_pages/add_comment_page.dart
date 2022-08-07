@@ -31,6 +31,7 @@ class _AddCommentsPageState extends State<AddCommentsPage> {
   Widget build(BuildContext context) {
     var id = widget.id;
 
+    // Check data and add Comment to the database
     void addComment() {
       if (Styles.checkIfStringEmpty(commentTextEditingController.text)) {
         DialogManager().displaySnackBar(context: context, text: "Please enter a comment");

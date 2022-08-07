@@ -5,6 +5,8 @@ import 'package:social_network/pages/trending_pages/trending_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 
+// ListView tile for displaying a Hashtag
+
 class HashtagListViewTile extends StatefulWidget {
   const HashtagListViewTile({Key? key, required this.hashtag}) : super(key: key);
 
@@ -21,6 +23,7 @@ class _HashtagListViewTileState extends State<HashtagListViewTile> {
   Widget build(BuildContext context) {
     var hashtag = widget.hashtag;
 
+    // Open TrendingPage
     void openTrendingPage() {
       Navigator.push(context, CupertinoPageRoute(builder: (builder) => TrendingPage(hashtag: hashtag)));
     }

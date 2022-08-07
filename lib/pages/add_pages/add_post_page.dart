@@ -47,6 +47,7 @@ class _AddPostPageState extends State<AddPostPage> {
   Widget build(BuildContext context) {
     var postType = widget.postType;
 
+    // Check data and add new Post to database
     void addPost() async {
       if (Styles.checkIfStringEmpty(postDescriptionTextEditingController.text)) {
         DialogManager().displaySnackBar(context: context, text: "Please enter post description");
@@ -66,12 +67,14 @@ class _AddPostPageState extends State<AddPostPage> {
       });
     }
 
+    // Change post description in the preview PostListViewTile widget
     void onDescriptionChanged(String value) {
       setState(() {
         post.description = value;
       });
     }
 
+    // Open image picker to choose post image, display the image, change button text
     void addImage() async {
       final ImagePicker imagePicker = ImagePicker();
       final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -84,6 +87,7 @@ class _AddPostPageState extends State<AddPostPage> {
       });
     }
 
+    // Open video picker to choose post video, display the video, change button text
     void addVideo() async {
       final ImagePicker imagePicker = ImagePicker();
       final XFile? video = await imagePicker.pickVideo(source: ImageSource.gallery);
@@ -97,6 +101,7 @@ class _AddPostPageState extends State<AddPostPage> {
       });
     }
 
+    // Set the button text to default
     void resetButtonText() {
       setState(() {
         addPictureButtonText = "Add Picture";

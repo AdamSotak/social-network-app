@@ -18,10 +18,12 @@ class FollowsPage extends StatelessWidget {
 
   final String userId;
   final bool followers;
+
   @override
   Widget build(BuildContext context) {
     List<Follow> follows = [];
 
+    // Open ProfilePage for the selected account
     void openProfilePage(String followUserId) {
       Navigator.push(
         context,

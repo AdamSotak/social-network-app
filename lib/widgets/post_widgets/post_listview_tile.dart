@@ -11,6 +11,8 @@ import 'package:social_network/widgets/post_widgets/options_row.dart';
 import 'package:social_network/widgets/post_widgets/user_data_widget.dart';
 import 'package:video_player/video_player.dart';
 
+// ListView tile for displaying a Post
+
 class PostListViewTile extends StatefulWidget {
   const PostListViewTile({Key? key, required this.post, this.onContentURLCleared}) : super(key: key);
 
@@ -32,6 +34,7 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
   @override
   void initState() {
     super.initState();
+    // Setup the VideoPlayerController according to the preview variable
     if (!preview && widget.post.video) {
       _videoPlayerController = VideoPlayerController.network(widget.post.contentURL)
         ..initialize().then(
@@ -69,6 +72,7 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
     var post = widget.post;
     var onContentURLCleared = widget.onContentURLCleared;
 
+    // Setup the VideoPlayeController to play in preview mode
     void setupVideoPlayer() async {
       if (preview && post.contentURL != "" && post.video) {
         _videoPlayerController = VideoPlayerController.file(File(widget.post.contentURL))
@@ -82,10 +86,12 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
       }
     }
 
+    // Setup the VideoPlayer if not setup already
     if (!videoPlayerSetup) {
       setupVideoPlayer();
     }
 
+    // Delete the post content URL
     void deletePostContentURL() {
       setState(() {
         post.contentURL = "";
@@ -96,6 +102,7 @@ class _PostListViewTileState extends State<PostListViewTile> with AutomaticKeepA
       }
     }
 
+    // Build the PostListViewTile widget
     Widget buildPostListViewTile() {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

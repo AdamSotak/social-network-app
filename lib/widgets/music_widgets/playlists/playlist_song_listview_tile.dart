@@ -4,6 +4,8 @@ import 'package:social_network/models/song.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/main_widgets/main_icon_button.dart';
 
+// ListView tile for displaying a Song in a Playlist
+
 class PlaylistSongListViewTile extends StatelessWidget {
   const PlaylistSongListViewTile({
     Key? key,

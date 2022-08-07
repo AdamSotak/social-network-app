@@ -11,6 +11,8 @@ import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_container.dart';
 import 'package:social_network/widgets/music_widgets/song_seekbar.dart';
 
+// Reusable AudioPlayer widget
+
 class AudioPlayerWidget extends StatefulWidget {
   const AudioPlayerWidget({
     Key? key,
@@ -46,6 +48,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   void initState() {
     super.initState();
 
+    // Load songs by id
     if (widget.album == null && widget.loop == null) {
       loadSongsFuture = SongsDatabase().getSongsById(songs: [widget.song!.id]);
     } else if (widget.album != null && widget.loop == null) {
@@ -69,6 +72,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     var audioPlayerType = widget.audioPlayerType;
     var preview = widget.preview;
 
+    // AudioPlayer controls
     void play() {
       audioPlayer.play();
     }
@@ -95,6 +99,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
       }
     }
 
+    // Setup the AudioPlayer according to the data type
     void setupAudioPlayer() async {
       switch (audioPlayerType) {
         case AudioPlayerType.loop:

@@ -9,6 +9,8 @@ class LoopsListView extends StatelessWidget {
 
   final String userId;
 
+  // ListView for displaying loops horizontally
+
   @override
   Widget build(BuildContext context) {
     List<Follow> follows = [];

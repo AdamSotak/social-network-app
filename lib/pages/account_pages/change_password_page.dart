@@ -30,6 +30,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Checks for empty data and change password
     void changePasswordDone() {
       if (Styles.checkIfStringEmpty(currentPasswordTextEditingController.text) ||
           Styles.checkIfStringEmpty(newPasswordTextEditingController.text) ||

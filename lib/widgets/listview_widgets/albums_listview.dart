@@ -10,6 +10,8 @@ class AlbumsListView extends StatelessWidget {
 
   final String userId;
 
+  // ListView for displaying albums
+
   @override
   Widget build(BuildContext context) {
     List<Album> albums = [];

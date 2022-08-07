@@ -12,6 +12,7 @@ class ThemeModeChangeNotifier with ChangeNotifier {
 
   static ThemeMode themeMode = ThemeMode.system;
 
+  // Check if dark mode enabled
   bool get darkMode {
     if (themeMode == ThemeMode.system) {
       final brightness = SchedulerBinding.instance.window.platformBrightness;
@@ -21,6 +22,7 @@ class ThemeModeChangeNotifier with ChangeNotifier {
     }
   }
 
+  // Set new app ThemeMode, update the UI and save the value
   void setTheme(ThemeMode appThemeMode) {
     AppStorage().setThemeMode(appThemeMode);
     themeMode = appThemeMode;

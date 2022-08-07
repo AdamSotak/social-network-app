@@ -43,6 +43,8 @@ class _MainButtonState extends State<MainButton> {
     var padding = widget.padding;
     var onPressed = widget.onPressed;
 
+    // Custom neuromorphic button
+
     return GestureDetector(
       onTap: () {
         onPressed();

@@ -7,6 +7,8 @@ import 'package:social_network/widgets/home/hashtag_listview_tile.dart';
 class HashtagsListView extends StatelessWidget {
   const HashtagsListView({Key? key}) : super(key: key);
 
+  // ListView for displaying hashtags horizontally
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(

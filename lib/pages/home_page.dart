@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    // Open SearchPage
     void openSearchPage() {
       Navigator.push(context, CupertinoPageRoute(builder: (builder) => const SearchPage()));
     }

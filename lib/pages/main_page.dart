@@ -20,6 +20,7 @@ class _MainPageState extends State<MainPage> {
   static int bottomNavigationBarCurrentIndex = 0;
   late PageController pageController;
 
+  // BottomNavigationBar pages
   List<Widget> pages = [
     const HomePage(),
     const PlaylistsPage(),

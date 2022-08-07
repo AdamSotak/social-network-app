@@ -37,6 +37,7 @@ class _PlaylistsPageState extends State<PlaylistsPage> {
     var song = widget.song;
     var album = widget.album;
 
+    // Merge playlist with new songs on playlist selection and update the database
     void playlistSelected(Playlist playlist) async {
       if (song != null && !playlist.songs.contains(song.id)) {
         playlist.songs.add(song.id);

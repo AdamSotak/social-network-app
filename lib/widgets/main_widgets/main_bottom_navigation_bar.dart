@@ -28,6 +28,7 @@ class _MainBottomNavigationBarState extends State<MainBottomNavigationBar> {
     var onWidgetSelected = widget.onWidgetSelected;
     List<Widget> newWidgets = [];
 
+    // Add GestureDetectors to every BottomNavigationBar item
     for (int index = 0; index < widgets.length; index++) {
       newWidgets.add(
         GestureDetector(
@@ -72,6 +73,8 @@ class MainBottomNavigationBarItem extends StatelessWidget {
   final Text title;
   final bool selected;
   final int index;
+
+  // Custom BottomNavigationBar item widget 
 
   @override
   Widget build(BuildContext context) {

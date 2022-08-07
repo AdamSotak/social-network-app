@@ -6,6 +6,8 @@ import 'package:social_network/pages/profile_pages/profile_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/styling/variables.dart';
 
+// Widget for displaying user data
+
 class UserDataWidget extends StatefulWidget {
   const UserDataWidget({Key? key, this.userId, this.userData, this.created}) : super(key: key);
 
@@ -27,6 +29,7 @@ class _UserDataWidgetState extends State<UserDataWidget> {
     following: 0,
   );
 
+  // Load UserData by userId
   Future<void> getUserData() async {
     if (widget.userId == null) {
       userData = widget.userData!;
@@ -47,6 +50,7 @@ class _UserDataWidgetState extends State<UserDataWidget> {
   Widget build(BuildContext context) {
     var created = widget.created;
 
+    // Open ProfilePage for the UserData
     void openProfilePage() {
       Navigator.push(
         context,
