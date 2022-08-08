@@ -38,7 +38,7 @@ class Auth {
   // Login user
   Future<bool> login({required String email, required String password, required BuildContext context}) async {
     try {
-      auth.signInWithEmailAndPassword(email: email.trim(), password: password).whenComplete(() {
+      await auth.signInWithEmailAndPassword(email: email.trim(), password: password).whenComplete(() {
         DialogManager().closeDialog(context: context);
       });
       return true;
@@ -61,12 +61,16 @@ class Auth {
 
   // Check if username available
   Future<bool> checkUsername({required String username}) async {
-    var response = await http.get(Uri.parse("${Variables.firebaseFunctionsURL}/checkUsername/$username"));
+    try {
+      var response = await http.get(Uri.parse("${Variables.firebaseFunctionsURL}/checkUsername/$username"));
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      log(data["usernameAvailable"].toString());
-      return data["usernameAvailable"] == true;
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        log(data["usernameAvailable"].toString());
+        return data["usernameAvailable"] == true;
+      }
+    } catch (_) {
+      return false;
     }
 
     return false;
@@ -125,7 +129,11 @@ class Auth {
 
   // Send a password reset email
   Future<void> resetPassword({required String email}) async {
-    await auth.sendPasswordResetEmail(email: email);
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+    } catch (_) {
+      return;
+    }
   }
 
   // Reauthenticate the user

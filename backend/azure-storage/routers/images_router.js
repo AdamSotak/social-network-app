@@ -14,6 +14,7 @@ const blobServiceClient = BlobServiceClient.fromConnectionString(
     AZURE_STORAGE_CONNECTION_STRING
 );
 
+// Image upload, receive multipart file and save to Azure Blob Storage, create a container if it was not found
 router.post('/upload', upload.single("file"), async (req, res) => {
     let userToken = req.body.userToken;
     let file = req.file;
@@ -37,6 +38,7 @@ router.post('/upload', upload.single("file"), async (req, res) => {
     res.json({ status: 200, url: blockBlobClient.url, tokenValid: true }).status(200);
 });
 
+// Delete image from Azure Blob Storage
 router.delete('/delete', async (req, res) => {
     let url = req.body.url;
     let userToken = req.body.userToken;

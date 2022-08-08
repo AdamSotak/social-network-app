@@ -5,6 +5,7 @@ const axios = require('axios');
 const userDataCollectionName = 'user_data';
 const azureStorageURL = "https://fluttersocialnetworkapp.azurewebsites.net";
 
+// Send an HTTP Delete request to Azure backend to delete from Azure Blob Storage
 function deleteFromAzureStorage(contentURL, requestURL, token) {
     axios.delete(`${azureStorageURL}${requestURL}`, {
         data: {
@@ -14,6 +15,7 @@ function deleteFromAzureStorage(contentURL, requestURL, token) {
     });
 }
 
+// Delete user created data from all database collections and delete user created data from Azure Blob Storage
 async function deleteFromCollections(userId, collectionNames, token) {
     let db = admin.firestore();
 
@@ -61,6 +63,7 @@ async function deleteFromCollections(userId, collectionNames, token) {
     }
 }
 
+// Check username availability
 exports.checkUsername = functions.https.onRequest(async (req, res) => {
     const username = req.params['0'];
     let db = admin.firestore();
@@ -73,6 +76,7 @@ exports.checkUsername = functions.https.onRequest(async (req, res) => {
     });
 });
 
+// Delete user created data when user deletes their account
 exports.deleteUserData = functions.https.onCall(async (data, context) => {
     let userId = context.auth.uid;
     let token = data.token;

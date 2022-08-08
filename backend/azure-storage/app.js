@@ -7,6 +7,7 @@ const songsRouter = require('./routers/songs_router');
 
 const app = express();
 
+// Setup the app
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/images', imagesRouter);

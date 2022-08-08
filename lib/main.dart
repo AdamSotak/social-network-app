@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +14,15 @@ import 'package:social_network/styling/styles.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  GoogleFonts.config.allowRuntimeFetching = false;
+  LicenseRegistry.addLicense(() async* {
+    final comfortaaLicense = await rootBundle.loadString('assets/fonts/OFL-Comfortaa.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], comfortaaLicense);
+  });
+  LicenseRegistry.addLicense(() async* {
+    final ralewayLicense = await rootBundle.loadString('assets/fonts/OFL-Raleway.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], ralewayLicense);
+  });
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const App());
 }
