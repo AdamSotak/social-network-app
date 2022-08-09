@@ -43,6 +43,7 @@ class App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           themeMode: ThemeModeChangeNotifier.themeMode,
           theme: ThemeData(
+            primaryColor: Colors.white,
             splashColor: Colors.transparent,
             brightness: Brightness.light,
             appBarTheme: AppBarTheme(
@@ -90,6 +91,7 @@ class App extends StatelessWidget {
                 caption: GoogleFonts.comfortaa(color: Colors.black, fontSize: 20.0)),
           ),
           darkTheme: ThemeData(
+            primaryColor: Colors.white,
             brightness: Brightness.dark,
             appBarTheme: AppBarTheme(titleTextStyle: GoogleFonts.raleway(color: Colors.white, fontSize: 25.0)),
             scaffoldBackgroundColor: const Color.fromARGB(255, 50, 47, 51),
