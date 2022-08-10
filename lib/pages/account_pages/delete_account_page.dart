@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/managers/dialog_manager.dart';
-import 'package:social_network/pages/login_page.dart';
+import 'package:social_network/pages/account_pages/login_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_app_bar.dart';
 import 'package:social_network/widgets/main_widgets/main_text_field.dart';

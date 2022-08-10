@@ -131,6 +131,31 @@ class _SettingsPageState extends State<SettingsPage> {
       Navigator.push(context, CupertinoPageRoute(builder: (builder) => const DeleteAccountPage()));
     }
 
+    void openOpenSourcePage() {
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (builder) => Theme(
+            data: Theme.of(context).copyWith(
+              appBarTheme: AppBarTheme(
+                elevation: 0.0,
+                iconTheme: Theme.of(context).iconTheme,
+                backgroundColor:
+                    ThemeModeChangeNotifier().darkMode ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
+                titleTextStyle: Theme.of(context).textTheme.headline1,
+              ),
+              primaryTextTheme: Theme.of(context).textTheme,
+            ),
+            child: const LicensePage(
+              applicationName: "MusicGallery",
+              applicationVersion: "Version 1.0.0",
+              applicationLegalese: "\u00a9 Adam Soták 2022",
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -168,6 +193,17 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 onTap: openChangeAppThemeModalBottomSheet,
               ),
+              ListTile(
+                title: Text(
+                  "Open-source licenses",
+                  style: Theme.of(context).textTheme.headline3,
+                ),
+                subtitle: Text(
+                  "Open-source libraries",
+                  style: Theme.of(context).textTheme.headline2,
+                ),
+                onTap: openOpenSourcePage,
+              ),
               const SizedBox(
                 height: 20.0,
               ),
@@ -195,7 +231,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: Theme.of(context).textTheme.headline2!.copyWith(color: Colors.pinkAccent),
                 ),
                 onTap: openDeleteAccountPage,
-              )
+              ),
+              const SizedBox(
+                height: 50.0,
+              ),
+              Text("MusicGallery v1.0.0"),
+              Text("\u00a9 Adam Soták 2022")
             ],
           ),
         ),

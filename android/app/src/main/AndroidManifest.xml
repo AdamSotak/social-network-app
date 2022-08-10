@@ -11,7 +11,7 @@
         </intent>
    </queries>
    <application
-        android:label="social_network"
+        android:label="MusicGallery"
         android:name="${applicationName}"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">

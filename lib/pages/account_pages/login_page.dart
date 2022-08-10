@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/managers/dialog_manager.dart';
-import 'package:social_network/pages/create_account_page.dart';
+import 'package:social_network/pages/account_pages/create_account_page.dart';
 import 'package:social_network/pages/account_pages/reset_password_page.dart';
 import 'package:social_network/styling/styles.dart';
 import 'package:social_network/widgets/main_widgets/main_button.dart';
@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Login.",
+                  "MusicGallery",
                   style: Theme.of(context).textTheme.headline1!.copyWith(fontWeight: FontWeight.bold, fontSize: 50.0),
                 ),
                 Text(

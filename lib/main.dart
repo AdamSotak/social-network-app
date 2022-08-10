@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:social_network/auth/auth.dart';
 import 'package:social_network/firebase_options.dart';
 import 'package:social_network/pages/main_page.dart';
-import 'package:social_network/pages/login_page.dart';
+import 'package:social_network/pages/account_pages/login_page.dart';
 import 'package:social_network/storage/app_theme/theme_mode_change_notifier.dart';
 import 'package:social_network/styling/styles.dart';
 
