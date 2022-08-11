@@ -16,14 +16,14 @@ class FollowsDatabase {
 
   // Get Followings data Stream for loading
   Stream<QuerySnapshot> getFollowingStream({required String fromUserId}) {
-    return firestore.collection(followsCollectionName).where('fromUserId', isEqualTo: fromUserId).snapshots();
+    return firestore.collection(followsCollectionName).where('userId', isEqualTo: fromUserId).snapshots();
   }
 
   Future<List<Follow>> getFollowingsLoopsForUser({required String userId}) async {
     List<Follow> returnValue = [];
     List<Follow> docs = await firestore
         .collection(followsCollectionName)
-        .where('fromUserId', isEqualTo: userId)
+        .where('userId', isEqualTo: userId)
         .get()
         .then((value) async {
       return value.docs.map((follow) => Follow.fromDocumentSnapshot(follow)).toList();
@@ -52,7 +52,7 @@ class FollowsDatabase {
   Future<Follow> getFollow({required String fromUserId, required String toUserId}) async {
     var doc = await firestore
         .collection(followsCollectionName)
-        .where('fromUserId', isEqualTo: fromUserId)
+        .where('userId', isEqualTo: fromUserId)
         .where('toUserId', isEqualTo: toUserId)
         .get()
         .then((value) {
@@ -65,7 +65,7 @@ class FollowsDatabase {
   Future<bool> checkIfFollowed({required String fromUserId, required String toUserId}) async {
     return await firestore
         .collection(followsCollectionName)
-        .where('fromUserId', isEqualTo: fromUserId)
+        .where('userId', isEqualTo: fromUserId)
         .where('toUserId', isEqualTo: toUserId)
         .get()
         .then((value) {
@@ -85,7 +85,7 @@ class FollowsDatabase {
   Future<void> deleteFollow({required String fromUserId, required String toUserId}) async {
     var follow = await firestore
         .collection(followsCollectionName)
-        .where('fromUserId', isEqualTo: fromUserId)
+        .where('userId', isEqualTo: fromUserId)
         .where('toUserId', isEqualTo: toUserId)
         .get();
 

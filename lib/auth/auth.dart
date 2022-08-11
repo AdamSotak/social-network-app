@@ -38,7 +38,7 @@ class Auth {
   // Login user
   Future<bool> login({required String email, required String password, required BuildContext context}) async {
     try {
-      await auth.signInWithEmailAndPassword(email: email.trim(), password: password).whenComplete(() {
+      await auth.signInWithEmailAndPassword(email: email.trim(), password: password).then((value) {
         DialogManager().closeDialog(context: context);
       });
       return true;
@@ -78,9 +78,15 @@ class Auth {
 
   // Create new account
   Future<bool> createAccount(
-      {required String email, required String username, required String displayName, required String password}) async {
+      {required String email,
+      required String username,
+      required String displayName,
+      required String password,
+      required BuildContext context}) async {
     try {
-      await auth.createUserWithEmailAndPassword(email: email.trim(), password: password);
+      await auth.createUserWithEmailAndPassword(email: email.trim(), password: password).then((value) {
+        DialogManager().closeDialog(context: context);
+      });
 
       UserData userData = UserData(
         id: Auth().getUserId(),

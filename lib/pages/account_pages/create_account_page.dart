@@ -68,7 +68,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               email: emailTextEditingController.text,
               username: usernameTextEditingController.text,
               displayName: displayNameTextEditingController.text,
-              password: passwordTextEditingController.text)
+              password: passwordTextEditingController.text,
+              context: context)
           .then((value) {
         DialogManager().closeDialog(context: context);
         if (!value) {

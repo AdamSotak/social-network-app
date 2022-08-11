@@ -114,8 +114,8 @@ class _SettingsPageState extends State<SettingsPage> {
         context: context,
         title: "Confirm Logout",
         description: "Please confirm logout",
-        onConfirmation: () {
-          Auth().logout().then((value) {
+        onConfirmation: () async {
+          await Auth().logout().then((value) {
             Navigator.pushAndRemoveUntil(
                 context, CupertinoPageRoute(builder: (builder) => const App()), (route) => false);
           });
