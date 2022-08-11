@@ -21,8 +21,6 @@ class FollowsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Follow> follows = [];
-
     // Open ProfilePage for the selected account
     void openProfilePage(String followUserId) {
       Navigator.push(
@@ -70,7 +68,7 @@ class FollowsPage extends StatelessWidget {
                     );
                   }
 
-                  follows.clear();
+                  List<Follow> follows = [];
 
                   follows.addAll(snapshot.data!.docs.map((DocumentSnapshot documentSnapshot) {
                     var follow = Follow.fromDocumentSnapshot(documentSnapshot);
