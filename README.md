@@ -50,4 +50,4 @@ Overview of the app's architecture
 
 ## Acknowledgments
 
- - In-App images - https://thispersondoesnotexist.com/ & https://thiscatdoesnotexist.com/
+ - In-App images and names - https://thispersondoesnotexist.com/ & https://thiscatdoesnotexist.com/ & https://randomuser.me/
